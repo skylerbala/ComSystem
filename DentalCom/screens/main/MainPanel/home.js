@@ -35,7 +35,6 @@ class MainPanelTab extends Component {
       row1: chunks[0],
       row2: chunks[1],
       row3: chunks[2],
-
     }
 
     this.setState({

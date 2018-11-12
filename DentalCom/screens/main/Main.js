@@ -77,14 +77,14 @@ class Main extends Component {
                 staffName: "Skyler",
                 message: "Go to Hell",
                 timeElapsed: 0,
-                timeElapsedString: this.seconds2time(0)
+                timeElapsedString: () => this.seconds2time(0)
             },
             {
                 id: uuid.v1(),
                 staffName: "Glenn",
                 message: "Sup",
                 timeElapsed: 0,
-                timeElapsedString: this.seconds2time(0)
+                timeElapsedString: () => this.seconds2time(0)
             }
         ],
         staff: [
@@ -137,17 +137,19 @@ class Main extends Component {
     constructor(props) {
         super(props);
         this.socket = SocketIOClient('http://localhost:3000/');
-        this.socket.on('messages', this.onReceivedMessage);
+        this.socket.on('messages', (newStaffName, newMessage) => this.onReceivedMessage(newStaffName, newMessage));
     }
 
     onReceivedMessage(newStaffName, newMessage) {
+
         var newMessage = {
             id: uuid.v1(),
             staffName: newStaffName,
             message: newMessage,
             timeElapsed: 0,
-            timeElapsedString: this.seconds2time(0)
+            timeElapsedString: () => this.seconds2time(0)
         }
+
         this.setState({
             messages: [newMessage, ...this.state.messages]
         })
@@ -196,7 +198,7 @@ class Main extends Component {
             staffName: staffName,
             message: message,
             timeElapsed: 0,
-            timeElapsedString: this.seconds2time(0)
+            timeElapsedString: () => this.seconds2time(0)
         }
         this.setState({
             messages: [newMessage, ...this.state.messages]

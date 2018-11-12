@@ -24,7 +24,6 @@ class SendMessageTab extends Component {
 	}
 
 	render() {
-		console.log(this.props.screenProps.staff)
 		return (
 			<Container padder>
 				<SwipeListView
