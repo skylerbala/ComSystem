@@ -30,8 +30,6 @@ class MainPanelTab extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-
-    console.log(nextProps.screenProps.employees)
     if (nextProps.screenProps.employees != []) {
       chunks = this.chunkify(nextProps.screenProps.employees, 3, true);
       newEmployees = {
@@ -91,7 +89,6 @@ class MainPanelTab extends Component {
   }
 
   render() {
-    console.log(this.state.employees)
     return (
       <Container padder>
 
@@ -109,7 +106,7 @@ class MainPanelTab extends Component {
                       <Text style={styles.text}>{rowData.item.employeeName}: {rowData.item.statement}</Text>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
-                      <Text style={styles.text}>{rowData.item.timeElapsedString}</Text>
+                      <Text style={styles.text}>{rowData.item.timeElapsed}</Text>
                     </View>
                   </View>
                 )}
@@ -129,7 +126,7 @@ class MainPanelTab extends Component {
           </Row>
           <Row size={1.5} style={{ backgroundColor: '#00CE9F' }}>
             <Content padder contentContainerStyle={{ flexGrow: 1 }}>
-              <List dataArray={this.state.employees.row1} horizontal={true}
+              <List dataArray={this.props.screenProps.employees} horizontal={true}
                 removeClippedSubviews={false}
                 renderRow={(item) =>
                   <Button
@@ -142,7 +139,7 @@ class MainPanelTab extends Component {
                   </Button>
                 }>
               </List>
-              <List dataArray={this.state.employees.row2} horizontal={true}
+              {/* <List dataArray={this.state.employees.row2} horizontal={true}
                 removeClippedSubviews={false}
                 renderRow={(item) =>
                   <Button
@@ -168,7 +165,7 @@ class MainPanelTab extends Component {
                     <Text>{item.name}</Text>
                   </Button>
                 }>
-              </List>
+              </List> */}
             </Content>
           </Row>
         </Grid >

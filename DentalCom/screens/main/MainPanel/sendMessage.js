@@ -21,6 +21,7 @@ class SendMessageTab extends Component {
 			statement: statement
 		}
 		this.props.screenProps.handleAddMessage(data);
+		this.props.screenProps.handleAddMessageSound();
 	}
 
 	render() {

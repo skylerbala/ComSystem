@@ -1,8 +1,8 @@
-const MongoClient = require('mongodb').MongoClient;
 const client = require('socket.io').listen(3000).sockets;
+const mongodb = require('mongodb');
 
 // Connect to MongoDB
-MongoClient.connect('mongodb://127.0.0.1/mongochat', (err, mongo) => {
+mongodb.MongoClient.connect('mongodb://127.0.0.1/mongochat', (err, mongo) => {
   if (err) throw err;
 
   console.log('MongoDB Connected');
@@ -13,22 +13,22 @@ MongoClient.connect('mongodb://127.0.0.1/mongochat', (err, mongo) => {
   // Connect to Socket.io
   client.on('connection', (socket) => {
     console.log('Connected: ' + socket.id)
-    
+
     let messages = db.collection('messages');
     let employees = db.collection('employees');
     let statements = db.collection('statements');
 
 
     // Connection init
-    messages.find().limit(100).sort({ _id: 1 }).toArray((err, res) => {
+    messages.find().limit(100).sort({ date_created: -1 }).toArray((err, res) => {
       if (err) throw err;
       socket.emit('addMessages', res);
     });
-    employees.find().limit(100).sort({ _id: 1 }).toArray((err, res) => {
+    employees.find().limit(100).sort({ date_created: -1 }).toArray((err, res) => {
       if (err) throw err;
       socket.emit('addEmployees', res);
     });
-    statements.find().limit(100).sort({ _id: 1 }).toArray((err, res) => {
+    statements.find().limit(100).sort({ date_created: -1 }).toArray((err, res) => {
       if (err) throw err;
       socket.emit('addStatements', res);
     });
@@ -110,22 +110,21 @@ MongoClient.connect('mongodb://127.0.0.1/mongochat', (err, mongo) => {
     // Delete
     socket.on('deleteMessage', (data) => {
       let toDelete = {
-        _id: data._id
+        _id: mongodb.ObjectId(data._id)
       };
 
       messages.deleteOne(toDelete, (err, res) => {
         if (err) throw err;
-
         socket.emit('deleteMessage', data);
       });
     });
 
     socket.on('deleteEmployee', (data) => {
       let toDelete = {
-        _id: data._id
+        _id: mongodb.ObjectId(data._id)
       };
 
-      messages.deleteOne(toDelete, (err, res) => {
+      employees.deleteOne(toDelete, (err, res) => {
         if (err) throw err;
 
         socket.emit('deleteEmployee', data);
@@ -134,10 +133,10 @@ MongoClient.connect('mongodb://127.0.0.1/mongochat', (err, mongo) => {
 
     socket.on('deleteStatement', (data) => {
       let toDelete = {
-        _id: data._id
+        _id: mongodb.ObjectId(data._id)
       };
 
-      messages.deleteOne(toDelete, (err, res) => {
+      statements.deleteOne(toDelete, (err, res) => {
         if (err) throw err;
 
         socket.emit('deleteStatement', data);

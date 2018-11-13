@@ -6,6 +6,8 @@ import MainPanel from './MainPanel';
 import Staff from './Staff';
 import Messages from './Messages';
 import SocketIOClient from 'socket.io-client';
+import moment from 'moment';
+import Expo from 'expo';
 
 var uuid = require('react-native-uuid');
 
@@ -58,7 +60,7 @@ class Main extends Component {
     }
 
     componentDidMount() {
-        // this.interval = setInterval(() => this.tick(), 1000);
+        this.interval = setInterval(() => this.tick(), 1000);
         this.socket = SocketIOClient('http://localhost:3000/');
         this.socket.on('addMessages', (data) => this.handleReceivedMessages(data));
         this.socket.on('addEmployees', (data) => this.handleReceivedEmployees(data));
@@ -68,11 +70,24 @@ class Main extends Component {
         this.socket.on('deleteStatement', (data) => this.handleReceivedDeleteStatement(data));
     }
 
+    async playSound() {
+
+        const soundObject = new Expo.Audio.Sound();
+        try {
+            await soundObject.loadAsync({ uri: 'https://www.computerhope.com/jargon/m/example.mp3'});
+            await soundObject.playAsync();
+            // Your sound is playing!
+        } catch (error) {
+            // An error occurred!
+        }
+
+    }
+
     handleReceivedMessages(data) {
         this.setState({
             messages: [...data, ...this.state.messages]
         })
-        
+
     }
 
     handleReceivedEmployees(data) {
@@ -206,18 +221,19 @@ class Main extends Component {
     //     return time;
     // }
 
-    // tick() {
-    //     var newMessages = this.state.messages.map((e) => {
-    //         e.timeElapsed += 1
-    //         e.timeElapsedString = this.seconds2time(e.timeElapsed)
-    //         return e
-    //     });
-    //     this.setState({
-    //         messages: newMessages
-    //     });
-    // }
+    tick() {
 
-    
+        var newMessages = this.state.messages.map((e) => {
+            e.timeElapsed = moment(e.date_created).fromNow();
+            return e
+        });
+        this.setState({
+            messages: newMessages
+        });
+        
+    }
+
+
 
 
     render() {
@@ -234,6 +250,7 @@ class Main extends Component {
                         handleDeleteMessage: (data) => this.handleDeleteMessage(data),
                         handleDeleteEmployee: (data) => this.handleDeleteEmployee(data),
                         handleDeleteStatement: (data) => this.handleDeleteStatement(data),
+                        handleAddMessageSound: () => this.playSound()
                     }
                 }
             >
