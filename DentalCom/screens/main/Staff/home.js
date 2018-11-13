@@ -31,12 +31,15 @@ class StaffTab extends Component {
 		this.props.navigation.setParams({ handleToggle: () => this.toggleStaffFormVisibility() });
 	}
 
-	addStaff(name) {
-		this.props.screenProps.onStaffAdd(name);
+	addEmployee(name) {
+		let data = {
+			name: name
+		}
+		this.props.screenProps.handleAddEmployee(data);
 	}
 
-	deleteStaff(id) {
-		this.props.screenProps.onStaffDelete(id);
+	deleteEmployee(data) {
+		this.props.screenProps.handleDeleteEmployee(data);
 	}
 
 	toggleStaffFormVisibility() {
@@ -52,7 +55,7 @@ class StaffTab extends Component {
 					useFlatList={true}
 					closeOnRowBeginSwipe
 					disableRightSwipe
-					data={this.props.screenProps.staff}
+					data={this.props.screenProps.employees}
 					renderItem={(rowData, rowMap) => (
 						<View style={styles.rowFront}>
 							<Text style={styles.text}>{rowData.item.name}</Text>
@@ -62,7 +65,7 @@ class StaffTab extends Component {
 						<View style={styles.rowBack}>
 							<TouchableOpacity style={styles.backRightBtn} onPress={_ => {
 								rowMap[rowData.item.key].closeRow()
-								this.deleteStaff(rowData.item.id)
+								this.deleteEmployee(rowData.item)
 							}}>
 								<Text style={[styles.text, styles.deleteText]}>Delete</Text>
 							</TouchableOpacity>
@@ -74,7 +77,7 @@ class StaffTab extends Component {
 					title={"Add Staff"}
 					hintInput={"Name"}
 					submitInput={(input) => {
-						this.addStaff(input)
+						this.addEmployee(input)
 						this.toggleStaffFormVisibility()
 					}}
 					closeDialog={() => { this.toggleStaffFormVisibility() }}>

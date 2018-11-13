@@ -31,12 +31,15 @@ class MessagesTab extends Component {
     this.props.navigation.setParams({ handleToggle: () => this.toggleMessageFormVisibility() });
   }
 
-  addMessage(message) {
-    this.props.screenProps.onMessageOptionsAdd(message);
+  addStatement(statement) {
+    let data = {
+      statement: statement
+    }
+    this.props.screenProps.handleAddStatement(data);
   }
 
-  deleteMessage(id) {
-    this.props.screenProps.onMessageOptionsDelete(id);
+  deleteStatment(id) {
+    this.props.screenProps.handleDeleteStatement(id);
   }
 
   toggleMessageFormVisibility() {
@@ -52,17 +55,17 @@ class MessagesTab extends Component {
           useFlatList={true}
           closeOnRowBeginSwipe
           disableRightSwipe
-          data={this.props.screenProps.messageOptions}
+          data={this.props.screenProps.statements}
           renderItem={(rowData, rowMap) => (
             <View style={styles.rowFront}>
-              <Text style={styles.text}>{rowData.item.message}</Text>
+              <Text style={styles.text}>{rowData.item.statement}</Text>
             </View>
           )}
           renderHiddenItem={(rowData, rowMap) => (
             <View style={styles.rowBack}>
               <TouchableOpacity style={styles.backRightBtn} onPress={_ => {
                 rowMap[rowData.item.key].closeRow()
-                this.deleteMessage(rowData.item.id)
+                this.deleteStatment(rowData.item)
               }}>
                 <Text style={[styles.text, styles.deleteText]}>Delete</Text>
               </TouchableOpacity>
@@ -75,7 +78,7 @@ class MessagesTab extends Component {
           title={"Add Message"}
           hintInput={"Name"}
           submitInput={(input) => {
-            this.addMessage(input)
+            this.addStatement(input)
             this.toggleMessageFormVisibility()
           }}
           closeDialog={() => this.toggleMessageFormVisibility()}>

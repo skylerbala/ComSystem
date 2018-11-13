@@ -7,11 +7,7 @@ import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 
 class SendMessageTab extends Component {
 	static navigationOptions = {
-		title: 'SendMessage',
-	}
-
-	state = {
-		isStaffFormVisible: false
+		title: "Send Message"
 	}
 
 	constructor(props) {
@@ -19,8 +15,12 @@ class SendMessageTab extends Component {
 	}
 
 
-	addMessage(staffName, message) {
-		this.props.screenProps.onMessageAdd(staffName, message);
+	addMessage(employeeName, statement) {
+		let data = {
+			employeeName: employeeName,
+			statement: statement
+		}
+		this.props.screenProps.handleAddMessage(data);
 	}
 
 	render() {
@@ -31,15 +31,15 @@ class SendMessageTab extends Component {
 					closeOnRowBeginSwipe
 					disableRightSwipe
 					disableLeftSwipe
-					data={this.props.screenProps.messageOptions}
+					data={this.props.screenProps.statements}
 					renderItem={(rowData, rowMap) => (
 						<TouchableOpacity
 							style={styles.rowFront}
 							onPress={_ => {
 								this.props.navigation.pop();
-								this.addMessage(this.props.navigation.getParam('staffName'), rowData.item.message);
+								this.addMessage(this.props.navigation.getParam('employeeName'), rowData.item.statement);
 							}}>
-							<Text style={styles.text}>{rowData.item.message}</Text>
+							<Text style={styles.text}>{rowData.item.statement}</Text>
 						</TouchableOpacity>
 					)}
 				/>

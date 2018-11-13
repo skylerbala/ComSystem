@@ -14,7 +14,7 @@ class MainPanelTab extends Component {
   }
 
   state = {
-    staff: {
+    employees: {
       row1: [],
       row2: [],
       row3: []
@@ -23,23 +23,31 @@ class MainPanelTab extends Component {
 
   constructor(props) {
     super(props)
-    chunks = this.chunkify(this.props.screenProps.staff, 3, true);
-    this.state.staff.row1 = chunks[0]
-    this.state.staff.row2 = chunks[1]
-    this.state.staff.row3 = chunks[2]
+  }
+
+  componentDidMount() {
+
   }
 
   componentWillReceiveProps(nextProps) {
-    chunks = this.chunkify(nextProps.screenProps.staff, 3, true);
-    newStaff = {
-      row1: chunks[0],
-      row2: chunks[1],
-      row3: chunks[2],
-    }
 
-    this.setState({
-      staff: newStaff
-    })
+    console.log(nextProps.screenProps.employees)
+    if (nextProps.screenProps.employees != []) {
+      chunks = this.chunkify(nextProps.screenProps.employees, 3, true);
+      newEmployees = {
+        row1: chunks[0],
+        row2: chunks[1],
+        row3: chunks[2],
+      }
+  
+      this.setState({
+        employees: newEmployees
+      })
+    } 
+  }
+
+  deleteMessage(data) {
+    this.props.screenProps.handleDeleteMessage(data);
   }
 
   chunkify(a, n, balanced) {
@@ -82,11 +90,8 @@ class MainPanelTab extends Component {
 
   }
 
-  deleteMessage(id) {
-    this.props.screenProps.onMessageDelete(id);
-  }
-
   render() {
+    console.log(this.state.employees)
     return (
       <Container padder>
 
@@ -101,7 +106,7 @@ class MainPanelTab extends Component {
                 renderItem={(rowData, rowMap) => (
                   <View style={styles.rowFront}>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                      <Text style={styles.text}>{rowData.item.staffName}: {rowData.item.message}</Text>
+                      <Text style={styles.text}>{rowData.item.employeeName}: {rowData.item.statement}</Text>
                     </View>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center' }}>
                       <Text style={styles.text}>{rowData.item.timeElapsedString}</Text>
@@ -112,7 +117,7 @@ class MainPanelTab extends Component {
                   <View style={styles.rowBack}>
                     <TouchableOpacity style={styles.backRightBtn} onPress={_ => {
                       rowMap[rowData.item.key].closeRow()
-                      this.deleteMessage(rowData.item.id)
+                      this.deleteMessage(rowData.item)
                     }}>
                       <Text style={[styles.text, styles.deleteText]}>Delete</Text>
                     </TouchableOpacity>
@@ -124,26 +129,26 @@ class MainPanelTab extends Component {
           </Row>
           <Row size={1.5} style={{ backgroundColor: '#00CE9F' }}>
             <Content padder contentContainerStyle={{ flexGrow: 1 }}>
-              <List dataArray={this.state.staff.row1} horizontal={true}
+              <List dataArray={this.state.employees.row1} horizontal={true}
                 removeClippedSubviews={false}
                 renderRow={(item) =>
                   <Button
                     style={{ marginRight: 15 }}
                     onPress={() => this.props.navigation.navigate("SendMessage", {
-                      staffName: item.name
+                      employeeName: item.name
                     })}
                   >
                     <Text>{item.name}</Text>
                   </Button>
                 }>
               </List>
-              <List dataArray={this.state.staff.row2} horizontal={true}
+              <List dataArray={this.state.employees.row2} horizontal={true}
                 removeClippedSubviews={false}
                 renderRow={(item) =>
                   <Button
                     style={{ marginRight: 15 }}
                     onPress={() => this.props.navigation.navigate("SendMessage", {
-                      staffName: item.name
+                      employeeName: item.name
                     })}
                   >
                     <Text>{item.name}</Text>
@@ -151,13 +156,13 @@ class MainPanelTab extends Component {
                 }>
               </List>
               <List 
-                dataArray={this.state.staff.row3} horizontal={true}
+                dataArray={this.state.employees.row3} horizontal={true}
                 removeClippedSubviews={false}
                 renderRow={(item) =>
                   <Button
                     style={{ marginRight: 15 }}
                     onPress={() => this.props.navigation.navigate("SendMessage", {
-                      staffName: item.name
+                      employeeName: item.name
                     })}
                   >
                     <Text>{item.name}</Text>
