@@ -11,19 +11,18 @@ client.on('connection', (socket) => {
 
 
   // Connection init
-  // messages.findAll().then((res) => {
-  //   socket.emit('addMessages', res);
-  // }).catch((err) => {
-  //   console.log('There was an error querying', JSON.stringify(err))
-  // });
-  // employees.findAll().then((res) => {
-  //   socket.emit('addEmployees', res);
-  // }).catch((err) => {
-  //   console.log('There was an error querying', JSON.stringify(err))
-  //   return res.send(err)
-  // });
+  messages.findAll().then((res) => {
+    socket.emit('addMessages', res);
+  }).catch((err) => {
+    console.log('There was an error querying', JSON.stringify(err))
+  });
+  employees.findAll().then((res) => {
+    socket.emit('addEmployees', res);
+  }).catch((err) => {
+    console.log('There was an error querying', JSON.stringify(err))
+    return res.send(err)
+  });
   statements.findAll().then((res) => {
-    console.log(res)
     socket.emit('addStatements', res);
   }).catch((err) => {
     console.log('There was an error querying', JSON.stringify(err.message))
@@ -44,7 +43,7 @@ client.on('connection', (socket) => {
         date_created: Date.now()
       };
       messages.create(newInstance).then((res) => {
-        socket.emit('addMessages', res);
+        socket.emit('addMessages', [res]);
         sendStatus({
           message: 'Message Sent',
           clear: true
@@ -67,7 +66,7 @@ client.on('connection', (socket) => {
         date_created: Date.now()
       };
       employees.create(newInstance).then((res) => {
-        socket.emit('addEmployees', res);
+        socket.emit('addEmployees', [res]);
         sendStatus({
           message: 'Employee Sent',
           clear: true
@@ -91,8 +90,7 @@ client.on('connection', (socket) => {
       };
 
       statements.create(newInstance).then((res) => {
-        console.log("sdfsdf" + res)
-        socket.emit('addStatements', res);
+        socket.emit('addStatements', [res]);
         sendStatus({
           message: 'Statement Sent',
           clear: true
@@ -105,7 +103,7 @@ client.on('connection', (socket) => {
 
   // Delete
   socket.on('deleteMessage', (data) => {
-    let id = data._id
+    let id = data.id
 
     messages.findById(id).then((res) => {
       res.destroy({force: true})
@@ -116,22 +114,22 @@ client.on('connection', (socket) => {
   });
 
   socket.on('deleteEmployee', (data) => {
-    let id = data._id
+    let id = data.id
 
     employees.findById(id).then((res) => {
       res.destroy({force: true})
-      socket.emit('deleteMessage', data);
+      socket.emit('deleteEmployee', data);
     }).catch((err) => {
       console.log('***Error deleting', JSON.stringify(err))
     })
   });
 
   socket.on('deleteStatement', (data) => {
-    let id = data._id
+    let id = data.id
 
     statements.findById(id).then((res) => {
       res.destroy({force: true})
-      socket.emit('deleteMessage', data);
+      socket.emit('deleteStatement', data);
     }).catch((err) => {
       console.log('***Error deleting', JSON.stringify(err))
     })

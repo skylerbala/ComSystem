@@ -97,6 +97,8 @@ class Main extends Component {
     }
 
     handleReceivedStatements(data) {
+        console.log('data' + data)
+
         this.setState({
             statements: [...data, ...this.state.statements]
         })
@@ -104,7 +106,7 @@ class Main extends Component {
 
     handleReceivedDeleteMessage(data) {
         let newMessages = this.state.messages;
-        deleteIndex = newMessages.findIndex(e => e._id == data._id)
+        deleteIndex = newMessages.findIndex(e => e.id == data.id)
         newMessages.splice(deleteIndex, 1)
         this.setState({
             messages: newMessages
@@ -113,7 +115,8 @@ class Main extends Component {
 
     handleReceivedDeleteEmployee(data) {
         let newEmployees = this.state.employees;
-        deleteIndex = newEmployees.findIndex(e => e._id == data._id)
+        console.log(this.state.employees)
+        deleteIndex = newEmployees.findIndex(e => e.id == data.id)
         newEmployees.splice(deleteIndex, 1)
         this.setState({
             employees: newEmployees
@@ -121,8 +124,9 @@ class Main extends Component {
     }
 
     handleReceivedDeleteStatement(data) {
+        console.log(data)
         let newStatements = this.state.statements;
-        deleteIndex = newStatements.findIndex(e => e._id == data._id)
+        deleteIndex = newStatements.findIndex(e => e.id == data.id)
         newStatements.splice(deleteIndex, 1)
         this.setState({
             statements: newStatements
