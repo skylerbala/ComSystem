@@ -74,7 +74,7 @@ class Main extends Component {
 
         const soundObject = new Expo.Audio.Sound();
         try {
-            await soundObject.loadAsync({ uri: 'https://www.computerhope.com/jargon/m/example.mp3'});
+            await soundObject.loadAsync(require('./sound.wav'));
             await soundObject.playAsync();
             // Your sound is playing!
         } catch (error) {
@@ -84,23 +84,23 @@ class Main extends Component {
     }
 
     handleReceivedMessages(data) {
+        console.log(data)
+
         this.setState({
-            messages: [...data, ...this.state.messages]
+            messages: data.concat(this.state.messages)
         })
 
     }
 
     handleReceivedEmployees(data) {
         this.setState({
-            employees: [...data, ...this.state.employees]
+            employees: data.concat(this.state.employees)
         })
     }
 
     handleReceivedStatements(data) {
-        console.log('data' + data)
-
         this.setState({
-            statements: [...data, ...this.state.statements]
+            statements: data.concat(this.state.statements)
         })
     }
 
@@ -115,7 +115,6 @@ class Main extends Component {
 
     handleReceivedDeleteEmployee(data) {
         let newEmployees = this.state.employees;
-        console.log(this.state.employees)
         deleteIndex = newEmployees.findIndex(e => e.id == data.id)
         newEmployees.splice(deleteIndex, 1)
         this.setState({
@@ -124,7 +123,6 @@ class Main extends Component {
     }
 
     handleReceivedDeleteStatement(data) {
-        console.log(data)
         let newStatements = this.state.statements;
         deleteIndex = newStatements.findIndex(e => e.id == data.id)
         newStatements.splice(deleteIndex, 1)
@@ -132,43 +130,6 @@ class Main extends Component {
             statements: newStatements
         });
     }
-
-    // handleStaffAdd(staffName) {
-    //     newStaff = {
-    //         id: uuid.v1(),
-    //         name: staffName
-    //     }
-    //     this.setState({
-    //         staff: [...this.state.staff, newStaff]
-    //     });
-    // }
-
-    // handleStaffDelete(id) {
-    //     var newStaffArr = [...this.state.staff]
-    //     indexOfDelete = newStaffArr.findIndex(e => e.id == id)
-    //     newStaffArr.splice(indexOfDelete, 1)
-    //     this.setState({
-    //         staff: newStaffArr
-    //     });
-    // }
-
-    // handleMessageOptionAdd(message) {
-    //     newMessage = {
-    //         message: message
-    //     }
-    //     this.setState({
-    //         messageOptions: [...this.state.messageOptions, newMessage]
-    //     });
-    // }
-
-    // handleMessageOptionDelete(id) {
-    //     var newMessageOptions = [...this.state.messageOptions]
-    //     indexOfDelete = newMessageOptions.findIndex(e => e.id == id)
-    //     newMessageOptions.splice(indexOfDelete, 1)
-    //     this.setState({
-    //         messageOptions: newMessageOptions
-    //     });
-    // }
 
     handleAddMessage(data) {
         this.socket.emit('addMessages', data);
