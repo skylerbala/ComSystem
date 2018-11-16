@@ -1,12 +1,14 @@
 
-import React, { Component } from 'react';
-import { Container, Button, Content, Form, Item, Label, Input, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid';
+import React from 'react';
+import { Container, Button, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
 import DialogInput from 'react-native-dialog-input';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import styles from '../../../library/styles/SwipeListViewStyles';
+import { ColorWheel } from 'react-native-color-wheel';
 
-class StaffTab extends Component {
+
+class StaffTab extends React.Component {
 	static navigationOptions = ({ navigation }) => {
 		const { params = {} } = navigation.state;
 		return {
@@ -31,6 +33,12 @@ class StaffTab extends Component {
 		this.props.navigation.setParams({ handleToggle: () => this.toggleStaffFormVisibility() });
 	}
 
+	toggleStaffFormVisibility() {
+		this.setState({
+			isStaffFormVisible: !this.state.isStaffFormVisible
+		})
+	}
+	
 	addEmployee(name) {
 		let data = {
 			name: name
@@ -42,36 +50,39 @@ class StaffTab extends Component {
 		this.props.screenProps.handleDeleteEmployee(data);
 	}
 
-	toggleStaffFormVisibility() {
-		this.setState({
-			isStaffFormVisible: !this.state.isStaffFormVisible
-		})
-	}
+	
 
 	render() {
 		return (
 			<Container padder>
 				<SwipeListView
-					useFlatList={true}
+					useFlatList
 					closeOnRowBeginSwipe
 					disableRightSwipe
+					rightOpenValue={-200}
+					stopRightSwipe={-200}
+					swipeToOpenPercent={50}
 					data={this.props.screenProps.employees}
+					keyExtractor={(rowData, index) => {
+						return rowData.id.toString();
+					}}
 					renderItem={(rowData, rowMap) => (
 						<View style={styles.rowFront}>
 							<Text style={styles.text}>{rowData.item.name}</Text>
 						</View>
 					)}
 					renderHiddenItem={(rowData, rowMap) => (
-						<View style={styles.rowBack}>
-							<TouchableOpacity style={styles.backRightBtn} onPress={_ => {
-								rowMap[rowData.item.key].closeRow()
+						<TouchableOpacity
+							style={[styles.deleteButton]}
+							onPress={_ => {
+								rowMap[rowData.item.id].closeRow()
 								this.deleteEmployee(rowData.item)
 							}}>
+							<View>
 								<Text style={[styles.text, styles.deleteText]}>Delete</Text>
-							</TouchableOpacity>
-						</View>
+							</View>
+						</TouchableOpacity>
 					)}
-					rightOpenValue={-200}
 				/>
 				<DialogInput isDialogVisible={this.state.isStaffFormVisible}
 					title={"Add Staff"}
@@ -86,42 +97,5 @@ class StaffTab extends Component {
 		);
 	}
 }
-
-const styles = StyleSheet.create({
-	text: {
-		fontSize: 50,
-	},
-	deleteText: {
-		color: "white"
-	},
-	rowFront: {
-		backgroundColor: 'white',
-		borderBottomColor: '#CCC',
-		borderBottomWidth: 1,
-		borderRightColor: '#CCC',
-		paddingLeft: 15,
-		borderRightWidth: 1,
-		justifyContent: 'center',
-		height: 100,
-	},
-	rowBack: {
-		alignItems: 'center',
-		backgroundColor: '#DDD',
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		paddingLeft: 15,
-	},
-	backRightBtn: {
-		backgroundColor: 'red',
-		width: 200,
-		alignItems: 'center',
-		justifyContent: 'center',
-		position: 'absolute',
-		bottom: 0,
-		top: 0,
-		right: 0
-	},
-});
 
 export default StaffTab;

@@ -4,41 +4,53 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import DialogInput from 'react-native-dialog-input';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import styles from '../../../library/styles/SwipeListViewStyles';
+
 
 class SendMessageTab extends Component {
-	static navigationOptions = {
-		title: "Send Message"
-	}
+	static navigationOptions = ({ navigation }) => {
+		const { params = {} } = navigation.state;
+		const employeeName = navigation.getParam('employeeName')
+		return {
+			title: employeeName,
+		}
+	};
 
 	constructor(props) {
 		super(props);
 	}
 
+	componentDidMount() {
+		this.props.navigation.setParams({ handleToggle: () => this.toggleMessageFormVisibility() });
+	}
 
-	addMessage(employeeName, statement) {
+	handleSendMessage(employeeName, statement) {
 		let data = {
 			employeeName: employeeName,
 			statement: statement
 		}
-		this.props.screenProps.handleAddMessage(data);
-		this.props.screenProps.handleAddMessageSound();
+		this.props.screenProps.handleSendMessage(data);
 	}
 
 	render() {
 		return (
 			<Container padder>
 				<SwipeListView
-					useFlatList={true}
+					useFlatList
 					closeOnRowBeginSwipe
 					disableRightSwipe
-					disableLeftSwipe
+					rightOpenValue={-200}
+					swipeToOpenPercent={50}
 					data={this.props.screenProps.statements}
+					keyExtractor={(rowData, index) => {
+						return rowData.id.toString();
+					}}
 					renderItem={(rowData, rowMap) => (
 						<TouchableOpacity
 							style={styles.rowFront}
 							onPress={_ => {
 								this.props.navigation.pop();
-								this.addMessage(this.props.navigation.getParam('employeeName'), rowData.item.statement);
+								this.handleSendMessage(this.props.navigation.getParam('employeeName'), rowData.item.statement);
 							}}>
 							<Text style={styles.text}>{rowData.item.statement}</Text>
 						</TouchableOpacity>
@@ -48,41 +60,5 @@ class SendMessageTab extends Component {
 		);
 	}
 }
-const styles = StyleSheet.create({
-	text: {
-		fontSize: 50,
-	},
-	deleteText: {
-		color: "white"
-	},
-	rowFront: {
-		backgroundColor: 'white',
-		borderBottomColor: '#CCC',
-		borderBottomWidth: 1,
-		borderRightColor: '#CCC',
-		paddingLeft: 15,
-		borderRightWidth: 1,
-		justifyContent: 'center',
-		height: 100,
-	},
-	rowBack: {
-		alignItems: 'center',
-		backgroundColor: '#DDD',
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		paddingLeft: 15,
-	},
-	backRightBtn: {
-		backgroundColor: 'red',
-		width: 200,
-		alignItems: 'center',
-		justifyContent: 'center',
-		position: 'absolute',
-		bottom: 0,
-		top: 0,
-		right: 0
-	},
-});
 
 export default SendMessageTab;

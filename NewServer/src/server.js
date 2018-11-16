@@ -11,7 +11,7 @@ client.on('connection', (socket) => {
 
 
   // Connection init
-  messages.findAll({order: ['date_created', 'ASC']}).then((res) => {
+  messages.findAll({ order: [['date_created', 'DESC']] }).then((res) => {
     socket.emit('addMessages', res);
   }).catch((err) => {
     console.log('There was an error querying', JSON.stringify('Problem' + err.message))
@@ -147,4 +147,3 @@ client.on('connection', (socket) => {
     console.log(err)
   })
 });
-
