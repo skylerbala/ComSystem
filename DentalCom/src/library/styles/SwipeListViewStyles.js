@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
   deleteText: {
     color: "white"
   },
+  noConnectionText: {
+    textAlign: 'center',
+    fontSize: 40,
+    justifyContent: 'center'
+  },
   rowFront: {
     backgroundColor: 'white',
     borderBottomColor: '#CCC',
@@ -28,6 +33,11 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0
   },
+  noConnectionView: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center'
+  }
 });
 
 export default styles

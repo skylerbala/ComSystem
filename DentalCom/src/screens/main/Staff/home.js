@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Container, Button, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
+import { Container, Content, Button, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
 import DialogInput from 'react-native-dialog-input';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
@@ -38,7 +38,7 @@ class StaffTab extends React.Component {
 			isStaffFormVisible: !this.state.isStaffFormVisible
 		})
 	}
-	
+
 	addEmployee(name) {
 		let data = {
 			name: name
@@ -50,49 +50,67 @@ class StaffTab extends React.Component {
 		this.props.screenProps.handleDeleteEmployee(data);
 	}
 
-	
+
 
 	render() {
+
+		let view;
+
+		if (this.props.screenProps.connected) {
+			view = (
+				<View>
+					<SwipeListView
+						useFlatList
+						closeOnRowBeginSwipe
+						disableRightSwipe
+						rightOpenValue={-200}
+						stopRightSwipe={-200}
+						swipeToOpenPercent={50}
+						data={this.props.screenProps.employees}
+						keyExtractor={(rowData, index) => {
+							return rowData.id.toString();
+						}}
+						renderItem={(rowData, rowMap) => (
+							<View style={styles.rowFront}>
+								<Text style={styles.text}>{rowData.item.name}</Text>
+							</View>
+						)}
+						renderHiddenItem={(rowData, rowMap) => (
+							<TouchableOpacity
+								style={[styles.deleteButton]}
+								onPress={_ => {
+									rowMap[rowData.item.id].closeRow()
+									this.deleteEmployee(rowData.item)
+								}}>
+								<View>
+									<Text style={[styles.text, styles.deleteText]}>Delete</Text>
+								</View>
+							</TouchableOpacity>
+						)}
+					/>
+					<DialogInput isDialogVisible={this.state.isStaffFormVisible}
+						title={"Add Staff"}
+						hintInput={"Name"}
+						submitInput={(input) => {
+							this.addEmployee(input)
+							this.toggleStaffFormVisibility()
+						}}
+						closeDialog={() => { this.toggleStaffFormVisibility() }}>
+					</DialogInput>
+				</View>
+			);
+		}
+		else {
+			view = (
+				<View style={styles.noConnectionView}>
+					<Text style={styles.noConnectionText}>No Connection</Text>
+				</View>
+			)
+		}
+
 		return (
 			<Container padder>
-				<SwipeListView
-					useFlatList
-					closeOnRowBeginSwipe
-					disableRightSwipe
-					rightOpenValue={-200}
-					stopRightSwipe={-200}
-					swipeToOpenPercent={50}
-					data={this.props.screenProps.employees}
-					keyExtractor={(rowData, index) => {
-						return rowData.id.toString();
-					}}
-					renderItem={(rowData, rowMap) => (
-						<View style={styles.rowFront}>
-							<Text style={styles.text}>{rowData.item.name}</Text>
-						</View>
-					)}
-					renderHiddenItem={(rowData, rowMap) => (
-						<TouchableOpacity
-							style={[styles.deleteButton]}
-							onPress={_ => {
-								rowMap[rowData.item.id].closeRow()
-								this.deleteEmployee(rowData.item)
-							}}>
-							<View>
-								<Text style={[styles.text, styles.deleteText]}>Delete</Text>
-							</View>
-						</TouchableOpacity>
-					)}
-				/>
-				<DialogInput isDialogVisible={this.state.isStaffFormVisible}
-					title={"Add Staff"}
-					hintInput={"Name"}
-					submitInput={(input) => {
-						this.addEmployee(input)
-						this.toggleStaffFormVisibility()
-					}}
-					closeDialog={() => { this.toggleStaffFormVisibility() }}>
-				</DialogInput>
+				{view}
 			</Container >
 		);
 	}

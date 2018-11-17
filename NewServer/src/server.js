@@ -23,6 +23,7 @@ io.on('connection', (socket) => {
       initialState.messages = res[0]
       initialState.employees = res[1]
       initialState.statements = res[2]
+      initialState.connected = true
 
       console.log('Sending Initial State: ' + initialState);
 
@@ -30,7 +31,7 @@ io.on('connection', (socket) => {
     })
     .catch(err => {
       console.log(err.message);
-    })
+    });
 
   // Add
   socket.on('addMessage', (data) => {
@@ -151,6 +152,9 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('Disconnected: ', socket.id)
+    let data = {}
+    data.connected = false
+    socket.emit('diconnect', data);
   })
 
   socket.on('error', function (err) {

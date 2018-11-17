@@ -30,7 +30,7 @@ export default MainTabNavigator = createBottomTabNavigator(
     Messages: {
       screen: Messages,
       navigationOptions: {
-        title: 'MainPanel',
+        title: 'Messages',
         tabBarIcon: ({ tintColor }) => {
           return (<Icon type="FontAwesome" name="envelope" style={{ color: tintColor }} />)
         }

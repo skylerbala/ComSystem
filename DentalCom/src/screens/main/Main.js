@@ -13,6 +13,7 @@ class Main extends Component {
         employees: [],
         statements: [],
         endpoint: "",
+        connected: false
     }
 
     constructor(props) {
@@ -62,6 +63,7 @@ class Main extends Component {
         this.socket.on('deleteMessage', (data) => this.handleReceivedDeleteMessage(data));
         this.socket.on('deleteEmployee', (data) => this.handleReceivedDeleteEmployee(data));
         this.socket.on('deleteStatement', (data) => this.handleReceivedDeleteStatement(data));
+        this.socket.on('disconnect', (data) => this.handleDisconnect(data));
     }
 
     async playSound() {
@@ -165,6 +167,16 @@ class Main extends Component {
 
     }
 
+    handleDisconnect(data) {
+        connected = data.connected
+        this.setState({
+            messages: [],
+            employees: [],
+            statements: [],
+            connected: false
+        })
+    }
+
     tick() {
         var newMessages = this.state.messages.map((e) => {
             let timeElapsed = moment(moment(Date.now()).diff(e.createdAt)).format('mm:ss');
@@ -186,6 +198,7 @@ class Main extends Component {
                         employees: this.state.employees,
                         statements: this.state.statements,
                         endpoint: this.state.endpoint,
+                        connected: this.state.connected,
 
                         handleSendMessage: (data) => this.handleSendMessage(data),
                         handleAddEmployee: (data) => this.handleAddEmployee(data),

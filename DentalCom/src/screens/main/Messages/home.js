@@ -51,46 +51,63 @@ class MessagesTab extends Component {
   }
 
   render() {
+    let view;
+
+    if (this.props.screenProps.connected) {
+      view = (
+        <Content>
+          <SwipeListView
+            useFlatList
+            closeOnRowBeginSwipe
+            disableRightSwipe
+            rightOpenValue={-200}
+            swipeToOpenPercent={50}
+            data={this.props.screenProps.statements}
+            keyExtractor={(rowData, index) => {
+              return rowData.id.toString();
+            }}
+            renderItem={(rowData, rowMap) => (
+              <View style={styles.rowFront}>
+                <Text style={styles.text}>{rowData.item.statement}</Text>
+              </View>
+            )}
+            renderHiddenItem={(rowData, rowMap) => (
+              <TouchableOpacity
+                style={[styles.deleteButton]}
+                onPress={_ => {
+                  rowMap[rowData.item.id].closeRow()
+                  this.deleteStatment(rowData.item)
+                }}>
+                <View>
+                  <Text style={[styles.text, styles.deleteText]}>Delete</Text>
+                </View>
+              </TouchableOpacity>
+            )}
+          />
+          <DialogInput
+            isDialogVisible={this.state.isMessageFormVisible}
+            title={"Add Message"}
+            hintInput={"Name"}
+            submitInput={(input) => {
+              this.addStatement(input)
+              this.toggleMessageFormVisibility()
+            }}
+            closeDialog={() => this.toggleMessageFormVisibility()}>
+          </DialogInput>
+        </Content>
+      )
+    }
+    else {
+      view = (
+        <View style={styles.noConnectionView}>
+          <Text style={styles.noConnectionText}>No Connection</Text>
+        </View>
+      )
+    }
+
     return (
       <Container padder>
-        <SwipeListView
-          useFlatList
-          closeOnRowBeginSwipe
-          disableRightSwipe
-          rightOpenValue={-200}
-          swipeToOpenPercent={50}
-          data={this.props.screenProps.statements}
-          keyExtractor={(rowData, index) => {
-            return rowData.id.toString();
-          }}
-          renderItem={(rowData, rowMap) => (
-            <View style={styles.rowFront}>
-              <Text style={styles.text}>{rowData.item.statement}</Text>
-            </View>
-          )}
-          renderHiddenItem={(rowData, rowMap) => (
-            <TouchableOpacity
-              style={[styles.deleteButton]}
-              onPress={_ => {
-                rowMap[rowData.item.id].closeRow()
-                this.deleteStatment(rowData.item)
-              }}>
-              <View>
-                <Text style={[styles.text, styles.deleteText]}>Delete</Text>
-              </View>
-            </TouchableOpacity>
-          )}
-        />
-        <DialogInput
-          isDialogVisible={this.state.isMessageFormVisible}
-          title={"Add Message"}
-          hintInput={"Name"}
-          submitInput={(input) => {
-            this.addStatement(input)
-            this.toggleMessageFormVisibility()
-          }}
-          closeDialog={() => this.toggleMessageFormVisibility()}>
-        </DialogInput>
+        {view}
       </Container >
     );
   }

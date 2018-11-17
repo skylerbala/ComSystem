@@ -35,49 +35,64 @@ class MainPanelTab extends Component {
         </Button>
       )
     });
-    
+
+    let messagesView;
+
+    if (this.props.screenProps.connected) {
+      messagesView = (
+        <SwipeListView
+          useFlatList
+          closeOnRowBeginSwipe
+          disableRightSwipe
+          rightOpenValue={-200}
+          stopRightSwipe={-200}
+          swipeToOpenPercent={50}
+          data={this.props.screenProps.messages}
+          keyExtractor={(rowData, index) => {
+            return rowData.id.toString();
+          }}
+          renderItem={(rowData, rowMap) => (
+            <View style={styles.rowFront}>
+              <View style={{ flex: 2, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
+                <Text style={styles.text}>{rowData.item.employeeName}: {rowData.item.statement}</Text>
+              </View>
+              <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: 10 }}>
+                <Text style={styles.timeText}>{rowData.item.timeElapsed}</Text>
+              </View>
+            </View>
+          )}
+          renderHiddenItem={(rowData, rowMap) => (
+            <View style={styles.rowBack}>
+              <TouchableOpacity style={styles.backRightBtn} onPress={_ => {
+                rowMap[rowData.item.id].closeRow()
+                this.deleteMessage(rowData.item)
+              }}>
+                <Text style={[styles.text, styles.deleteText]}>Delete</Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        />
+      )
+    }
+    else {
+      messagesView = (
+        <View style={styles.noConnectionView}>
+          <Text style={styles.noConnectionText}>No Connection</Text>
+        </View>
+      )
+    }
+
     return (
       <Container padder>
         <Grid style={{ backgroundColor: '#f7e1d3' }}>
           <Row size={2} style={{ backgroundColor: 'white', margin: 15, borderRadius: 10 }}>
             <Content padder contentContainerStyle={{ flexGrow: 1 }}>
-              <SwipeListView
-                useFlatList
-                closeOnRowBeginSwipe
-                disableRightSwipe
-                rightOpenValue={-200}
-                stopRightSwipe={-200}
-                swipeToOpenPercent={50}
-                data={this.props.screenProps.messages}
-                keyExtractor={(rowData, index) => {
-                  return rowData.id.toString();
-                }}
-                renderItem={(rowData, rowMap) => (
-                  <View style={styles.rowFront}>
-                    <View style={{ flex: 2, flexDirection: 'row', justifyContent: 'flex-start', alignItems: 'center' }}>
-                      <Text style={styles.text}>{rowData.item.employeeName}: {rowData.item.statement}</Text>
-                    </View>
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginRight: 10 }}>
-                      <Text style={styles.timeText}>{rowData.item.timeElapsed}</Text>
-                    </View>
-                  </View>
-                )}
-                renderHiddenItem={(rowData, rowMap) => (
-                  <View style={styles.rowBack}>
-                    <TouchableOpacity style={styles.backRightBtn} onPress={_ => {
-                      rowMap[rowData.item.id].closeRow()
-                      this.deleteMessage(rowData.item)
-                    }}>
-                      <Text style={[styles.text, styles.deleteText]}>Delete</Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              />
+              {messagesView}
             </Content>
           </Row>
           <Row size={1} style={{ backgroundColor: '#bdd0c4', margin: 15, borderRadius: 10 }}>
             <Content padder contentContainerStyle={{ flex: 1, flexDirection: 'row', flexWrap: 'wrap' }}>
-              { employeeButtons }
+              {employeeButtons}
             </Content>
           </Row>
         </Grid >
@@ -97,6 +112,10 @@ const styles = StyleSheet.create({
   },
   deleteText: {
     color: "white"
+  },
+  noConnectionText: {
+    textAlign: 'center',
+    fontSize: 40
   },
   rowFront: {
     backgroundColor: '#9ab7d3',
@@ -132,6 +151,11 @@ const styles = StyleSheet.create({
     right: 0,
     borderRadius: 10
   },
+  noConnectionView: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center'
+  }
 });
 
 export default MainPanelTab;
