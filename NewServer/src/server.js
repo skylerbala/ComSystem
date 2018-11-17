@@ -27,7 +27,10 @@ io.on('connection', (socket) => {
       console.log('Sending Initial State: ' + initialState);
 
       socket.emit('initializeState', initialState);
-    });
+    })
+    .catch(err => {
+      console.log(err.message);
+    })
 
   // Add
   socket.on('addMessage', (data) => {
