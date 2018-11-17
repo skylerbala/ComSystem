@@ -1,7 +1,7 @@
 import React from 'react';
 import { Icon} from 'native-base';
 import { createBottomTabNavigator } from 'react-navigation';
-import MessagesPanel from './MessagesPanel';
+import MainPanel from './MainPanel';
 import Staff from './Staff';
 import Messages from './Messages';
 import Settings from './Settings';
@@ -9,10 +9,10 @@ import Settings from './Settings';
 
 export default MainTabNavigator = createBottomTabNavigator(
 {
-    MessagesPanel: {
-      screen: MessagesPanel,
+  MainPanel: {
+      screen: MainPanel,
       navigationOptions: {
-        title: 'MessagesPanel',
+        title: 'MainPanel',
         tabBarIcon: ({ tintColor }) => {
           return (<Icon type="FontAwesome" name="tachometer" style={{ color: tintColor }} />)
         }
@@ -30,7 +30,7 @@ export default MainTabNavigator = createBottomTabNavigator(
     Messages: {
       screen: Messages,
       navigationOptions: {
-        title: 'Messages',
+        title: 'MainPanel',
         tabBarIcon: ({ tintColor }) => {
           return (<Icon type="FontAwesome" name="envelope" style={{ color: tintColor }} />)
         }
@@ -46,6 +46,6 @@ export default MainTabNavigator = createBottomTabNavigator(
       }
     }
   }, {
-    initialRouteName: 'MessagesPanel',
+    initialRouteName: 'MainPanel',
   }
 );

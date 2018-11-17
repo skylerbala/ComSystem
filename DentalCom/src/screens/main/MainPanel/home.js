@@ -8,7 +8,7 @@ import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 
 
 
-class MessagesPanelTab extends Component {
+class MainPanelTab extends Component {
   static navigationOptions = {
     title: 'MessagesPanel',
   }
@@ -114,7 +114,6 @@ const styles = StyleSheet.create({
   },
   rowBack: {
     alignItems: 'center',
-    backgroundColor: '#DDD',
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -135,4 +134,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MessagesPanelTab;
+export default MainPanelTab;

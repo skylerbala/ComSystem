@@ -1,34 +1,36 @@
-const client = require('socket.io').listen(3000).sockets;
+const app = require('http').createServer().listen(3000, '0.0.0.0')
+const io = require('socket.io').listen(app).sockets;
 const db = require('./models');
 
 // Connect to Socket.io
-client.on('connection', (socket) => {
-  console.log('Connected: ' + socket.id)
+io.on('connection', (socket) => {
 
   let messages = db.Message;
   let employees = db.Employee;
   let statements = db.Statement;
 
+  console.log('New Connection: ' + socket.id);
 
-  // Connection init
-  messages.findAll({ order: [['date_created', 'DESC']] }).then((res) => {
-    socket.emit('addMessages', res);
-  }).catch((err) => {
-    console.log('There was an error querying', JSON.stringify('Problem' + err.message))
-  });
-  employees.findAll().then((res) => {
-    socket.emit('addEmployees', res);
-  }).catch((err) => {
-    console.log('There was an error querying', JSON.stringify('Problem' + err.message))
-  });
-  statements.findAll().then((res) => {
-    socket.emit('addStatements', res);
-  }).catch((err) => {
-    console.log('There was an error querying', JSON.stringify('Problem' + err.message))
-  });
+  let initialState = {}
+
+  const all_messages = messages.findAll({ order: [['createdAt', 'DESC']] })
+  const all_employees = employees.findAll({ order: [['createdAt', 'DESC']] })
+  const all_statements = statements.findAll({ order: [['createdAt', 'DESC']] })
+
+  Promise
+    .all([all_messages, all_employees, all_statements])
+    .then((res) => {
+      initialState.messages = res[0]
+      initialState.employees = res[1]
+      initialState.statements = res[2]
+
+      console.log('Sending Initial State: ' + initialState);
+
+      socket.emit('initializeState', initialState);
+    });
 
   // Add
-  socket.on('addMessages', (data) => {
+  socket.on('addMessage', (data) => {
     let employeeName = data.employeeName;
     let statement = data.statement;
 
@@ -36,16 +38,17 @@ client.on('connection', (socket) => {
       sendStatus('Please enter a name and message');
     }
     else {
-      let newInstance = {
+      let newMessage = {
         employeeName: employeeName,
         statement: statement,
-        date_created: Date.now()
       };
-      messages.create(newInstance).then((res) => {
-        client.emit('addMessages', [res]);
+
+      messages.create(newMessage).then((res) => {
+        io.emit('addMessage', res);
+        console.log("Message Added")
+
         sendStatus({
           message: 'Message Sent',
-          clear: true
         });
       }).catch((err) => {
         console.log('***There was an error creating', JSON.stringify(err))
@@ -53,22 +56,21 @@ client.on('connection', (socket) => {
     }
   });
 
-  socket.on('addEmployees', (data) => {
+  socket.on('addEmployee', (data) => {
     let name = data.name;
 
     if (name === '') {
       sendStatus('Please enter employee name');
     }
     else {
-      let newInstance = {
+      let newEmployee = {
         name: name,
-        date_created: Date.now()
       };
-      employees.create(newInstance).then((res) => {
-        client.emit('addEmployees', [res]);
+      employees.create(newEmployee).then((res) => {
+        io.emit('addEmployee', res);
+        console.log("Employee Added")
         sendStatus({
           message: 'Employee Sent',
-          clear: true
         });
       }).catch((err) => {
         console.log('***There was an error creating', JSON.stringify(err))
@@ -76,23 +78,23 @@ client.on('connection', (socket) => {
     }
   });
 
-  socket.on('addStatements', (data) => {
+  socket.on('addStatement', (data) => {
     let statement = data.statement;
 
     if (statement === '') {
       sendStatus('Please enter a statement');
     }
     else {
-      let newInstance = {
+      let newStatement = {
         statement: statement,
-        date_created: Date.now()
       };
 
-      statements.create(newInstance).then((res) => {
-        client.emit('addStatements', [res]);
+      statements.create(newStatement).then((res) => {
+        io.emit('addStatement', res);
+        console.log("Statement Added")
+
         sendStatus({
           message: 'Statement Sent',
-          clear: true
         });
       }).catch((err) => {
         console.log('***There was an error creating', JSON.stringify(err))
@@ -105,8 +107,10 @@ client.on('connection', (socket) => {
     let id = data.id
 
     messages.findById(id).then((res) => {
-      res.destroy({force: true})
-      client.emit('deleteMessage', data);
+      res.destroy({ force: true });
+      io.emit('deleteMessage', data);
+      console.log("Message Deleted")
+
     }).catch((err) => {
       console.log('***Error deleting', JSON.stringify(err))
     })
@@ -116,8 +120,10 @@ client.on('connection', (socket) => {
     let id = data.id
 
     employees.findById(id).then((res) => {
-      res.destroy({force: true})
-      client.emit('deleteEmployee', data);
+      res.destroy({ force: true });
+      io.emit('deleteEmployee', data);
+      console.log("Employee Deleted")
+
     }).catch((err) => {
       console.log('***Error deleting', JSON.stringify(err))
     })
@@ -127,8 +133,10 @@ client.on('connection', (socket) => {
     let id = data.id
 
     statements.findById(id).then((res) => {
-      res.destroy({force: true})
-      client.emit('deleteStatement', data);
+      res.destroy({ force: true });
+      io.emit('deleteStatement', data);
+      console.log("Statement Deleted")
+
     }).catch((err) => {
       console.log('***Error deleting', JSON.stringify(err))
     })
@@ -139,11 +147,11 @@ client.on('connection', (socket) => {
   }
 
   socket.on('disconnect', () => {
-    console.log('client disconnect...', socket.id)
+    console.log('Disconnected: ', socket.id)
   })
 
   socket.on('error', function (err) {
-    console.log('received error from client:', socket.id)
+    console.log('Socket Error: ', socket.id)
     console.log(err)
   })
 });

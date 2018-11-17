@@ -49,25 +49,16 @@ class Main extends Component {
         this.interval = setInterval(() => this.tick(), 1000);
     }
 
-    componentDidMount() {
-        this.retrieveItem('endpoint').then((result) => {
-            this.setState({ endpoint: result })
-            this.setSocketIOClient(result)
-        }).catch((err) => {
-            console.log(err);
-        });
-        this.interval = setInterval(() => this.tick(), 1000);
-    }
-
     componentWillUnmount() {
         this.socket.close();
     }
 
     setSocketIOClient(endpoint) {
         this.socket = SocketIOClient(endpoint);
-        this.socket.on('addMessages', (data) => this.handleReceivedMessages(data));
-        this.socket.on('addEmployees', (data) => this.handleReceivedEmployees(data));
-        this.socket.on('addStatements', (data) => this.handleReceivedStatements(data));
+        this.socket.on('initializeState', (data) => this.handleInitializeState(data));
+        this.socket.on('addMessage', (data) => this.handleReceivedMessage(data));
+        this.socket.on('addEmployee', (data) => this.handleReceivedEmployee(data));
+        this.socket.on('addStatement', (data) => this.handleReceivedStatement(data));
         this.socket.on('deleteMessage', (data) => this.handleReceivedDeleteMessage(data));
         this.socket.on('deleteEmployee', (data) => this.handleReceivedDeleteEmployee(data));
         this.socket.on('deleteStatement', (data) => this.handleReceivedDeleteStatement(data));
@@ -84,24 +75,27 @@ class Main extends Component {
         }
     }
 
-    handleReceivedMessages(data) {
-        this.setState({
-            messages: data.concat(this.state.messages)
-        })
-        if (data.length === 1) {
-            this.playSound()
-        }
+    handleInitializeState(data) {
+        console.log('State' + data);
+        this.setState(data);
     }
 
-    handleReceivedEmployees(data) {
+    handleReceivedMessage(data) {
         this.setState({
-            employees: data.concat(this.state.employees)
+            messages: [data, ...this.state.messages]
+        })
+        this.playSound()
+    }
+
+    handleReceivedEmployee(data) {
+        this.setState({
+            employees: [data, ...this.state.employees]
         })
     }
 
-    handleReceivedStatements(data) {
+    handleReceivedStatement(data) {
         this.setState({
-            statements: data.concat(this.state.statements)
+            statements: [data, ...this.state.statements]
         })
     }
 
@@ -133,15 +127,15 @@ class Main extends Component {
     }
 
     handleSendMessage(data) {
-        this.socket.emit('addMessages', data);
+        this.socket.emit('addMessage', data);
     }
 
     handleAddEmployee(data) {
-        this.socket.emit('addEmployees', data);
+        this.socket.emit('addEmployee', data);
     }
 
     handleAddStatement(data) {
-        this.socket.emit('addStatements', data);
+        this.socket.emit('addStatement', data);
     }
 
     handleDeleteMessage(data) {
@@ -164,20 +158,23 @@ class Main extends Component {
             endpoint: data,
         }
         this.storeItem('endpoint', data)
-        this.setState(newState);
-        this.socket.close();
-        this.setSocketIOClient(data);
+        this.setState(newState, () => {
+            this.socket.close();
+            this.setSocketIOClient(data);
+        });
+
     }
 
     tick() {
         var newMessages = this.state.messages.map((e) => {
-            let timeElapsed = moment(moment(Date.now()).diff(e.date_created)).format('mm:ss');
+            let timeElapsed = moment(moment(Date.now()).diff(e.createdAt)).format('mm:ss');
             e.timeElapsed = timeElapsed;
             return e
         });
         this.setState({
             messages: newMessages
         });
+
     }
 
     render() {
