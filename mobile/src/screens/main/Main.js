@@ -79,13 +79,13 @@ class Main extends Component {
 
     handleReceivedEmployee(data) {
         this.setState({
-            employees: [data, ...this.state.employees]
+            employees: [...this.state.employees, data]
         })
     }
 
     handleReceivedStatement(data) {
         this.setState({
-            statements: [data, ...this.state.statements]
+            statements: [...this.state.statements, data]
         })
     }
 
