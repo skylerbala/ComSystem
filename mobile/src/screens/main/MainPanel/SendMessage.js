@@ -50,7 +50,9 @@ class SendMessageTab extends Component {
 								this.props.navigation.pop();
 								this.handleSendMessage(this.props.navigation.getParam('employeeName'), rowData.item.statement);
 							}}>
-							<Text style={styles.text}>{rowData.item.statement}</Text>
+							<Text style={styles.text}>
+								{rowData.item.statement}
+							</Text>
 						</TouchableOpacity>
 					)}
 				/>

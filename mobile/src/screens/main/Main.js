@@ -7,17 +7,25 @@ import AsyncStorageAPI from '../../library/utils/AsyncStorageAPI';
 
 class Main extends Component {
 
+    state = {
+        messages: [],
+        employees: [],
+        statements: [],
+        endpoint: "",
+        connected: false
+    }
 
     constructor(props) {
         super(props);
-        const initialState = {
-            messages: [],
-            employees: [],
-            statements: [],
-            endpoint: "",
-            connected: false
-        }
-        this.state = initialState
+        
+        this.handleSendMessage = this.handleSendMessage.bind(this)
+        this.handleAddEmployee = this.handleAddEmployee.bind(this)
+        this.handleAddStatement = this.handleAddStatement.bind(this)
+        this.handleDeleteMessage = this.handleDeleteMessage.bind(this)
+        this.handleDeleteEmployee = this.handleDeleteEmployee.bind(this)
+        this.handleDeleteStatement = this.handleDeleteStatement.bind(this)
+        this.handleIPChange = this.handleIPChange.bind(this)
+        this.handleSendMessageSound = this.playSound.bind(this)
     }
 
     componentDidMount() {
@@ -189,16 +197,16 @@ class Main extends Component {
                         endpoint: this.state.endpoint,
                         connected: this.state.connected,
 
-                        handleSendMessage: (data) => this.handleSendMessage(data),
-                        handleAddEmployee: (data) => this.handleAddEmployee(data),
-                        handleAddStatement: (data) => this.handleAddStatement(data),
-                        handleDeleteMessage: (data) => this.handleDeleteMessage(data),
-                        handleDeleteEmployee: (data) => this.handleDeleteEmployee(data),
-                        handleDeleteStatement: (data) => this.handleDeleteStatement(data),
+                        handleSendMessage: this.handleSendMessage,
+                        handleAddEmployee: this.handleAddEmployee,
+                        handleAddStatement: this.handleAddStatement,
+                        handleDeleteMessage: this.handleDeleteMessage,
+                        handleDeleteEmployee: this.handleDeleteEmployee,
+                        handleDeleteStatement: this.handleDeleteStatement,
 
-                        handleIPChange: (data) => this.handleIPChange(data),
+                        handleIPChange: this.handleIPChange,
 
-                        handleSendMessageSound: () => this.playSound()
+                        handleSendMessageSound: this.playSound,
                     }
                 }
             >

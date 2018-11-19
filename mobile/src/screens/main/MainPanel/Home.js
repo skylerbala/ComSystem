@@ -35,7 +35,9 @@ class MainPanelTab extends Component {
           })}
           key={employee.id}
         >
-          <Text style={styles.staffButtonText}>{employee.name}</Text>
+          <Text style={styles.staffButtonText}>
+            {employee.name}
+          </Text>
         </Button>
       )
     });
