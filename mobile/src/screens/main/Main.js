@@ -3,60 +3,42 @@ import SocketIOClient from 'socket.io-client';
 import moment from 'moment';
 import { Audio } from 'expo';
 import MainTabNavigator from './MainTabNavigator';
-import DialogInput from 'react-native-dialog-input';
-import { AsyncStorage } from 'react-native';
+import AsyncStorageAPI from '../../library/utils/AsyncStorageAPI';
 
 class Main extends Component {
 
-    state = {
-        messages: [],
-        employees: [],
-        statements: [],
-        endpoint: "",
-        connected: false
-    }
 
     constructor(props) {
         super(props);
-    }
-
-    async storeItem(key, item) {
-        try {
-            const storedItem = await AsyncStorage.setItem(key, item);
-            return storedItem;
-        } catch (error) {
-            console.log(error.message);
+        const initialState = {
+            messages: [],
+            employees: [],
+            statements: [],
+            endpoint: "",
+            connected: false
         }
-        return;
-    }
-
-    async retrieveItem(key) {
-        try {
-            const retrievedItem = await AsyncStorage.getItem(key);
-            return retrievedItem;
-        } catch (error) {
-            console.log(error.message);
-        }
-        return 'none'
+        this.state = initialState
     }
 
     componentDidMount() {
-        this.retrieveItem('endpoint').then((result) => {
+        this.storage = new AsyncStorageAPI;
+        this.storage.retrieveItem('endpoint').then((result) => {
             this.setState({ endpoint: result })
-            this.setSocketIOClient(result)
+            this.setSocketIOClient("http://" + result + ":3000")
         }).catch((err) => {
             console.log(err);
         });
-        this.interval = setInterval(() => this.tick(), 1000);
+        this.timer = setInterval(() => this.tick(), 1000);
     }
 
     componentWillUnmount() {
         this.socket.close();
+        clearInterval(this.timer)
     }
 
     setSocketIOClient(endpoint) {
         this.socket = SocketIOClient(endpoint);
-        this.socket.on('initializeState', (data) => this.handleInitializeState(data));
+        this.socket.on('initializeState', (data) => this.initializeState(data));
         this.socket.on('addMessage', (data) => this.handleReceivedMessage(data));
         this.socket.on('addEmployee', (data) => this.handleReceivedEmployee(data));
         this.socket.on('addStatement', (data) => this.handleReceivedStatement(data));
@@ -67,18 +49,16 @@ class Main extends Component {
     }
 
     async playSound() {
-        const soundObject = new Audio.Sound();
+        const sound = new Audio.Sound();
         try {
-            await soundObject.loadAsync(require('./sound.wav'));
-            await soundObject.playAsync();
-            // Your sound is playing!
-        } catch (error) {
-            // An error occurred!
+            await sound.loadAsync(require('../../assets/sounds/front-desk-bell.wav'));
+            await sound.playAsync();
+        } catch (err) {
+            console.log(err);
         }
     }
 
-    handleInitializeState(data) {
-        console.log('State' + data);
+    initializeState(data) {
         this.setState(data);
     }
 
@@ -159,10 +139,13 @@ class Main extends Component {
             statements: [],
             endpoint: data,
         }
-        this.storeItem('endpoint', data)
+        this.storage.storeItem('endpoint', data)
         this.setState(newState, () => {
-            this.socket.close();
-            this.setSocketIOClient(data);
+            if (this.state.endpoint.length > 1) {
+                console.log('sdf', this.state.endpoint)
+                this.socket.close();
+            }
+            this.setSocketIOClient("http://" + data + ":3000");
         });
 
     }
@@ -179,7 +162,13 @@ class Main extends Component {
 
     tick() {
         var newMessages = this.state.messages.map((e) => {
-            let timeElapsed = moment(moment(Date.now()).diff(e.createdAt)).format('mm:ss');
+            let dateNow = moment(Date.now())
+            let dateCreated = moment(e.createdAt)
+            let duration = moment.duration(dateNow - dateCreated)._data;
+            let timeElapsed = moment(duration).format('HH:mm:ss')
+            if (timeElapsed === "Invalid date") {
+                timeElapsed = "00:00:00";
+            }
             e.timeElapsed = timeElapsed;
             return e
         });

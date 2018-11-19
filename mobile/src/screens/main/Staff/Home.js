@@ -4,7 +4,7 @@ import { Container, Content, Button, Text, Fab, Body, Icon, alert, Header, Left,
 import DialogInput from 'react-native-dialog-input';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import styles from '../../../library/styles/SwipeListViewStyles';
+import styles from '../styles/SwipeListViewStyle';
 import { ColorWheel } from 'react-native-color-wheel';
 
 
@@ -49,8 +49,6 @@ class StaffTab extends React.Component {
 	deleteEmployee(data) {
 		this.props.screenProps.handleDeleteEmployee(data);
 	}
-
-
 
 	render() {
 

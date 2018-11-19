@@ -1,8 +1,6 @@
 import { createStackNavigator } from 'react-navigation';
-import React, { Component } from 'react';
-import Home from './home';
-import { Button, Icon } from 'native-base';
-import SendMessage from './sendMessage';
+import Home from './Home';
+import SendMessage from './SendMessage';
 
 
 export default createStackNavigator({

@@ -3,7 +3,7 @@
     "username": "root",
     "password": null,
     "database": "database_development",
-    "storage": "./dev-db.sqlite3",
+    "storage": "dev-db.sqlite3",
     "dialect": "sqlite"
   },
   "test": {

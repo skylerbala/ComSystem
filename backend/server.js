@@ -1,6 +1,8 @@
+"use strict"
+
 const app = require('http').createServer().listen(3000, '0.0.0.0')
 const io = require('socket.io').listen(app).sockets;
-const db = require('./models');
+const db = require('./src/models');
 
 // Connect to Socket.io
 io.on('connection', (socket) => {

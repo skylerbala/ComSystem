@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Container, Button, Content, Form, Item, Label, Input, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid';
-import DialogInput from 'react-native-dialog-input';
+import { Container, Text } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import styles from '../../../library/styles/SwipeListViewStyles';
+import { TouchableOpacity } from 'react-native';
+import styles from '../styles/SwipeListViewStyle';
 
 
 class SendMessageTab extends Component {
