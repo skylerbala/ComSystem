@@ -5,10 +5,6 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 
-
-
-
-
 class MainPanelTab extends Component {
   static navigationOptions = {
     title: 'MainPanel',
@@ -29,16 +25,26 @@ class MainPanelTab extends Component {
     employeeButtons = this.props.screenProps.employees.map((employee) => {
       return (
         <Button
-          style={styles.staffButton}
-          onPress={() => this.props.navigation.navigate("SendMessage", {
-            employeeName: employee.name
-          })}
+          style={{
+            marginLeft: 5,
+            marginRight: 5,
+            marginBottom: 15,
+            height: 60,
+            width: 169,
+            backgroundColor: employee.color,
+          }}
+          onPress={() => {
+            this.props.navigation.navigate("SendMessage", {
+              name: employee.name,
+              color: employee.color
+            })
+          }}
           key={employee.id}
         >
           <Text style={styles.staffButtonText}>
             {employee.name}
           </Text>
-        </Button>
+        </Button >
       )
     });
 
@@ -56,10 +62,20 @@ class MainPanelTab extends Component {
             return rowData.id.toString();
           }}
           renderItem={(rowData, rowMap) => (
-            <View style={styles.messagesRowFront}>
+            <View style={{
+              backgroundColor: rowData.item.color,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 113,
+              borderRadius: 10,
+              marginBottom: 15,
+              paddingLeft: 10,
+              paddingRight: 10
+            }}>
               <View style={styles.messagesContent}>
                 <Text style={styles.text}>
-                  {rowData.item.employeeName}: {rowData.item.statement}
+                  {rowData.item.name}: {rowData.item.statement}
                 </Text>
               </View>
               <View style={styles.messagesTimer}>
@@ -102,6 +118,7 @@ class MainPanelTab extends Component {
           <Row size={2} style={styles.rowContainer}>
             <Content padder contentContainerStyle={{ flexGrow: 1 }}>
               {messagesView}
+
             </Content>
           </Row>
           <Row size={1} style={styles.rowContainer}>
@@ -177,7 +194,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   text: {
-    fontSize: 40,
+    fontSize: 35,
     color: 'white',
     flex: 1,
     flexWrap: 'wrap'
@@ -185,14 +202,6 @@ const styles = StyleSheet.create({
   timeText: {
     fontSize: 25,
     color: 'white'
-  },
-  staffButton: {
-    marginLeft: 5,
-    marginRight: 5,
-    marginBottom: 15,
-    height: 60,
-    width: 169,
-    backgroundColor: '#3286aa',
   },
   staffButtonText: {
     fontSize: 40,

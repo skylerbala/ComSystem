@@ -8,9 +8,9 @@ import styles from '../styles/SwipeListViewStyle';
 class SendMessageTab extends Component {
 	static navigationOptions = ({ navigation }) => {
 		const { params = {} } = navigation.state;
-		const employeeName = navigation.getParam('employeeName')
+		const name = navigation.getParam('name')
 		return {
-			title: employeeName,
+			title: name,
 		}
 	};
 
@@ -22,10 +22,11 @@ class SendMessageTab extends Component {
 		this.props.navigation.setParams({ handleToggle: () => this.toggleMessageFormVisibility() });
 	}
 
-	handleSendMessage(employeeName, statement) {
+	handleSendMessage(name, statement, color) {
 		let data = {
-			employeeName: employeeName,
-			statement: statement
+			name: name,
+			statement: statement,
+			color: color
 		}
 		this.props.screenProps.handleSendMessage(data);
 	}
@@ -35,7 +36,6 @@ class SendMessageTab extends Component {
 			<Container padder>
 				<SwipeListView
 					useFlatList
-					closeOnRowBeginSwipe
 					disableRightSwipe
 					rightOpenValue={-200}
 					swipeToOpenPercent={50}
@@ -47,8 +47,8 @@ class SendMessageTab extends Component {
 						<TouchableOpacity
 							style={styles.rowFront}
 							onPress={_ => {
-								this.props.navigation.pop();
-								this.handleSendMessage(this.props.navigation.getParam('employeeName'), rowData.item.statement);
+								// this.props.navigation.pop();
+								// this.handleSendMessage(this.props.navigation.getParam('name'), rowData.item.statement, this.props.navigation.getParam('color'));
 							}}>
 							<Text style={styles.text}>
 								{rowData.item.statement}
@@ -56,6 +56,7 @@ class SendMessageTab extends Component {
 						</TouchableOpacity>
 					)}
 				/>
+				
 			</Container >
 		);
 	}

@@ -2,7 +2,7 @@
 
 const app = require('http').createServer().listen(3000, '0.0.0.0')
 const io = require('socket.io').listen(app).sockets;
-const db = require('./src/models');
+const db = require('./models');
 
 // Connect to Socket.io
 io.on('connection', (socket) => {
@@ -15,9 +15,9 @@ io.on('connection', (socket) => {
 
   let initialState = {}
 
-  const all_messages = messages.findAll({ order: [['createdAt', 'DESC']] })
-  const all_employees = employees.findAll({ order: [['createdAt', 'DESC']] })
-  const all_statements = statements.findAll({ order: [['createdAt', 'DESC']] })
+  const all_messages = messages.findAll({ order: [['createdAt', 'ASC']] })
+  const all_employees = employees.findAll({ order: [['createdAt', 'ASC']] })
+  const all_statements = statements.findAll({ order: [['createdAt', 'ASC']] })
 
   Promise
     .all([all_messages, all_employees, all_statements])
@@ -37,16 +37,18 @@ io.on('connection', (socket) => {
 
   // Add
   socket.on('addMessage', (data) => {
-    let employeeName = data.employeeName;
+    let name = data.name;
     let statement = data.statement;
+    let color = data.color;
 
-    if (employeeName === '' || statement === '') {
+    if (name === '' || statement === '') {
       sendStatus('Please enter a name and message');
     }
     else {
       let newMessage = {
-        employeeName: employeeName,
+        name: name,
         statement: statement,
+        color: color
       };
 
       messages.create(newMessage).then((res) => {
@@ -64,13 +66,18 @@ io.on('connection', (socket) => {
 
   socket.on('addEmployee', (data) => {
     let name = data.name;
+    let color = data.color;
 
     if (name === '') {
       sendStatus('Please enter employee name');
     }
+    else if (color === '') {
+      sendStatus('Please enter color')
+    }
     else {
       let newEmployee = {
         name: name,
+        color: color
       };
       employees.create(newEmployee).then((res) => {
         io.emit('addEmployee', res);

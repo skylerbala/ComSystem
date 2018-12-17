@@ -4,6 +4,8 @@ import moment from 'moment';
 import { Audio } from 'expo';
 import MainTabNavigator from './MainTabNavigator';
 import AsyncStorageAPI from '../../library/utils/AsyncStorageAPI';
+import Sounds from '../../assets/sounds';
+
 
 class Main extends Component {
 
@@ -12,12 +14,13 @@ class Main extends Component {
         employees: [],
         statements: [],
         endpoint: "",
-        connected: false
+        connected: false,
+        ring: null
     }
 
     constructor(props) {
         super(props);
-        
+
         this.handleSendMessage = this.handleSendMessage.bind(this)
         this.handleAddEmployee = this.handleAddEmployee.bind(this)
         this.handleAddStatement = this.handleAddStatement.bind(this)
@@ -25,6 +28,7 @@ class Main extends Component {
         this.handleDeleteEmployee = this.handleDeleteEmployee.bind(this)
         this.handleDeleteStatement = this.handleDeleteStatement.bind(this)
         this.handleIPChange = this.handleIPChange.bind(this)
+        this.handleRingChange = this.handleRingChange.bind(this)
         this.handleSendMessageSound = this.playSound.bind(this)
     }
 
@@ -36,6 +40,17 @@ class Main extends Component {
         }).catch((err) => {
             console.log(err);
         });
+
+        this.storage.retrieveItem('ring').then((result) => {
+            let ring = result
+            if (ring == null) {
+                ring = Sounds[0].name;
+            }
+            this.setState({ ring: ring })
+        }).catch((err) => {
+            console.log(err);
+        });
+
         this.timer = setInterval(() => this.tick(), 1000);
     }
 
@@ -57,10 +72,20 @@ class Main extends Component {
     }
 
     async playSound() {
-        const sound = new Audio.Sound();
+        let sound = new Audio.Sound();
+
         try {
-            await sound.loadAsync(require('../../assets/sounds/front-desk-bell.wav'));
+            ring = await Sounds.find((e) => {
+                if (e.name == this.state.ring) {
+                    return e.path
+                }
+            })
+
+            console.log(ring)
+
+            await sound.loadAsync(ring.path);
             await sound.playAsync();
+
         } catch (err) {
             console.log(err);
         }
@@ -72,7 +97,7 @@ class Main extends Component {
 
     handleReceivedMessage(data) {
         this.setState({
-            messages: [data, ...this.state.messages]
+            messages: [...this.state.messages, data]
         })
         this.playSound()
     }
@@ -150,13 +175,19 @@ class Main extends Component {
         this.storage.storeItem('endpoint', data)
         this.setState(newState, () => {
             if (this.state.endpoint.length > 1) {
-                console.log('sdf', this.state.endpoint)
                 this.socket.close();
             }
             this.setSocketIOClient("http://" + data + ":3000");
         });
-
     }
+
+    async handleRingChange(data) {
+        this.storage.storeItem('ring', data)
+        this.setState({
+            ring: data
+        })
+    }    
+
 
     handleDisconnect(data) {
         connected = data.connected
@@ -173,9 +204,12 @@ class Main extends Component {
             let dateNow = moment(Date.now())
             let dateCreated = moment(e.createdAt)
             let duration = moment.duration(dateNow - dateCreated)._data;
-            let timeElapsed = moment(duration).format('HH:mm:ss')
+            let timeElapsed = moment(duration).format('mm:ss')
             if (timeElapsed === "Invalid date") {
-                timeElapsed = "00:00:00";
+                timeElapsed = "00:00";
+            }
+            if (timeElapsed === "03:00") {
+                this.playSound();
             }
             e.timeElapsed = timeElapsed;
             return e
@@ -196,6 +230,7 @@ class Main extends Component {
                         statements: this.state.statements,
                         endpoint: this.state.endpoint,
                         connected: this.state.connected,
+                        ring: this.state.ring,
 
                         handleSendMessage: this.handleSendMessage,
                         handleAddEmployee: this.handleAddEmployee,
@@ -205,6 +240,7 @@ class Main extends Component {
                         handleDeleteStatement: this.handleDeleteStatement,
 
                         handleIPChange: this.handleIPChange,
+                        handleRingChange: this.handleRingChange,
 
                         handleSendMessageSound: this.playSound,
                     }
