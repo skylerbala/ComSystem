@@ -1,11 +1,14 @@
 
 import React, { Component } from 'react';
-import { Container, Button, Content, Form, Item, Label, Input, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
+import { Container, Content, Form, Item, Label, Input, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 import DialogInput from 'react-native-dialog-input';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import styles from '../../../screens/main/styles/SwipeListViewStyle';
+import styles from '../../../screens/Main/styles/SwipeListViewStyle';
+import NoConnectionView from '../common/components/NoConnectionView';
+import { Card, Button, FormLabel, FormInput } from 'react-native-elements';
+import Modal from "react-native-modal";
 
 
 class MessagesTab extends Component {
@@ -13,16 +16,12 @@ class MessagesTab extends Component {
     const { params = {} } = navigation.state;
     return {
       title: 'Messages',
-      headerRight: (
-        <Button transparent onPress={() => params.handleToggle()}>
-          <Icon type="FontAwesome" name="plus" />
-        </Button>
-      )
     }
   };
 
   state = {
-    isMessageFormVisible: false
+    isModalVisible: false,
+    message: "",
   }
 
   constructor(props) {
@@ -30,23 +29,24 @@ class MessagesTab extends Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ handleToggle: () => this.toggleMessageFormVisibility() });
+    this.props.navigation.setParams({ handleToggle: () => this._toggleModal() });
   }
 
-  addStatement(statement) {
+  _addStatement() {
     let data = {
-      statement: statement
+      statement: this.state.message
     }
     this.props.screenProps.handleAddStatement(data);
+    this._toggleModal();
   }
 
   deleteStatment(id) {
     this.props.screenProps.handleDeleteStatement(id);
   }
 
-  toggleMessageFormVisibility() {
+  _toggleModal() {
     this.setState({
-      isMessageFormVisible: !this.state.isMessageFormVisible
+      isModalVisible: !this.state.isModalVisible
     })
   }
 
@@ -57,180 +57,122 @@ class MessagesTab extends Component {
       view = (
         <Content>
           <Grid style={styles.gridContainer}>
-            <Col size={1} style={styles.rowContainer}>
-              <SwipeListView
-                useFlatList
-                closeOnRowBeginSwipe
-                disableRightSwipe
-                rightOpenValue={-200}
-                swipeToOpenPercent={50}
-                data={this.props.screenProps.statements}
-                keyExtractor={(rowData, index) => {
-                  return rowData.id.toString();
-                }}
-                renderItem={(rowData, rowMap) => (
-                  <View style={styles.rowFront}>
-                    <Text style={styles.text}>{rowData.item.statement}</Text>
-                  </View>
-                )}
-                renderHiddenItem={(rowData, rowMap) => (
-                  <TouchableOpacity
-                    style={[styles.deleteButton]}
-                    onPress={_ => {
-                      rowMap[rowData.item.id].closeRow()
-                      this.deleteStatment(rowData.item)
-                    }}>
-                    <View>
-                      <Text style={[styles.text, styles.deleteText]}>Delete</Text>
+            <Col size={1}>
+              <Card
+                title={"Messages 1"}
+              >
+                <SwipeListView
+                  useFlatList
+                  closeOnRowBeginSwipe
+                  disableRightSwipe
+                  rightOpenValue={-200}
+                  swipeToOpenPercent={50}
+                  data={this.props.screenProps.statements}
+                  keyExtractor={(rowData, index) => {
+                    return rowData.id.toString();
+                  }}
+                  renderItem={(rowData, rowMap) => (
+                    <View style={styles.rowFront}>
+                      <Text style={styles.text}>{rowData.item.statement}</Text>
                     </View>
-                  </TouchableOpacity>
-                )}
-              />
-              <DialogInput
-                isDialogVisible={this.state.isMessageFormVisible}
-                title={"Add Message"}
-                hintInput={"Name"}
-                submitInput={(input) => {
-                  this.addStatement(input)
-                  this.toggleMessageFormVisibility()
-                }}
-                closeDialog={() => this.toggleMessageFormVisibility()}>
-              </DialogInput>
+                  )}
+                  renderHiddenItem={(rowData, rowMap) => (
+                    <TouchableOpacity
+                      style={[styles.deleteButton]}
+                      onPress={_ => {
+                        rowMap[rowData.item.id].closeRow()
+                        this.deleteStatment(rowData.item)
+                      }}>
+                      <View>
+                        <Text style={[styles.text, styles.deleteText]}>Delete</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+                <Button
+                  title={"Add New Message"}
+                  color={'black'}
+                  style={{
+                    margin: 10
+                  }}
+                  onPress={() => this._toggleModal()}
+                />
+              </Card>
             </Col>
-            <Col size={1} style={styles.rowContainer}>
-              <SwipeListView
-                useFlatList
-                closeOnRowBeginSwipe
-                disableRightSwipe
-                rightOpenValue={-200}
-                swipeToOpenPercent={50}
-                data={this.props.screenProps.statements}
-                keyExtractor={(rowData, index) => {
-                  return rowData.id.toString();
-                }}
-                renderItem={(rowData, rowMap) => (
-                  <View style={styles.rowFront}>
-                    <Text style={styles.text}>{rowData.item.statement}</Text>
-                  </View>
-                )}
-                renderHiddenItem={(rowData, rowMap) => (
-                  <TouchableOpacity
-                    style={[styles.deleteButton]}
-                    onPress={_ => {
-                      rowMap[rowData.item.id].closeRow()
-                      this.deleteStatment(rowData.item)
-                    }}>
-                    <View>
-                      <Text style={[styles.text, styles.deleteText]}>Delete</Text>
+            <Col size={1}>
+              <Card
+                title={"Messages 2"}
+              >
+                <SwipeListView
+                  useFlatList
+                  closeOnRowBeginSwipe
+                  disableRightSwipe
+                  rightOpenValue={-200}
+                  swipeToOpenPercent={50}
+                  data={this.props.screenProps.statements}
+                  keyExtractor={(rowData, index) => {
+                    return rowData.id.toString();
+                  }}
+                  renderItem={(rowData, rowMap) => (
+                    <View style={styles.rowFront}>
+                      <Text style={styles.text}>{rowData.item.statement}</Text>
                     </View>
-                  </TouchableOpacity>
-                )}
-              />
-              <DialogInput
-                isDialogVisible={this.state.isMessageFormVisible}
-                title={"Add Message"}
-                hintInput={"Name"}
-                submitInput={(input) => {
-                  this.addStatement(input)
-                  this.toggleMessageFormVisibility()
-                }}
-                closeDialog={() => this.toggleMessageFormVisibility()}>
-              </DialogInput>
+                  )}
+                  renderHiddenItem={(rowData, rowMap) => (
+                    <TouchableOpacity
+                      style={[styles.deleteButton]}
+                      onPress={_ => {
+                        rowMap[rowData.item.id].closeRow()
+                        this.deleteStatment(rowData.item)
+                      }}>
+                      <View>
+                        <Text style={[styles.text, styles.deleteText]}>Delete</Text>
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                />
+                <Button
+                  title={"Add New Message"}
+                  color={'black'}
+                  style={{
+                    margin: 10
+                  }}
+                  onPress={() => this._toggleModal()}
+                />
+              </Card>
             </Col>
-            <Col size={1} style={styles.rowContainer}>
-              <SwipeListView
-                useFlatList
-                closeOnRowBeginSwipe
-                disableRightSwipe
-                rightOpenValue={-200}
-                swipeToOpenPercent={50}
-                data={this.props.screenProps.statements}
-                keyExtractor={(rowData, index) => {
-                  return rowData.id.toString();
-                }}
-                renderItem={(rowData, rowMap) => (
-                  <View style={styles.rowFront}>
-                    <Text style={styles.text}>{rowData.item.statement}</Text>
-                  </View>
-                )}
-                renderHiddenItem={(rowData, rowMap) => (
-                  <TouchableOpacity
-                    style={[styles.deleteButton]}
-                    onPress={_ => {
-                      rowMap[rowData.item.id].closeRow()
-                      this.deleteStatment(rowData.item)
-                    }}>
-                    <View>
-                      <Text style={[styles.text, styles.deleteText]}>Delete</Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-              />
-              <DialogInput
-                isDialogVisible={this.state.isMessageFormVisible}
+
+            <Modal isVisible={this.state.isModalVisible} onBackdropPress={() => this.setState({ isModalVisible: false })}
+            >
+              <Card
                 title={"Add Message"}
-                hintInput={"Name"}
-                submitInput={(input) => {
-                  this.addStatement(input)
-                  this.toggleMessageFormVisibility()
-                }}
-                closeDialog={() => this.toggleMessageFormVisibility()}>
-              </DialogInput>
-            </Col>
-            <Col size={1} style={styles.rowContainer}>
-              <SwipeListView
-                useFlatList
-                closeOnRowBeginSwipe
-                disableRightSwipe
-                rightOpenValue={-200}
-                swipeToOpenPercent={50}
-                data={this.props.screenProps.statements}
-                keyExtractor={(rowData, index) => {
-                  return rowData.id.toString();
-                }}
-                renderItem={(rowData, rowMap) => (
-                  <View style={styles.rowFront}>
-                    <Text style={styles.text}>{rowData.item.statement}</Text>
-                  </View>
-                )}
-                renderHiddenItem={(rowData, rowMap) => (
-                  <TouchableOpacity
-                    style={[styles.deleteButton]}
-                    onPress={_ => {
-                      rowMap[rowData.item.id].closeRow()
-                      this.deleteStatment(rowData.item)
-                    }}>
-                    <View>
-                      <Text style={[styles.text, styles.deleteText]}>Delete</Text>
-                    </View>
-                  </TouchableOpacity>
-                )}
-              />
-              <DialogInput
-                isDialogVisible={this.state.isMessageFormVisible}
-                title={"Add Message"}
-                hintInput={"Name"}
-                submitInput={(input) => {
-                  this.addStatement(input)
-                  this.toggleMessageFormVisibility()
-                }}
-                closeDialog={() => this.toggleMessageFormVisibility()}>
-              </DialogInput>
-            </Col>
+              >
+                <FormLabel>New Message</FormLabel>
+                <FormInput onChangeText={(message) => this.setState({message: message})} />
+                <Button
+                  raised
+                  title='Add'
+                  onPress={() => {
+                    this._addStatement();
+                  }}
+                  style={{
+                    margin: 10
+                  }}
+                />
+              </Card>
+            </Modal>
           </Grid>
         </Content>
       )
     }
     else {
       view = (
-        <View style={styles.noConnectionView}>
-          <Text style={styles.noConnectionText}>No Connection</Text>
-        </View>
+        <NoConnectionView />
       )
     }
 
     return (
-      <Container padder>
+      <Container style={{ backgroundColor: '#dce9ef' }}>
         {view}
       </Container >
     );

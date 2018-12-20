@@ -5,7 +5,7 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import DialogInput from 'react-native-dialog-input';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import styles from '../../../screens/main/styles/SwipeListViewStyle';
+import styles from '../../../screens/Main/styles/SwipeListViewStyle';
 import Sounds from '../../../assets/sounds';
 
 

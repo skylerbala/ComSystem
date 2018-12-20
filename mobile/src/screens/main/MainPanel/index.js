@@ -1,13 +1,9 @@
 import { createStackNavigator } from 'react-navigation';
-import Home from './Home';
-import SendMessage from './SendMessage';
+import MainPanel from './MainPanel';
 
 
 export default createStackNavigator({
-  Home: {
-    screen: Home,
+  MainPanel: {
+    screen: MainPanel,
   },
-  SendMessage: {
-    screen: SendMessage,
-  }
 });

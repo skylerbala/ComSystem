@@ -1,5 +1,5 @@
 import React from 'react';
-import Main from './screens/main/Main';
+import Main from './screens/Main';
 import Expo from 'expo';
 
 class App extends React.Component {
