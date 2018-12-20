@@ -55,114 +55,112 @@ class MessagesTab extends Component {
 
     if (this.props.screenProps.connected) {
       view = (
-        <Content>
-          <Grid style={styles.gridContainer}>
-            <Col size={1}>
-              <Card
-                title={"Messages 1"}
-              >
-                <SwipeListView
-                  useFlatList
-                  closeOnRowBeginSwipe
-                  disableRightSwipe
-                  rightOpenValue={-200}
-                  swipeToOpenPercent={50}
-                  data={this.props.screenProps.statements}
-                  keyExtractor={(rowData, index) => {
-                    return rowData.id.toString();
-                  }}
-                  renderItem={(rowData, rowMap) => (
-                    <View style={styles.rowFront}>
-                      <Text style={styles.text}>{rowData.item.statement}</Text>
-                    </View>
-                  )}
-                  renderHiddenItem={(rowData, rowMap) => (
-                    <TouchableOpacity
-                      style={[styles.deleteButton]}
-                      onPress={_ => {
-                        rowMap[rowData.item.id].closeRow()
-                        this.deleteStatment(rowData.item)
-                      }}>
-                      <View>
-                        <Text style={[styles.text, styles.deleteText]}>Delete</Text>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                />
-                <Button
-                  title={"Add New Message"}
-                  color={'black'}
-                  style={{
-                    margin: 10
-                  }}
-                  onPress={() => this._toggleModal()}
-                />
-              </Card>
-            </Col>
-            <Col size={1}>
-              <Card
-                title={"Messages 2"}
-              >
-                <SwipeListView
-                  useFlatList
-                  closeOnRowBeginSwipe
-                  disableRightSwipe
-                  rightOpenValue={-200}
-                  swipeToOpenPercent={50}
-                  data={this.props.screenProps.statements}
-                  keyExtractor={(rowData, index) => {
-                    return rowData.id.toString();
-                  }}
-                  renderItem={(rowData, rowMap) => (
-                    <View style={styles.rowFront}>
-                      <Text style={styles.text}>{rowData.item.statement}</Text>
-                    </View>
-                  )}
-                  renderHiddenItem={(rowData, rowMap) => (
-                    <TouchableOpacity
-                      style={[styles.deleteButton]}
-                      onPress={_ => {
-                        rowMap[rowData.item.id].closeRow()
-                        this.deleteStatment(rowData.item)
-                      }}>
-                      <View>
-                        <Text style={[styles.text, styles.deleteText]}>Delete</Text>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                />
-                <Button
-                  title={"Add New Message"}
-                  color={'black'}
-                  style={{
-                    margin: 10
-                  }}
-                  onPress={() => this._toggleModal()}
-                />
-              </Card>
-            </Col>
-
-            <Modal isVisible={this.state.isModalVisible} onBackdropPress={() => this.setState({ isModalVisible: false })}
+        <Grid style={styles.gridContainer}>
+          <Col size={1}>
+            <Card
+              title={"Messages 1"}
             >
-              <Card
-                title={"Add Message"}
-              >
-                <FormLabel>New Message</FormLabel>
-                <FormInput onChangeText={(message) => this.setState({message: message})} />
-                <Button
-                  raised
-                  title='Add'
-                  onPress={() => {
-                    this._addStatement();
-                  }}
-                  style={{
-                    margin: 10
-                  }}
-                />
-              </Card>
-            </Modal>
-          </Grid>
-        </Content>
+              <SwipeListView
+                useFlatList
+                closeOnRowBeginSwipe
+                disableRightSwipe
+                rightOpenValue={-200}
+                swipeToOpenPercent={50}
+                data={this.props.screenProps.statements}
+                keyExtractor={(rowData, index) => {
+                  return rowData.id.toString();
+                }}
+                renderItem={(rowData, rowMap) => (
+                  <View style={styles.rowFront}>
+                    <Text style={styles.text}>{rowData.item.statement}</Text>
+                  </View>
+                )}
+                renderHiddenItem={(rowData, rowMap) => (
+                  <TouchableOpacity
+                    style={[styles.deleteButton]}
+                    onPress={_ => {
+                      rowMap[rowData.item.id].closeRow()
+                      this.deleteStatment(rowData.item)
+                    }}>
+                    <View>
+                      <Text style={[styles.text, styles.deleteText]}>Delete</Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+              <Button
+                title={"Add New Message"}
+                color={'black'}
+                style={{
+                  margin: 10
+                }}
+                onPress={() => this._toggleModal()}
+              />
+            </Card>
+          </Col>
+          <Col size={1}>
+            <Card
+              title={"Messages 2"}
+            >
+              <SwipeListView
+                useFlatList
+                closeOnRowBeginSwipe
+                disableRightSwipe
+                rightOpenValue={-200}
+                swipeToOpenPercent={50}
+                data={this.props.screenProps.statements}
+                keyExtractor={(rowData, index) => {
+                  return rowData.id.toString();
+                }}
+                renderItem={(rowData, rowMap) => (
+                  <View style={styles.rowFront}>
+                    <Text style={styles.text}>{rowData.item.statement}</Text>
+                  </View>
+                )}
+                renderHiddenItem={(rowData, rowMap) => (
+                  <TouchableOpacity
+                    style={[styles.deleteButton]}
+                    onPress={_ => {
+                      rowMap[rowData.item.id].closeRow()
+                      this.deleteStatment(rowData.item)
+                    }}>
+                    <View>
+                      <Text style={[styles.text, styles.deleteText]}>Delete</Text>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              />
+              <Button
+                title={"Add New Message"}
+                color={'black'}
+                style={{
+                  margin: 10
+                }}
+                onPress={() => this._toggleModal()}
+              />
+            </Card>
+          </Col>
+
+          <Modal isVisible={this.state.isModalVisible} onBackdropPress={() => this.setState({ isModalVisible: false })}
+          >
+            <Card
+              title={"Add Message"}
+            >
+              <FormLabel>New Message</FormLabel>
+              <FormInput onChangeText={(message) => this.setState({ message: message })} />
+              <Button
+                raised
+                title='Add'
+                onPress={() => {
+                  this._addStatement();
+                }}
+                style={{
+                  margin: 10
+                }}
+              />
+            </Card>
+          </Modal>
+        </Grid>
       )
     }
     else {

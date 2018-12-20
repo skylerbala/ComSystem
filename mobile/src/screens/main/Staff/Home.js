@@ -21,10 +21,6 @@ import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elemen
 
 
 import {
-	SlidersColorPicker,
-	HueGradient,
-	SaturationGradient,
-	LightnessGradient,
 	HueSlider,
 	SaturationSlider,
 	LightnessSlider
@@ -117,21 +113,33 @@ class StaffTab extends React.Component {
 							}}
 							renderItem={(rowData, rowMap) => (
 								<View style={{
-									backgroundColor: rowData.item.color,
+									backgroundColor: 'gray',
 									borderBottomColor: '#CCC',
 									borderBottomWidth: 1,
 									borderRightColor: '#CCC',
 									paddingLeft: 15,
 									borderRightWidth: 1,
-									justifyContent: 'center',
 									height: 75,
+									flexDirection: 'row',
+									alignItems: 'center',
+									justifyContent: 'center'
 								}}>
 									<Text style={styles.text}>{rowData.item.name}</Text>
+									<View style={{ backgroundColor: rowData.item.color, height: 50, width: 50, justifyContent: 'center', marginRight: 15 }}></View>
 								</View>
 							)}
 							renderHiddenItem={(rowData, rowMap) => (
+								<View style={styles.deleteButton}>
 								<TouchableOpacity
-									style={[styles.deleteButton]}
+									onPress={_ => {
+										rowMap[rowData.item.id].closeRow()
+										this.deleteEmployee(rowData.item)
+									}}>
+									<View>
+										<Text style={[styles.text, styles.deleteText]}>Edit</Text>
+									</View>
+								</TouchableOpacity>
+								<TouchableOpacity
 									onPress={_ => {
 										rowMap[rowData.item.id].closeRow()
 										this.deleteEmployee(rowData.item)
@@ -140,6 +148,7 @@ class StaffTab extends React.Component {
 										<Text style={[styles.text, styles.deleteText]}>Delete</Text>
 									</View>
 								</TouchableOpacity>
+								</View>
 							)}
 						/>
 					</View>
@@ -201,7 +210,9 @@ class StaffTab extends React.Component {
 const styles = StyleSheet.create({
 	text: {
 		fontSize: 35,
-		color: 'white'
+		color: 'white',
+		flex: 1,
+		justifyContent: 'flex-start'
 	},
 	deleteText: {
 		color: "white"
@@ -213,7 +224,7 @@ const styles = StyleSheet.create({
 	},
 	deleteButton: {
 		backgroundColor: '#da635d',
-		width: 200,
+		width: 100,
 		alignItems: 'center',
 		justifyContent: 'center',
 		position: 'absolute',
@@ -221,11 +232,6 @@ const styles = StyleSheet.create({
 		top: 0,
 		right: 0
 	},
-	noConnectionView: {
-		flex: 1,
-		flexDirection: 'column',
-		justifyContent: 'center'
-	}
 });
 
 export default StaffTab;

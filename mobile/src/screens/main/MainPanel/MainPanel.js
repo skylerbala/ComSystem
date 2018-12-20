@@ -8,48 +8,54 @@ import NoConnectionView from '../common/components/NoConnectionView';
 import Modal from "react-native-modal";
 import tinycolor from 'tinycolor2';
 
-class MainPanel extends Component {
+export default class MainPanel extends Component {
   static navigationOptions = {
-    title: 'MainPanel',
+    header: null
   }
 
   state = {
     isModalVisible: false,
-    name: null,
-    color: null,
-    message: []
+    newMessageName: null,
+    newMessageContent: [],
+    newMessageColor: null,
   }
 
   constructor(props) {
     super(props);
+    this.onSendMessage = this.onSendMessage.bind(this);
+    this.onDeleteMessage = this.onDeleteMessage.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.hideModal = this.hideModal.bind(this);
   }
 
-  deleteMessage(data) {
-    this.props.screenProps.handleDeleteMessage(data);
-  }
-
-
-  handleSendMessage() {
-    this.props.navigation.pop();
+  onSendMessage() {
     let data = {
-      name: this.state.name,
-      statement: this.state.message.join(' '),
-      color: this.state.color
+      name: this.state.newMessageName,
+      content: this.state.message.join(' '),
+      color: this.state.newMessageColor
     }
 
     this.props.screenProps.handleSendMessage(data);
-    this.setState({ isModalVisible: false });
 
+    this.hideModal();
   }
 
-  _toggleModal() {
+  onDeleteMessage(data) {
+    this.props.screenProps.handleDeleteMessage(data);
+  }
+
+  toggleModal() {
     this.setState({ isModalVisible: !this.state.isModalVisible });
   }
 
-  render() {
-    let messagesView = (<NoConnectionView />);
+  hideModal() {
+    this.setState({ isModalVisible: false });
+  }
 
-    let statements = this.props.screenProps.statements.map((statement) => {
+  render() {
+    let mainPanelView = <NoConnectionView />;
+
+    let statements1 = this.props.screenProps.statements.map((statement) => {
       return (
         <TouchableOpacity
           key={statement.id}
@@ -60,15 +66,50 @@ class MainPanel extends Component {
             width: 190,
             borderRadius: 5,
             padding: 5,
-            backgroundColor: 'blue'
+            backgroundColor: 'blue',
+            color: 'white'
+
           }}
           onPress={() => {
             statement.selected = !statement.selected;
             if (statement.selected) {
-              this.state.message.push(statement.statement);
+              this.state.newMessageContent.push(statement.statement);
             }
             else {
-              this.state.message = this.state.message.filter((message) => {
+              this.state.newMessageContent = this.state.newMessageContent.filter((message) => {
+                return message != statement.statement;
+              });
+            }
+          }}
+        >
+          <Text style={{
+            fontSize: 25,
+            fontWeight: '600', color: 'white', alignSelf: 'center'
+          }}>{statement.statement}</Text>
+        </TouchableOpacity>
+      )
+    });
+
+    let statements2 = this.props.screenProps.statements.map((statement) => {
+      return (
+        <TouchableOpacity
+          key={statement.id}
+
+          style={{
+            margin: 5,
+            height: 46,
+            width: 190,
+            borderRadius: 5,
+            padding: 5,
+            backgroundColor: 'red',
+          }}
+          onPress={() => {
+            statement.selected = !statement.selected;
+            if (statement.selected) {
+              this.state.newMessageContent.push(statement.statement);
+            }
+            else {
+              this.state.newMessageContent = this.state.newMessageContent.filter((message) => {
                 return message != statement.statement;
               });
             }
@@ -97,11 +138,11 @@ class MainPanel extends Component {
           }}
           onPress={() => {
             // this.props.navigation.navigate("SendMessage", {
-            //   name: employee.name,
+            //   newMessageName: employee.newMessageName,
             //   color: employee.color
             // })
-            this.setState({ name: employee.name, color: employee.color })
-            this._toggleModal();
+            this.setState({ newMessageName: employee.name, color: employee.color })
+            this.toggleModal();
           }}
         >
           <Text style={{ fontSize: 25, color: 'white', alignSelf: 'center' }}>{employee.name}</Text>
@@ -109,114 +150,91 @@ class MainPanel extends Component {
       )
     });
 
-    // {%<Button
-    //   key={employee.id}
-    //   backgroundColor={employee.color}
-    //   borderRadius={5}
-    //   fontSize={40}
-    //   fontWeight={'600'}
-    //   onPress={() => {
-    //     // this.props.navigation.navigate("SendMessage", {
-    //     //   name: employee.name,
-    //     //   color: employee.color
-    //     // })
-    //     this.setState({name: employee.name, color: employee.color})
-    //     this._toggleModal();
-    //   }}
-    //   raised
-    //   title={employee.name}
-    //   style={{marginTop: 5, marginBottom: 5}}
-    // />
-    // %}
-
     if (this.props.screenProps.connected) {
-      messagesView = (
-        <View>
-          <SwipeListView
-            useFlatList
-            closeOnRowBeginSwipe
-            disableRightSwipe
-            rightOpenValue={-200}
-            stopRightSwipe={-200}
-            swipeToOpenPercent={50}
-            data={this.props.screenProps.messages}
-            keyExtractor={(rowData, index) => {
-              return rowData.id.toString();
-            }}
-            renderItem={(rowData, rowMap) => (
-              <View style={{
-                backgroundColor: rowData.item.color,
-                flexDirection: 'row',
-                justifyContent: 'center',
-                alignItems: 'center',
-                height: 65,
-                borderRadius: 10,
-                marginBottom: 15,
-                paddingLeft: 10,
-                paddingRight: 10,
-              }}>
-                <View style={{ flex: 8, flexDirection: 'row', justifyContent: 'flex-start' }}>
-                  <Text style={styles.text}>
-                    {rowData.item.name}: {rowData.item.statement}
-                  </Text>
-                </View>
-                <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                  <Text style={styles.timeText}>
-                    {rowData.item.timeElapsed}
-                  </Text>
-                </View>
-              </View>
-            )}
-            renderHiddenItem={(rowData, rowMap) => (
-              <View style={styles.messagesRowBack}>
-                <TouchableOpacity
-                  style={styles.deleteButton}
-                  onPress={_ => {
-                    rowMap[rowData.item.id].closeRow()
-                    this.deleteMessage(rowData.item)
-                  }}>
-                  <Text style={styles.deleteButtonText}>
-                    Delete
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          />
-          <Modal isVisible={this.state.isModalVisible} onBackdropPress={() => this.setState({ isModalVisible: false })}
-          >
-            <Card
-              title={"Send Message"}
-            >
-              <View>
-
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {statements}
-                </View>
-                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                  {statements}
-                </View>
-              </View>
-              <View style={{ height: 75, backgroundColor: tinycolor(this.state.color).toHslString(), padding: 10, justifyContent: 'center', margin: 10 }}>
-                <Text style={{ fontSize: 40, color: 'white', }}>{this.state.name}: {this.props.navigation.getParam('name')} {this.state.message.join(' ')}
-                </Text>
-              </View>
-              <Button
-                raised
-                title='Send'
-                onPress={() => this.handleSendMessage()}
-              />
-            </Card>
-          </Modal>
-        </View>
-      )
-    }
-
-    return (
-      <Container style={{ backgroundColor: '#dce9ef' }}>
+      mainPanelView = (
         <Grid>
           <Row size={2.5} style={styles.rowContainer}>
             <ScrollView contentContainerStyle={{ flex: 1, flexDirection: 'column', margin: 10 }}>
-              {messagesView}
+              <View>
+                <SwipeListView
+                  useFlatList
+                  closeOnRowBeginSwipe
+                  disableRightSwipe
+                  rightOpenValue={-200}
+                  stopRightSwipe={-200}
+                  swipeToOpenPercent={50}
+                  data={this.props.screenProps.messages}
+                  keyExtractor={(rowData, index) => {
+                    return rowData.id.toString();
+                  }}
+                  renderItem={(rowData, rowMap) => (
+                    <View style={{
+                      backgroundColor: rowData.item.color,
+                      flexDirection: 'row',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      height: 65,
+                      borderRadius: 10,
+                      marginBottom: 15,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                    }}>
+                      <View style={{ flex: 8, flexDirection: 'row', justifyContent: 'flex-start' }}>
+                        <Text style={styles.text}>
+                          {rowData.item.name}: {rowData.item.statement}
+                        </Text>
+                      </View>
+                      <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                        <Text style={styles.timeText}>
+                          {rowData.item.timeElapsed}
+                        </Text>
+                      </View>
+                    </View>
+                  )}
+                  renderHiddenItem={(rowData, rowMap) => (
+                    <View style={styles.messagesRowBack}>
+                      <TouchableOpacity
+                        style={styles.deleteButton}
+                        onPress={() => {
+                          rowMap[rowData.item.id].closeRow();
+                          this.onDeleteMessage(rowData.item);
+                        }}
+                      >
+                        <Text style={styles.deleteButtonText}>
+                          Delete
+                  </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                />
+                <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.hideModal}
+                >
+                  <Card
+                    title={"Send Message"}
+                  >
+                    <View>
+                      <Text>Messages 1</Text>
+                      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {statements1}
+                      </View>
+                      <Text>Messages 2</Text>
+
+                      <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                        {statements2}
+                      </View>
+                    </View>
+                    <View style={{ height: 75, backgroundColor: tinycolor(this.state.newMessageColor).toHslString(), padding: 10, justifyContent: 'center', margin: 10 }}>
+                      <Text style={{ fontSize: 40, color: 'white', }}>{this.state.newMessageName}: {this.props.navigation.getParam('newMessageName')} {this.state.newMessageContent.join(' ')}
+                      </Text>
+                    </View>
+                    <Button
+                      raised
+                      title='Send'
+                      onPress={this.onSendMessage}
+                    />
+                  </Card>
+                </Modal>
+              </View>
             </ScrollView>
           </Row>
           <Row size={1} style={styles.rowContainer}>
@@ -225,6 +243,13 @@ class MainPanel extends Component {
             </ScrollView>
           </Row>
         </Grid>
+
+      )
+    }
+
+    return (
+      <Container style={{ backgroundColor: '#dce9ef', margin: 10 }}>
+        {mainPanelView}
       </Container>
     );
   }
@@ -233,7 +258,7 @@ class MainPanel extends Component {
 const styles = StyleSheet.create({
   rowContainer: {
     backgroundColor: '#91bbd1',
-    margin: 15,
+    margin: 10,
     borderRadius: 10
   },
   messagesTimer: {
@@ -279,5 +304,3 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   }
 });
-
-export default MainPanel;
