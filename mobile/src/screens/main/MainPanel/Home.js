@@ -67,7 +67,7 @@ class MainPanelTab extends Component {
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              height: 113,
+              height: 55,
               borderRadius: 10,
               marginBottom: 15,
               paddingLeft: 10,
@@ -153,7 +153,7 @@ const styles = StyleSheet.create({
     paddingRight: 10
   },
   messagesContent: {
-    flex: 3,
+    flex: 8,
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center'
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   text: {
-    fontSize: 35,
+    fontSize: 40,
     color: 'white',
     flex: 1,
     flexWrap: 'wrap'
