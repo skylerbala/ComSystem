@@ -2,8 +2,8 @@ import React from 'react';
 import { Icon } from 'native-base';
 import { createBottomTabNavigator } from 'react-navigation';
 import MainPanel from './MainPanel';
-import Staff from './Staff';
-import Messages from './Messages';
+import Employees from './Employees';
+import Expressions from './Expressions';
 import Settings from './Settings';
 
 
@@ -17,19 +17,19 @@ export default MainTabNavigator = createBottomTabNavigator({
       }
     }
   },
-  Staff: {
-    screen: Staff,
+  Employees: {
+    screen: Employees,
     navigationOptions: {
-      title: 'Staff',
+      title: 'Employees',
       tabBarIcon: ({ tintColor }) => {
         return (<Icon type="FontAwesome" name="user" style={{ color: tintColor }} />)
       }
     }
   },
-  Messages: {
-    screen: Messages,
+  Expressions: {
+    screen: Expressions,
     navigationOptions: {
-      title: 'Messages',
+      title: 'Expressions',
       tabBarIcon: ({ tintColor }) => {
         return (<Icon type="FontAwesome" name="envelope" style={{ color: tintColor }} />)
       }

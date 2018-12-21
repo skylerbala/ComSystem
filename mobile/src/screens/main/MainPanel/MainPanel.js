@@ -10,7 +10,7 @@ import tinycolor from 'tinycolor2';
 
 export default class MainPanel extends Component {
   static navigationOptions = {
-    header: null
+    title: "eMessage"
   }
 
   state = {
@@ -18,6 +18,11 @@ export default class MainPanel extends Component {
     newMessageName: null,
     newMessageContent: [],
     newMessageColor: null,
+    message: {
+      name: null,
+      content: [],
+      color: null
+    }
   }
 
   constructor(props) {
@@ -31,13 +36,18 @@ export default class MainPanel extends Component {
   onSendMessage() {
     let data = {
       name: this.state.newMessageName,
-      content: this.state.message.join(' '),
-      color: this.state.newMessageColor
+      content: this.state.newMessageContent.join(' '),
+      color: tinycolor(this.state.newMessageColor).toHexString()
     }
 
     this.props.screenProps.handleSendMessage(data);
 
-    this.hideModal();
+    this.setState({
+      isModalVisible: false,
+      newMessageName: null,
+      newMessageContent: [],
+      newMessageColor: null,
+    })
   }
 
   onDeleteMessage(data) {
@@ -55,105 +65,114 @@ export default class MainPanel extends Component {
   render() {
     let mainPanelView = <NoConnectionView />;
 
-    let statements1 = this.props.screenProps.statements.map((statement) => {
-      return (
-        <TouchableOpacity
-          key={statement.id}
+    if (this.props.screenProps.isConnected) {
+      let expressions1 = this.props.screenProps.expressions.filter((expression) => {
+        return expression.type == 1
+      }).map((expression) => {
+        return (
+          <TouchableOpacity
+            key={expression.id}
 
-          style={{
-            margin: 5,
-            height: 46,
-            width: 190,
-            borderRadius: 5,
-            padding: 5,
-            backgroundColor: 'blue',
-            color: 'white'
+            style={{
+              margin: 5,
+              height: 46,
+              width: 190,
+              borderRadius: 5,
+              padding: 5,
+              backgroundColor: '#91bbd1',
+              color: 'white'
 
-          }}
-          onPress={() => {
-            statement.selected = !statement.selected;
-            if (statement.selected) {
-              this.state.newMessageContent.push(statement.statement);
-            }
-            else {
-              this.state.newMessageContent = this.state.newMessageContent.filter((message) => {
-                return message != statement.statement;
-              });
-            }
-          }}
-        >
-          <Text style={{
-            fontSize: 25,
-            fontWeight: '600', color: 'white', alignSelf: 'center'
-          }}>{statement.statement}</Text>
-        </TouchableOpacity>
-      )
-    });
+            }}
+            onPress={() => {
+              expression.selected = !expression.selected;
+              if (expression.selected) {
+                this.state.newMessageContent.push(expression.content);
+              }
+              else {
+                this.state.newMessageContent = this.state.newMessageContent.filter((content) => {
+                  return content != expression.content;
+                });
+              }
+            }}
+          >
+            <Text style={{
+              fontSize: 25,
+              fontWeight: '600', color: 'white', alignSelf: 'center'
+            }}>
+              {expression.content}
+            </Text>
+          </TouchableOpacity>
+        )
+      });
 
-    let statements2 = this.props.screenProps.statements.map((statement) => {
-      return (
-        <TouchableOpacity
-          key={statement.id}
+      let expressions2 = this.props.screenProps.expressions.filter((expression) => {
+        return expression.type == 2
+      }).map((expression) => {
+        return (
+          <TouchableOpacity
+            key={expression.id}
 
-          style={{
-            margin: 5,
-            height: 46,
-            width: 190,
-            borderRadius: 5,
-            padding: 5,
-            backgroundColor: 'red',
-          }}
-          onPress={() => {
-            statement.selected = !statement.selected;
-            if (statement.selected) {
-              this.state.newMessageContent.push(statement.statement);
-            }
-            else {
-              this.state.newMessageContent = this.state.newMessageContent.filter((message) => {
-                return message != statement.statement;
-              });
-            }
-          }}
-        >
-          <Text style={{
-            fontSize: 25,
-            fontWeight: '600', color: 'white', alignSelf: 'center'
-          }}>{statement.statement}</Text>
-        </TouchableOpacity>
-      )
-    });
+            style={{
+              margin: 5,
+              height: 46,
+              width: 190,
+              borderRadius: 5,
+              padding: 5,
+              backgroundColor: '#478375',
+              color: 'white'
 
-    let employeeButtons = this.props.screenProps.employees.map((employee) => {
-      return (
-        <TouchableOpacity
-          key={employee.id}
+            }}
+            onPress={() => {
+              expression.selected = !expression.selected;
+              if (expression.selected) {
+                this.state.newMessageContent.push(expression.content);
+              }
+              else {
+                this.state.newMessageContent = this.state.newMessageContent.filter((content) => {
+                  return content != expression.content;
+                });
+              }
+            }}
+          >
+            <Text style={{
+              fontSize: 25,
+              fontWeight: '600', color: 'white', alignSelf: 'center'
+            }}>
+              {expression.content}
+            </Text>
+          </TouchableOpacity>
+        )
+      });
 
-          style={{
-            backgroundColor: employee.color,
-            margin: 5,
-            height: 46,
-            width: 150,
-            borderRadius: 5,
-            padding: 5,
-          }}
-          onPress={() => {
-            // this.props.navigation.navigate("SendMessage", {
-            //   newMessageName: employee.newMessageName,
-            //   color: employee.color
-            // })
-            this.setState({ newMessageName: employee.name, color: employee.color })
-            this.toggleModal();
-          }}
-        >
-          <Text style={{ fontSize: 25, color: 'white', alignSelf: 'center' }}>{employee.name}</Text>
-        </TouchableOpacity>
-      )
-    });
+      let employeeButtons = this.props.screenProps.employees.map((employee) => {
+        return (
+          <TouchableOpacity
+            key={employee.id}
+            style={{
+              backgroundColor: employee.color,
+              margin: 5,
+              height: 46,
+              width: 150,
+              borderRadius: 5,
+              padding: 5,
+            }}
+            onPress={() => {
+              // this.props.navigation.navigate("SendMessage", {
+              //   newMessageName: employee.newMessageName,
+              //   color: employee.color
+              // })
+              this.setState({ newMessageName: employee.name, newMessageColor: employee.color })
+              this.toggleModal();
+            }}
+          >
+            <Text style={{ fontSize: 25, color: 'white', alignSelf: 'center' }}>{employee.name}</Text>
+          </TouchableOpacity>
+        )
+      });
 
-    if (this.props.screenProps.connected) {
       mainPanelView = (
         <Grid>
-          <Row size={2.5} style={styles.rowContainer}>
+          <Row size={4} style={styles.rowContainer}>
             <ScrollView contentContainerStyle={{ flex: 1, flexDirection: 'column', margin: 10 }}>
               <View>
                 <SwipeListView
@@ -173,7 +192,7 @@ export default class MainPanel extends Component {
                       flexDirection: 'row',
                       justifyContent: 'center',
                       alignItems: 'center',
-                      height: 65,
+                      minHeight: 65,
                       borderRadius: 10,
                       marginBottom: 15,
                       paddingLeft: 10,
@@ -181,7 +200,7 @@ export default class MainPanel extends Component {
                     }}>
                       <View style={{ flex: 8, flexDirection: 'row', justifyContent: 'flex-start' }}>
                         <Text style={styles.text}>
-                          {rowData.item.name}: {rowData.item.statement}
+                          {rowData.item.name}: {rowData.item.content}
                         </Text>
                       </View>
                       <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -202,7 +221,7 @@ export default class MainPanel extends Component {
                       >
                         <Text style={styles.deleteButtonText}>
                           Delete
-                  </Text>
+                        </Text>
                       </TouchableOpacity>
                     </View>
                   )}
@@ -215,15 +234,14 @@ export default class MainPanel extends Component {
                     <View>
                       <Text>Messages 1</Text>
                       <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        {statements1}
+                        {expressions1}
                       </View>
                       <Text>Messages 2</Text>
-
                       <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        {statements2}
+                        {expressions2}
                       </View>
                     </View>
-                    <View style={{ height: 75, backgroundColor: tinycolor(this.state.newMessageColor).toHslString(), padding: 10, justifyContent: 'center', margin: 10 }}>
+                    <View style={{ height: 75, backgroundColor: tinycolor(this.state.newMessageColor).toHexString(), padding: 10, justifyContent: 'center', margin: 10 }}>
                       <Text style={{ fontSize: 40, color: 'white', }}>{this.state.newMessageName}: {this.props.navigation.getParam('newMessageName')} {this.state.newMessageContent.join(' ')}
                       </Text>
                     </View>
@@ -248,7 +266,7 @@ export default class MainPanel extends Component {
     }
 
     return (
-      <Container style={{ backgroundColor: '#dce9ef', margin: 10 }}>
+      <Container style={{ backgroundColor: '#dce9ef', padding: 10 }}>
         {mainPanelView}
       </Container>
     );
@@ -288,7 +306,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 50,
-    fontWeight: '600',
+    fontWeight: '400',
     color: 'white',
     flex: 1,
     flexWrap: 'wrap'

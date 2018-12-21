@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Message = sequelize.define('Message', {
     name: DataTypes.STRING,
-    statement: DataTypes.STRING,
+    content: DataTypes.STRING,
     color: DataTypes.STRING
   }, {});
   Message.associate = function(models) {

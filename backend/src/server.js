@@ -9,7 +9,8 @@ io.on('connection', (socket) => {
 
   let messages = db.Message;
   let employees = db.Employee;
-  let statements = db.Statement;
+  let expressions = db.Expression;
+
 
   console.log('New Connection: ' + socket.id);
 
@@ -17,15 +18,15 @@ io.on('connection', (socket) => {
 
   const all_messages = messages.findAll({ order: [['createdAt', 'ASC']] })
   const all_employees = employees.findAll({ order: [['createdAt', 'ASC']] })
-  const all_statements = statements.findAll({ order: [['createdAt', 'ASC']] })
+  const all_expressions = expressions.findAll({ order: [['createdAt', 'ASC']] })
 
   Promise
-    .all([all_messages, all_employees, all_statements])
+    .all([all_messages, all_employees, all_expressions])
     .then((res) => {
       initialState.messages = res[0]
       initialState.employees = res[1]
-      initialState.statements = res[2]
-      initialState.connected = true
+      initialState.expressions = res[2]
+      initialState.isConnected = true
 
       console.log('Sending Initial State: ' + initialState);
 
@@ -38,16 +39,16 @@ io.on('connection', (socket) => {
   // Add
   socket.on('addMessage', (data) => {
     let name = data.name;
-    let statement = data.statement;
+    let content = data.content;
     let color = data.color;
 
-    if (name === '' || statement === '') {
+    if (name === '' || content === '') {
       sendStatus('Please enter a name and message');
     }
     else {
       let newMessage = {
         name: name,
-        statement: statement,
+        content: content,
         color: color
       };
 
@@ -91,28 +92,61 @@ io.on('connection', (socket) => {
     }
   });
 
-  socket.on('addStatement', (data) => {
-    let statement = data.statement;
+  socket.on('addExpression', (data) => {
+    let content = data.content;
+    let type = data.type;
 
-    if (statement === '') {
-      sendStatus('Please enter a statement');
+    if (content === '') {
+      sendStatus('Please enter a expression');
     }
     else {
-      let newStatement = {
-        statement: statement,
+      let newExpression = {
+        content: content,
+        type: type
       };
 
-      statements.create(newStatement).then((res) => {
-        io.emit('addStatement', res);
-        console.log("Statement Added")
+      expressions.create(newExpression).then((res) => {
+        io.emit('addExpression', res);
+        console.log("Expression Added")
 
         sendStatus({
-          message: 'Statement Sent',
+          message: 'Expression Sent',
         });
       }).catch((err) => {
         console.log('***There was an error creating', JSON.stringify(err))
       });
     }
+  });
+
+  // Update
+  socket.on('updateEmployee', (data) => {
+    console.log(data)
+    let id = data.id
+    let name = data.name
+    let color = data.color
+
+    employees.findById(id).then((res) => {
+      res.update({ name: name, color: color });
+      io.emit('updateEmployee', data);
+      console.log("Employee Updated")
+
+    }).catch((err) => {
+      console.log('***Error deleting', JSON.stringify(err))
+    })
+  });
+
+  socket.on('updateExpression', (data) => {
+    let id = data.id
+    let content = data.content;
+
+    expressions.findById(id).then((res) => {
+      res.update({ content: content });
+      io.emit('updateExpression', data);
+      console.log("Expression Updated")
+
+    }).catch((err) => {
+      console.log('***Error deleting', JSON.stringify(err))
+    })
   });
 
   // Delete
@@ -142,13 +176,13 @@ io.on('connection', (socket) => {
     })
   });
 
-  socket.on('deleteStatement', (data) => {
+  socket.on('deleteExpression', (data) => {
     let id = data.id
 
-    statements.findById(id).then((res) => {
+    expressions.findById(id).then((res) => {
       res.destroy({ force: true });
-      io.emit('deleteStatement', data);
-      console.log("Statement Deleted")
+      io.emit('deleteExpression', data);
+      console.log("Expression Deleted")
 
     }).catch((err) => {
       console.log('***Error deleting', JSON.stringify(err))
@@ -161,9 +195,7 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('Disconnected: ', socket.id)
-    let data = {}
-    data.connected = false
-    socket.emit('diconnect', data);
+
   })
 
   socket.on('error', function (err) {

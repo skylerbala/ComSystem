@@ -12,9 +12,9 @@ class Main extends Component {
     state = {
         messages: [],
         employees: [],
-        statements: [],
+        expressions: [],
         endpoint: "",
-        connected: false,
+        isConnected: false,
         ring: null
     }
 
@@ -23,10 +23,12 @@ class Main extends Component {
 
         this.handleSendMessage = this.handleSendMessage.bind(this)
         this.handleAddEmployee = this.handleAddEmployee.bind(this)
-        this.handleAddStatement = this.handleAddStatement.bind(this)
+        this.handleAddExpression = this.handleAddExpression.bind(this)
+        this.handleUpdateEmployee = this.handleUpdateEmployee.bind(this)
+        this.handleUpdateExpression = this.handleUpdateExpression.bind(this)
         this.handleDeleteMessage = this.handleDeleteMessage.bind(this)
         this.handleDeleteEmployee = this.handleDeleteEmployee.bind(this)
-        this.handleDeleteStatement = this.handleDeleteStatement.bind(this)
+        this.handleDeleteExpression = this.handleDeleteExpression.bind(this)
         this.handleIPChange = this.handleIPChange.bind(this)
         this.handleRingChange = this.handleRingChange.bind(this)
         this.handleSendMessageSound = this.playSound.bind(this)
@@ -64,10 +66,12 @@ class Main extends Component {
         this.socket.on('initializeState', (data) => this.initializeState(data));
         this.socket.on('addMessage', (data) => this.handleReceivedMessage(data));
         this.socket.on('addEmployee', (data) => this.handleReceivedEmployee(data));
-        this.socket.on('addStatement', (data) => this.handleReceivedStatement(data));
+        this.socket.on('addExpression', (data) => this.handleReceivedExpression(data));
+        this.socket.on('updateEmployee', (data) => this.handleReceivedUpdateEmployee(data));
+        this.socket.on('updateExpression', (data) => this.handleReceivedUpdateExpression(data));
         this.socket.on('deleteMessage', (data) => this.handleReceivedDeleteMessage(data));
         this.socket.on('deleteEmployee', (data) => this.handleReceivedDeleteEmployee(data));
-        this.socket.on('deleteStatement', (data) => this.handleReceivedDeleteStatement(data));
+        this.socket.on('deleteExpression', (data) => this.handleReceivedDeleteExpression(data));
         this.socket.on('disconnect', (data) => this.handleDisconnect(data));
     }
 
@@ -108,10 +112,28 @@ class Main extends Component {
         })
     }
 
-    handleReceivedStatement(data) {
+    handleReceivedExpression(data) {
         this.setState({
-            statements: [...this.state.statements, data]
+            expressions: [...this.state.expressions, data]
         })
+    }
+
+    handleReceivedUpdateEmployee(data) {
+        let newEmployees = this.state.employees;
+        updateIndex = newEmployees.findIndex(e => e.id == data.id)
+        newEmployees[updateIndex] = data;
+        this.setState({
+            employees: newEmployees
+        });
+    }
+
+    handleReceivedUpdateExpression(data) {
+        let newExpressions = this.state.expressions;
+        updateIndex = newExpressions.findIndex(e => e.id == data.id)
+        newExpressions[updateIndex] = data;
+        this.setState({
+            expressions: newExpressions
+        });
     }
 
     handleReceivedDeleteMessage(data) {
@@ -132,12 +154,12 @@ class Main extends Component {
         });
     }
 
-    handleReceivedDeleteStatement(data) {
-        let newStatements = this.state.statements;
-        deleteIndex = newStatements.findIndex(e => e.id == data.id)
-        newStatements.splice(deleteIndex, 1)
+    handleReceivedDeleteExpression(data) {
+        let newExpressions = this.state.expressions;
+        deleteIndex = newExpressions.findIndex(e => e.id == data.id)
+        newExpressions.splice(deleteIndex, 1)
         this.setState({
-            statements: newStatements
+            expressions: newExpressions
         });
     }
 
@@ -149,8 +171,16 @@ class Main extends Component {
         this.socket.emit('addEmployee', data);
     }
 
-    handleAddStatement(data) {
-        this.socket.emit('addStatement', data);
+    handleAddExpression(data) {
+        this.socket.emit('addExpression', data);
+    }
+
+    handleUpdateEmployee(data) {
+        this.socket.emit('updateEmployee', data);
+    }
+
+    handleUpdateExpression(data) {
+        this.socket.emit('updateExpression', data);
     }
 
     handleDeleteMessage(data) {
@@ -161,15 +191,15 @@ class Main extends Component {
         this.socket.emit('deleteEmployee', data);
     }
 
-    handleDeleteStatement(data) {
-        this.socket.emit('deleteStatement', data);
+    handleDeleteExpression(data) {
+        this.socket.emit('deleteExpression', data);
     }
 
     async handleIPChange(data) {
         newState = {
             messages: [],
             employees: [],
-            statements: [],
+            expressions: [],
             endpoint: data,
         }
         this.storage.storeItem('endpoint', data)
@@ -190,12 +220,11 @@ class Main extends Component {
 
 
     handleDisconnect(data) {
-        connected = data.connected
         this.setState({
             messages: [],
             employees: [],
-            statements: [],
-            connected: false
+            expressions: [],
+            isConnected: false
         })
     }
 
@@ -227,17 +256,19 @@ class Main extends Component {
                     {
                         messages: this.state.messages,
                         employees: this.state.employees,
-                        statements: this.state.statements,
+                        expressions: this.state.expressions,
                         endpoint: this.state.endpoint,
-                        connected: this.state.connected,
+                        isConnected: this.state.isConnected,
                         ring: this.state.ring,
 
                         handleSendMessage: this.handleSendMessage,
                         handleAddEmployee: this.handleAddEmployee,
-                        handleAddStatement: this.handleAddStatement,
+                        handleAddExpression: this.handleAddExpression,
+                        handleUpdateEmployee: this.handleUpdateEmployee,
+                        handleUpdateExpression: this.handleUpdateExpression,
                         handleDeleteMessage: this.handleDeleteMessage,
                         handleDeleteEmployee: this.handleDeleteEmployee,
-                        handleDeleteStatement: this.handleDeleteStatement,
+                        handleDeleteExpression: this.handleDeleteExpression,
 
                         handleIPChange: this.handleIPChange,
                         handleRingChange: this.handleRingChange,
