@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
-import { Button, Text, Card } from 'react-native-elements';
+import { View, ScrollView, TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { Card } from 'react-native-elements';
 import { Container } from 'native-base';
 import { Row, Grid } from 'react-native-easy-grid';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import NoConnectionView from '../common/components/NoConnectionView';
 import Modal from "react-native-modal";
 import tinycolor from 'tinycolor2';
+import Button from '../common/components/Button'
 
 export default class MainPanel extends Component {
   static navigationOptions = {
@@ -27,14 +28,13 @@ export default class MainPanel extends Component {
     this.onSendMessage = this.onSendMessage.bind(this);
     this.onDeleteMessage = this.onDeleteMessage.bind(this);
     this.showModal = this.showModal.bind(this);
-    this.hideModal = this.hideModal.bind(this);
+    this.resetState = this.resetState.bind(this);
     this.resetState = this.resetState.bind(this);
   }
 
   onSendMessage() {
     let newMessage = this.state.message;
-    newMessage.content = this.state.message.content.join(' ');
-
+    newMessage.content = newMessage.content.join(' ');
     this.props.screenProps.handleSendMessage(newMessage);
 
     this.resetState();
@@ -48,23 +48,22 @@ export default class MainPanel extends Component {
     this.setState({ isModalVisible: true });
   }
 
-  hideModal() {
-    this.resetState();
-  }
-
   resetState() {
-    this.setState({
-      isModalVisible: false,
-      message: {
-        name: null,
-        content: [],
-        color: null
-      }
+    this.setState({ isModalVisible: false }, () => {
+      this.setState({
+        message: {
+          name: null,
+          content: [],
+          color: null
+        }
+      });
     });
   }
 
+
   render() {
     let mainPanelView = <NoConnectionView />;
+    let modal = null
 
     if (this.props.screenProps.isConnected) {
 
@@ -154,30 +153,32 @@ export default class MainPanel extends Component {
         );
       });
 
-      const modal = (
-        <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.hideModal}>
-          <Card title={"Send Message"}>
-            <Text>Messages 1</Text>
-            <View style={styles.expressionsView}>
-              {expressions1}
-            </View>
-            <Text>Messages 2</Text>
-            <View style={styles.expressionsView}>
-              {expressions2}
-            </View>
-            <View style={[
-              styles.messageRowPreview, {
-                backgroundColor: tinycolor(this.state.message.color).toHexString()
-              }]}
-            >
-              <Text style={styles.messageRowPreviewText}>
-                {this.state.message.name}: {this.state.message.content.join(' ')}
-              </Text>
-            </View>
-            <Button raised title='Send' onPress={this.onSendMessage} />
-          </Card>
-        </Modal>
-      )
+      if (this.state.isModalVisible) {
+        modal = (
+          <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
+            <Card title={"Send Message"}>
+              <Text>Messages 1</Text>
+              <View style={styles.expressionsView}>
+                {expressions1}
+              </View>
+              <Text>Messages 2</Text>
+              <View style={styles.expressionsView}>
+                {expressions2}
+              </View>
+              <View style={[
+                styles.messageRowPreview, {
+                  backgroundColor: tinycolor(this.state.message.color).toHexString()
+                }]}
+              >
+                <Text style={styles.messageRowPreviewText}>
+                  {this.state.message.name}: {this.state.message.content.join(' ')}
+                </Text>
+              </View>
+              <Button onPress={this.onSendMessage} title={"Send"} />
+            </Card>
+          </Modal>
+        )
+      }
 
       const messagesView = (
         <SwipeListView
@@ -338,7 +339,8 @@ const styles = StyleSheet.create({
   expressionsView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   messageRowPreview: {
     height: 75,
@@ -349,5 +351,5 @@ const styles = StyleSheet.create({
   messageRowPreviewText: {
     fontSize: 40,
     color: 'white'
-  }
+  },
 });

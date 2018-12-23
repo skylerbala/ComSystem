@@ -44,7 +44,7 @@ class SettingsTab extends Component {
         <Content>
           <Form>
             <Item inlineLabel>
-              <Label>Raspberry Pi IP</Label>
+              <Label>eMessage Box IP</Label>
               <Input placeholder="None" autoCapitalize='none' value={this.props.screenProps.endpoint} onChangeText={(input) => this.handleIPChange(input)} />
             </Item>
             <Item picker>

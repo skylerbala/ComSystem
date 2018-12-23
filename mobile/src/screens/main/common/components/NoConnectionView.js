@@ -1,9 +1,8 @@
 
-import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import { Text, } from 'react-native-elements';
+import React from 'react';
+import { View, StyleSheet, Text } from 'react-native';
 
-const NoConnectionView = (props) => {
+export default NoConnectionView = (props) => {
   return (
     <View style={styles.view}>
       <Text style={styles.text}>
@@ -24,5 +23,3 @@ const styles = StyleSheet.create({
     fontSize: 40
   },
 });
-
-export default NoConnectionView;

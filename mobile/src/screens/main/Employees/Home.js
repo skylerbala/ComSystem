@@ -1,29 +1,24 @@
 import React from 'react';
-import { Container, Content, Text, Fab, Body, alert, Header, Left, Right, Title, Form, Input, Item, Label } from 'native-base';
-import DialogInput from 'react-native-dialog-input';
+import { Container, Text } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { ColorWheel } from 'react-native-color-wheel';
 import {
 	Dimensions,
 	TouchableOpacity,
 	StyleSheet,
 	View,
-	TextInput
 } from 'react-native';
 import Modal from "react-native-modal";
-import ColorPalette from 'react-native-color-palette';
-import { Col, Row, Grid } from 'react-native-easy-grid';
 import NoConnectionView from '../common/components/NoConnectionView';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
-
-import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements';
-
+import { Card } from 'react-native-elements';
+import { FormLabel, FormInput } from 'react-native-elements';
 import {
 	HueSlider,
 	SaturationSlider,
 	LightnessSlider
 } from 'react-native-color';
 import tinycolor from 'tinycolor2';
+import Button from '../common/components/Button'
+
 
 
 
@@ -33,177 +28,155 @@ export default class EmployeesTab extends React.Component {
 		const { params = {} } = navigation.state;
 		return {
 			title: 'Employees',
-			headerRight: (
-				<Button
-					icon={{ name: 'plus', type: 'font-awesome', color: '#007aff' }}
-					onPress={() => params.handleToggle()}
-					backgroundColor='transparent'
-				/>
-			)
 		}
 	};
 
 	state = {
 		isModalVisible: false,
-		id: null,
-		color: tinycolor('#70c1b3').toHsl(),
-		name: "",
-		isEditing: false,
+		employee: {
+			id: null,
+			name: "",
+			color: tinycolor('#70c1b3').toHsl()
+		},
+		isEditing: false
 	};
-
-	updateHue = h => this.setState({ color: { ...this.state.color, h } });
-	updateSaturation = s => this.setState({ color: { ...this.state.color, s } });
-	updateLightness = l => this.setState({ color: { ...this.state.color, l } });
 
 	constructor(props) {
 		super(props);
-	}
 
-	componentDidMount() {
-		this.props.navigation.setParams({ handleToggle: () => this.toggleModal() });
-	}
+		this.onAddEmployee = this.onAddEmployee.bind(this);
+		this.onEditEmployee = this.onEditEmployee.bind(this);
+		this.showModal = this.showModal.bind(this);
+		this.resetState = this.resetState.bind(this);
 
-	toggleModal() {
-		// this.props.navigation.navigate("PickColor")
-		this.setState({ isModalVisible: !this.state.isModalVisible });
-	}
-
-	onNameChange(name) {
-		this.setState({ name: name })
 	}
 
 	onAddEmployee() {
 		let newEmployee = {
-			name: this.state.name,
-			color: tinycolor(this.state.color).toHexString()
+			name: this.state.employee.name,
+			color: tinycolor(this.state.employee.color).toHexString()
 		}
 		this.props.screenProps.handleAddEmployee(newEmployee);
-		this.setState({
-			isModalVisible: false,
-			color: tinycolor('#70c1b3').toHsl(),
-			name: "",
-		});
+		this.resetState();
 	}
 
 	onEditEmployee() {
-		let newEmployee = {
-			id: this.state.id,
-			name: this.state.name,
-			color: tinycolor(this.state.color).toHexString()
-		}
-		this.setState({
-			isModalVisible: false,
-			isEditing: false,
-			color: tinycolor('#70c1b3').toHsl(),
-			name: "",
-		});
-		this.props.screenProps.handleUpdateEmployee(newEmployee);
+		let newEmployee = this.state.employee;
+		newEmployee.color = tinycolor(newEmployee.color).toHexString();
+		this.props.screenProps.handleUpdateEmployee(this.state.employee);
+		this.resetState();
 	}
 
 	onDeleteEmployee(data) {
 		this.props.screenProps.handleDeleteEmployee(data);
 	}
 
+	showModal() {
+		this.setState({ isModalVisible: true });
+	}
+
+	resetState() {
+		this.setState({
+			isModalVisible: false,
+			isEditing: false,
+			employee: {
+				id: null,
+				name: "",
+				color: tinycolor('#70c1b3').toHsl()
+			},
+		});
+	}
+
+	updateHue(h) {
+		this.setState({
+			employee: {
+				id: this.state.employee.id,
+				name: this.state.employee.name,
+				color: { ...this.state.employee.color, h }
+			}
+		});
+	}
+
+	updateSaturation(s) {
+		this.setState({
+			employee: {
+				id: this.state.employee.id,
+				name: this.state.employee.name,
+				color: { ...this.state.employee.color, s }
+			}
+		});
+	}
+
+	updateLightness(l) {
+		this.setState({
+			employee: {
+				id: this.state.employee.id,
+				name: this.state.employee.name,
+				color: { ...this.state.employee.color, l }
+			}
+		});
+	}
+
 	render() {
-		console.log(this.state)
-		let view = <NoConnectionView />
-		let modal = null
-		if (this.state.isEditing) {
-			modal = (
-				<Modal isVisible={this.state.isModalVisible} onBackdropPress={() => this.setState({ isModalVisible: false, isEditing: false,
-				})}
-					>
-						<Card
-							title={"Edit Staff"}
-						>
-							<FormLabel>Staff Name</FormLabel>
-							<FormInput onChangeText={(name) => this.onNameChange(name)} />
-							<View style={{ height: 50, backgroundColor: tinycolor(this.state.color).toHslString(), margin: 10 }}>
-								<Text style={{ fontSize: 40, color: 'white', alignSelf: 'center' }}>{this.state.name}</Text>
-							</View>
-							<FormLabel style={styles.sectionText}>Color</FormLabel>
-							<FormLabel style={styles.componentText}>Hue</FormLabel>
-							<HueSlider
-								style={styles.sliderRow}
-								gradientSteps={40}
-								value={this.state.color.h}
-								onValueChange={this.updateHue}
-							/>
-							<FormLabel style={styles.componentText}>Saturation</FormLabel>
-							<SaturationSlider
-								style={styles.sliderRow}
-								gradientSteps={20}
-								value={this.state.color.s}
-								color={this.state.color}
-								onValueChange={this.updateSaturation}
-							/>
-							<FormLabel style={styles.componentText}>Lightness</FormLabel>
-							<LightnessSlider
-								style={styles.sliderRow}
-								gradientSteps={20}
-								value={this.state.color.l}
-								color={this.state.color}
-								onValueChange={this.updateLightness}
-							/>
-							<Button
-								raised
-								title='Save'
-								onPress={() => this.onEditEmployee()}
-							/>
-						</Card>
-					</Modal>
-			)
-		}
-		else {
-			modal = (
-				<Modal isVisible={this.state.isModalVisible} onBackdropPress={() => this.setState({ isModalVisible: false })}
-					>
-						<Card
-							title={"Add Staff"}
-						>
-							<FormLabel>Staff Name</FormLabel>
-							<FormInput onChangeText={(name) => this.onNameChange(name)} />
-							<View style={{ height: 50, backgroundColor: tinycolor(this.state.color).toHslString(), margin: 10 }}>
-								<Text style={{ fontSize: 40, color: 'white', alignSelf: 'center' }}>{this.state.name}</Text>
-							</View>
-							<FormLabel style={styles.sectionText}>Color</FormLabel>
-							<FormLabel style={styles.componentText}>Hue</FormLabel>
-							<HueSlider
-								style={styles.sliderRow}
-								gradientSteps={40}
-								value={this.state.color.h}
-								onValueChange={this.updateHue}
-							/>
-							<FormLabel style={styles.componentText}>Saturation</FormLabel>
-							<SaturationSlider
-								style={styles.sliderRow}
-								gradientSteps={20}
-								value={this.state.color.s}
-								color={this.state.color}
-								onValueChange={this.updateSaturation}
-							/>
-							<FormLabel style={styles.componentText}>Lightness</FormLabel>
-							<LightnessSlider
-								style={styles.sliderRow}
-								gradientSteps={20}
-								value={this.state.color.l}
-								color={this.state.color}
-								onValueChange={this.updateLightness}
-							/>
-							<Button
-								raised
-								title='Save'
-								onPress={() => this.onAddEmployee()}
-							/>
-						</Card>
-					</Modal>
-			)
-		}
+		let mainView = <NoConnectionView />
 
 		if (this.props.screenProps.isConnected) {
-			view = (
-				<View>
-					<View style={{ margin: 15 }}>
+			let modalTitle = "Add Employee";
+			let modalOnPress = this.onAddEmployee;
+
+			if (this.state.isEditing) {
+				modalTitle = "Edit Employee";
+				modalOnPress = this.onEditEmployee;
+			}
+
+			const modal = (
+				<Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
+					<Card title={modalTitle}>
+						<FormLabel>Employee Name</FormLabel>
+						<FormInput onChangeText={
+							(name) => {
+								let newEmployee = this.state.employee;
+								newEmployee.name = name;
+								this.setState({ employee: newEmployee });
+							}} />
+						<FormLabel>Color</FormLabel>
+						<FormLabel>Hue</FormLabel>
+						<HueSlider
+							gradientSteps={40}
+							value={this.state.employee.color.h}
+							color={this.state.employee.color}
+							onValueChange={(h) => this.updateHue(h)}
+						/>
+						<FormLabel style={styles.componentText}>Saturation</FormLabel>
+						<SaturationSlider
+							gradientSteps={20}
+							value={this.state.employee.color.s}
+							color={this.state.employee.color}
+							onValueChange={(s) => this.updateSaturation(s)}
+						/>
+						<FormLabel style={styles.componentText}>Lightness</FormLabel>
+						<LightnessSlider
+							gradientSteps={20}
+							value={this.state.employee.color.l}
+							color={this.state.employee.color}
+							onValueChange={(l) => this.updateLightness(l)}
+						/>
+						<View style={
+							[
+								styles.employeePreview,
+								{ backgroundColor: tinycolor(this.state.employee.color).toHexString() }
+							]
+						}>
+							<Text style={styles.employeePreviewText}>{this.state.employee.name}</Text>
+						</View>
+						<Button title='Save' onPress={modalOnPress} />
+					</Card>
+				</Modal>
+			)
+
+			mainView = (
+				<View style={styles.mainContainer}>
+					<View style={styles.employeesView}>
 						<SwipeListView
 							useFlatList
 							closeOnRowBeginSwipe
@@ -216,44 +189,42 @@ export default class EmployeesTab extends React.Component {
 								return rowData.id.toString();
 							}}
 							renderItem={(rowData, rowMap) => (
-								<View style={{
-									backgroundColor: '#478375',
-									borderBottomColor: '#CCC',
-									borderBottomWidth: 1,
-									borderRightColor: '#CCC',
-									paddingLeft: 15,
-									borderRightWidth: 1,
-									height: 75,
-									flexDirection: 'row',
-									alignItems: 'center',
-									justifyContent: 'center'
-								}}>
-									<Text style={styles.text}>{rowData.item.name}</Text>
-									<View style={{ backgroundColor: rowData.item.color, height: 50, width: 50, justifyContent: 'center', marginRight: 15 }}></View>
+								<View style={styles.employeeRow}>
+									<Text style={styles.employeeRowText}>{rowData.item.name}</Text>
+									<View style={[styles.employeeRowColorBox, { backgroundColor: rowData.item.color }]}></View>
 								</View>
 							)}
 							renderHiddenItem={(rowData, rowMap) => (
-								<View style={styles.rowBack}>
-									<Text>Left</Text>
+								<View style={styles.employeeRowBack}>
 									<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={_ => {
 										rowMap[rowData.item.id].closeRow()
-										this.setState({ isEditing: true, id: rowData.item.id });
-										this.toggleModal();
+										this.setState({
+											isEditing: true,
+											employee: {
+												id: rowData.item.id,
+												name: rowData.item.name,
+												color: tinycolor(rowData.item.color).toHsl()
+											}
+										});
+										this.showModal();
 									}}>
 										<Text style={styles.backTextWhite}>Edit</Text>
 									</TouchableOpacity>
-									<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnRight]} onPress={_ => {
-										rowMap[rowData.item.id].closeRow()
-										this.onDeleteEmployee(rowData.item)
-									}}>
+									<TouchableOpacity
+										style={[styles.backRightBtn, styles.backRightBtnRight]}
+										onPress={_ => {
+											rowMap[rowData.item.id].closeRow()
+											this.onDeleteEmployee(rowData.item)
+										}}>
 										<Text style={styles.backTextWhite}>Delete</Text>
 									</TouchableOpacity>
 								</View>
 							)}
 						/>
 					</View>
-
-
+					<View style={{ flex: .1, }}>
+						<Button title={"Add Employee"} onPress={this.showModal} />
+					</View>
 					{modal}
 				</View>
 			);
@@ -261,34 +232,68 @@ export default class EmployeesTab extends React.Component {
 
 		return (
 			<Container style={{ backgroundColor: '#dce9ef' }}>
-				{view}
+				{mainView}
 			</Container >
 		);
 	}
 }
 
 const styles = StyleSheet.create({
-	container: {
-		backgroundColor: 'white',
-		flex: 1
-	},
-	standalone: {
-		marginTop: 30,
-		marginBottom: 30,
-	},
-	standaloneRowFront: {
-		alignItems: 'center',
-		backgroundColor: '#CCC',
-		justifyContent: 'center',
+	employeePreview: {
 		height: 50,
+		margin: 10
 	},
-	standaloneRowBack: {
+	employeePreviewText: {
+		fontSize: 40,
+		color: 'white',
+		alignSelf: 'center'
+	},
+	mainContainer: {
+		flex: 1,
+		flexDirection: 'column',
+		margin: 15,
+		borderRadius: 15,
+		backgroundColor: "#91bbd1",
+	},
+	employeesView: {
+		flex: 1,
+		margin: 10
+	},
+	employeeRow: {
+		backgroundColor: '#478375',
+		borderBottomColor: '#CCC',
+		borderBottomWidth: 1,
+		borderRightColor: '#CCC',
+		paddingLeft: 15,
+		borderRightWidth: 1,
+		height: 75,
+		flexDirection: 'row',
 		alignItems: 'center',
-		backgroundColor: '#8BC645',
+		justifyContent: 'center'
+	},
+	employeeRowText: {
+		fontSize: 35,
+		color: 'white',
+		flex: 1,
+		justifyContent: 'flex-start'
+	},
+	employeeRowColorBox: {
+		height: 50,
+		width: 50,
+		justifyContent: 'center',
+		marginRight: 15
+	},
+	employeeRowBack: {
+		alignItems: 'center',
+		backgroundColor: '#DDD',
 		flex: 1,
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		padding: 15
+		paddingLeft: 15,
+	},
+	container: {
+		backgroundColor: 'white',
+		flex: 1
 	},
 	backTextWhite: {
 		color: '#FFF',
@@ -301,14 +306,6 @@ const styles = StyleSheet.create({
 		borderBottomWidth: 1,
 		justifyContent: 'center',
 		height: 50,
-	},
-	rowBack: {
-		alignItems: 'center',
-		backgroundColor: '#DDD',
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		paddingLeft: 15,
 	},
 	backRightBtn: {
 		alignItems: 'center',
@@ -325,34 +322,6 @@ const styles = StyleSheet.create({
 	backRightBtnRight: {
 		backgroundColor: '#da635d',
 		right: 0
-	},
-	controls: {
-		alignItems: 'center',
-		marginBottom: 30
-	},
-	switchContainer: {
-		flexDirection: 'row',
-		justifyContent: 'center',
-		marginBottom: 5
-	},
-	switch: {
-		alignItems: 'center',
-		borderWidth: 1,
-		borderColor: 'black',
-		paddingVertical: 10,
-		width: Dimensions.get('window').width / 4,
-	},
-	trash: {
-		height: 25,
-		width: 25,
-	},
-
-
-	text: {
-		fontSize: 35,
-		color: 'white',
-		flex: 1,
-		justifyContent: 'flex-start'
 	},
 	deleteText: {
 		color: "white"

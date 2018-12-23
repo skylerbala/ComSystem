@@ -7,8 +7,7 @@ import AsyncStorageAPI from '../../library/utils/AsyncStorageAPI';
 import Sounds from '../../assets/sounds';
 
 
-class Main extends Component {
-
+export default class Main extends Component {
     state = {
         messages: [],
         employees: [],
@@ -85,7 +84,7 @@ class Main extends Component {
                 }
             })
 
-            console.log(ring)
+            // console.log(ring)
 
             await sound.loadAsync(ring.path);
             await sound.playAsync();
@@ -216,7 +215,7 @@ class Main extends Component {
         this.setState({
             ring: data
         })
-    }    
+    }
 
 
     handleDisconnect(data) {
@@ -237,8 +236,8 @@ class Main extends Component {
             if (timeElapsed === "Invalid date") {
                 timeElapsed = "00:00";
             }
-            if (timeElapsed === "03:00") {
-                this.playSound();
+            if (duration.minutes % 2 === 0 && duration.seconds === 0) {
+                // this.playSound();
             }
             e.timeElapsed = timeElapsed;
             return e
@@ -281,5 +280,3 @@ class Main extends Component {
         );
     }
 }
-
-export default Main;
