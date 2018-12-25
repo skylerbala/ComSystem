@@ -1,8 +1,8 @@
 import { createStackNavigator } from 'react-navigation';
-import MainPanel from './MainPanel';
+import Home from './Home';
 
 export default createStackNavigator({
-  MainPanel: {
-    screen: MainPanel,
+  Home: {
+    screen: Home,
   },
 });

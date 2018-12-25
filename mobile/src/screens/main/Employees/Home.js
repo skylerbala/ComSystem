@@ -18,7 +18,7 @@ import {
 } from 'react-native-color';
 import tinycolor from 'tinycolor2';
 import Button from '../common/components/Button'
-
+import { scale, verticalScale, moderateScale } from '../../../library/utils/ScalingAPI';
 
 
 
@@ -120,7 +120,7 @@ export default class EmployeesTab extends React.Component {
 	render() {
 		let mainView = <NoConnectionView />
 
-		if (this.props.screenProps.isConnected) {
+		if (this.props.screenProps.messageBoxIsConnected) {
 			let modalTitle = "Add Employee";
 			let modalOnPress = this.onAddEmployee;
 
@@ -131,7 +131,7 @@ export default class EmployeesTab extends React.Component {
 
 			const modal = (
 				<Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
-					<Card title={modalTitle}>
+					<Card title={modalTitle} containerStyle={styles.modalCard}>
 						<FormLabel>Employee Name</FormLabel>
 						<FormInput onChangeText={
 							(name) => {
@@ -175,137 +175,107 @@ export default class EmployeesTab extends React.Component {
 			)
 
 			mainView = (
-				<View style={styles.mainContainer}>
-					<View style={styles.employeesView}>
-						<SwipeListView
-							useFlatList
-							closeOnRowBeginSwipe
-							disableRightSwipe
-							rightOpenValue={-250}
-							stopRightSwipe={-250}
-							swipeToOpenPercent={50}
-							data={this.props.screenProps.employees}
-							keyExtractor={(rowData, index) => {
-								return rowData.id.toString();
-							}}
-							renderItem={(rowData, rowMap) => (
-								<View style={styles.employeeRow}>
-									<Text style={styles.employeeRowText}>{rowData.item.name}</Text>
-									<View style={[styles.employeeRowColorBox, { backgroundColor: rowData.item.color }]}></View>
-								</View>
-							)}
-							renderHiddenItem={(rowData, rowMap) => (
-								<View style={styles.employeeRowBack}>
-									<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={_ => {
-										rowMap[rowData.item.id].closeRow()
-										this.setState({
-											isEditing: true,
-											employee: {
-												id: rowData.item.id,
-												name: rowData.item.name,
-												color: tinycolor(rowData.item.color).toHsl()
-											}
-										});
-										this.showModal();
-									}}>
-										<Text style={styles.backTextWhite}>Edit</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										style={[styles.backRightBtn, styles.backRightBtnRight]}
-										onPress={_ => {
+				<View style={styles.mainView}>
+					<View style={styles.mainSubView}>
+						<View style={styles.employeesView}>
+							<SwipeListView
+								useFlatList
+								closeOnRowBeginSwipe
+								disableRightSwipe
+								rightOpenValue={-250}
+								stopRightSwipe={-250}
+								swipeToOpenPercent={50}
+								data={this.props.screenProps.employees}
+								keyExtractor={(rowData, index) => {
+									return rowData.id.toString();
+								}}
+								renderItem={(rowData, rowMap) => (
+									<View style={styles.employeeRow}>
+										<Text style={styles.employeeRowText}>{rowData.item.name}</Text>
+										<View style={[styles.employeeRowColorBox, { backgroundColor: rowData.item.color }]}></View>
+									</View>
+								)}
+								renderHiddenItem={(rowData, rowMap) => (
+									<View style={styles.employeeRowBack}>
+										<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={_ => {
 											rowMap[rowData.item.id].closeRow()
-											this.onDeleteEmployee(rowData.item)
+											this.setState({
+												isEditing: true,
+												employee: {
+													id: rowData.item.id,
+													name: rowData.item.name,
+													color: tinycolor(rowData.item.color).toHsl()
+												}
+											});
+											this.showModal();
 										}}>
-										<Text style={styles.backTextWhite}>Delete</Text>
-									</TouchableOpacity>
-								</View>
-							)}
-						/>
+											<Text style={styles.backTextWhite}>Edit</Text>
+										</TouchableOpacity>
+										<TouchableOpacity
+											style={[styles.backRightBtn, styles.backRightBtnRight]}
+											onPress={_ => {
+												rowMap[rowData.item.id].closeRow()
+												this.onDeleteEmployee(rowData.item)
+											}}>
+											<Text style={styles.backTextWhite}>Delete</Text>
+										</TouchableOpacity>
+									</View>
+								)}
+							/>
+						</View>
+							<Button title={"Add Employee"} onPress={this.showModal} />
+						{modal}
 					</View>
-					<View style={{ flex: .1, }}>
-						<Button title={"Add Employee"} onPress={this.showModal} />
-					</View>
-					{modal}
 				</View>
 			);
 		}
 
-		return (
-			<Container style={{ backgroundColor: '#dce9ef' }}>
-				{mainView}
-			</Container >
-		);
+		return mainView;
 	}
 }
 
 const styles = StyleSheet.create({
-	employeePreview: {
-		height: 50,
-		margin: 10
+	mainView: {
+		backgroundColor: '#d0e1f9',
+		flex: 1,
+		padding: scale(5) // Might not be necessary
 	},
-	employeePreviewText: {
-		fontSize: 40,
-		color: 'white',
-		alignSelf: 'center'
-	},
-	mainContainer: {
+	mainSubView: {
+		backgroundColor: '#4d648d',
 		flex: 1,
 		flexDirection: 'column',
-		margin: 15,
-		borderRadius: 15,
-		backgroundColor: "#91bbd1",
+		borderRadius: 5,
+		padding: scale(5) // Might not be necessary
 	},
 	employeesView: {
-		flex: 1,
-		margin: 10
+		flex: 10,
 	},
 	employeeRow: {
-		backgroundColor: '#478375',
-		borderBottomColor: '#CCC',
+		backgroundColor: '#1e1f26',
+		borderBottomColor: '#4d648d',
 		borderBottomWidth: 1,
-		borderRightColor: '#CCC',
-		paddingLeft: 15,
-		borderRightWidth: 1,
-		height: 75,
+		paddingLeft: scale(7.5),
+		height: scale(35),
 		flexDirection: 'row',
 		alignItems: 'center',
-		justifyContent: 'center'
 	},
 	employeeRowText: {
-		fontSize: 35,
+		fontSize: scale(17.5),
 		color: 'white',
 		flex: 1,
-		justifyContent: 'flex-start'
 	},
 	employeeRowColorBox: {
-		height: 50,
-		width: 50,
-		justifyContent: 'center',
-		marginRight: 15
+		height: scale(25),
+		width: scale(25),
+		marginRight: scale(7.5)
 	},
 	employeeRowBack: {
-		alignItems: 'center',
-		backgroundColor: '#DDD',
 		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'space-between',
-		paddingLeft: 15,
-	},
-	container: {
-		backgroundColor: 'white',
-		flex: 1
+		paddingLeft: scale(7.5),
 	},
 	backTextWhite: {
 		color: '#FFF',
-		fontSize: 35,
-	},
-	rowFront: {
-		alignItems: 'center',
-		backgroundColor: '#CCC',
-		borderBottomColor: 'black',
-		borderBottomWidth: 1,
-		justifyContent: 'center',
-		height: 50,
+		fontSize: scale(17.5),
 	},
 	backRightBtn: {
 		alignItems: 'center',
@@ -316,29 +286,24 @@ const styles = StyleSheet.create({
 		width: 125
 	},
 	backRightBtnLeft: {
-		backgroundColor: 'blue',
+		backgroundColor: '#eb6841',
 		right: 125
 	},
 	backRightBtnRight: {
-		backgroundColor: '#da635d',
+		backgroundColor: '#cc2a36',
 		right: 0
 	},
-	deleteText: {
-		color: "white"
-	},
-	noConnectionText: {
-		textAlign: 'center',
-		fontSize: 40,
+	employeePreview: {
+		height: scale(35),
+		padding: scale(2.5),
+		alignItems: 'center',
 		justifyContent: 'center'
 	},
-	deleteButton: {
-		backgroundColor: '#da635d',
-		width: 100,
-		alignItems: 'center',
-		justifyContent: 'center',
-		position: 'absolute',
-		bottom: 0,
-		top: 0,
-		right: 0
+	employeePreviewText: {
+		fontSize: scale(17.5),
+		color: 'white',
 	},
+	modalCard: {
+		borderRadius: 5
+	}
 });

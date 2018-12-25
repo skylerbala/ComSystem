@@ -1,5 +1,6 @@
 import React from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
+import { scale } from '../../../../library/utils//ScalingAPI';
 
 export default Button = (props) => {
   return (
@@ -14,12 +15,12 @@ export default Button = (props) => {
 
 const styles = StyleSheet.create({
   view: {
-    height: 55,
-    backgroundColor: 'black',
-    padding: 10,
-    margin: 10,
-    justifyContent: 'center',
+    height: scale(25),
+    backgroundColor: '#63ace5',
+    padding: scale(2.5),
+    marginTop: scale(5),
     alignItems: 'center',
+    justifyContent: 'center',
     borderRadius: 5
   },
   text: {

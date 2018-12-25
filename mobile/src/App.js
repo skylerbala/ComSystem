@@ -1,8 +1,7 @@
 import React from 'react';
 import Main from './screens/Main';
 import OnBoarding from './screens/OnBoarding';
-import Expo from 'expo';
-import { View } from 'react-native'
+import { registerRootComponent } from 'expo';
 import AsyncStorageAPI from './library/utils/AsyncStorageAPI';
 
 class App extends React.Component {
@@ -12,13 +11,11 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-    this.onOnBoardingFinish = this.onOnBoardingFinish.bind(this);
   }
 
   componentDidMount() {
     this.storage = new AsyncStorageAPI;
     this.storage.retrieveItem('isOnBoarding').then((result) => {
-      console.log("result", result)
       if (result === 'false') {
         this.setState({ isOnBoarding: false });
       }
@@ -28,7 +25,7 @@ class App extends React.Component {
     })
   }
 
-  onOnBoardingFinish() {
+  onOnBoardingFinish = () => {
     this.storage.storeItem('isOnBoarding', 'false');
     this.setState({ isOnBoarding: false });
   }
@@ -44,10 +41,8 @@ class App extends React.Component {
       );
     }
 
-    return (
-      view
-    );
+    return view;
   }
 }
 
-Expo.registerRootComponent(App);
+registerRootComponent(App);

@@ -1,13 +1,13 @@
 
 import React, { Component } from 'react';
 import { Container, Text } from 'native-base';
-import { Col, Grid } from 'react-native-easy-grid';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import NoConnectionView from '../common/components/NoConnectionView';
 import { Card, FormLabel, FormInput } from 'react-native-elements';
 import Modal from "react-native-modal";
 import Button from '../common/components/Button'
+import { scale, verticalScale, moderateScale } from '../../../library/utils/ScalingAPI';
 
 
 export default class ExpressionsTab extends Component {
@@ -69,7 +69,7 @@ export default class ExpressionsTab extends Component {
   render() {
     let mainView = <NoConnectionView />
 
-    if (this.props.screenProps.isConnected) {
+    if (this.props.screenProps.messageBoxIsConnected) {
       const expressions1 = this.props.screenProps.expressions.filter((expression) => {
         return expression.type == 1
       });
@@ -78,18 +78,18 @@ export default class ExpressionsTab extends Component {
         return expression.type == 2
       });
 
-      let modalTitle = "Add Message";
+      let modalTitle = "Add Expression";
       let modalOnPress = this.onAddExpression;
 
       if (this.state.isEditing) {
-        modalTitle = "Edit Message";
+        modalTitle = "Edit Expression";
         modalOnPress = this.onEditExpression;
       }
 
       modal = (
         <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
-          <Card title={modalTitle}>
-            <FormLabel>New Message</FormLabel>
+          <Card title={modalTitle} containerStyle={styles.modalCard}>
+            <FormLabel>New Expression</FormLabel>
             <FormInput onChangeText={(expression) => {
               let newExpression = this.state.expression;
               newExpression.content = expression;
@@ -103,31 +103,29 @@ export default class ExpressionsTab extends Component {
 
 
       mainView = (
-        <Grid>
-          <Col size={1}>
-            <Card title={"Expressions 1"}>
+        <View style={styles.mainView}>
+          <View style={styles.mainSubView}>
+            <View style={styles.listView}>
+              <Text style={styles.expressionListTitleText}>Expressions 1</Text>
               <SwipeListView
                 useFlatList
                 closeOnRowBeginSwipe
                 disableRightSwipe
-                rightOpenValue={-200}
+                rightOpenValue={-230}
                 swipeToOpenPercent={50}
                 data={expressions1}
                 keyExtractor={(rowData, index) => {
                   return rowData.id.toString();
                 }}
                 renderItem={(rowData, rowMap) => (
-                  <View style={[styles.expressionRow, { backgroundColor: '#91bbd1' }]}>
+                  <View style={[styles.expressionRow, { backgroundColor: '#0057e7' }]}>
                     <Text style={styles.expressionRowText}>{rowData.item.content}</Text>
                   </View>
                 )}
                 renderHiddenItem={(rowData, rowMap) => (
                   <View style={styles.expressionRowBack}>
                     <TouchableOpacity
-                      style={[styles.expressionRowBackButton, {
-                        backgroundColor: 'blue',
-                        right: 100
-                      }]}
+                      style={[styles.expressionRowBackButton, styles.expressionRowBackButtonLeft]}
                       onPress={_ => {
                         rowMap[rowData.item.id].closeRow();
                         this.setState({
@@ -139,24 +137,21 @@ export default class ExpressionsTab extends Component {
                           }
                         })
                       }}>
-                      <Text>Edit</Text>
+                      <Text style={styles.expressionRowText}>Edit</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={[styles.expressionRowBackButton, {
-                        backgroundColor: 'red',
-                        right: 0
-                      }]}
+                      style={[styles.expressionRowBackButton, styles.expressionRowBackButtonRight]}
                       onPress={_ => {
                         rowMap[rowData.item.id].closeRow()
                         this.onDeleteExpression(rowData.item)
                       }}>
-                      <Text>Delete</Text>
+                      <Text style={styles.expressionRowText}>Delete</Text>
                     </TouchableOpacity>
                   </View>
                 )}
               />
               <Button
-                title={"Add New Message"}
+                title={"Add New Expression"}
                 onPress={() => {
                   let newExpression = this.state.expression;
                   newExpression.type = 1;
@@ -164,32 +159,28 @@ export default class ExpressionsTab extends Component {
                   this.showModal();
                 }}
               />
-            </Card>
-          </Col>
-          <Col size={1}>
-            <Card title={"Expressions 2"}>
+            </View>
+            <View style={styles.listView}>
+              <Text style={styles.expressionListTitleText}>Expressions 2</Text>
               <SwipeListView
                 useFlatList
                 closeOnRowBeginSwipe
                 disableRightSwipe
-                rightOpenValue={-200}
+                rightOpenValue={-230}
                 swipeToOpenPercent={50}
                 data={expressions2}
                 keyExtractor={(rowData, index) => {
                   return rowData.id.toString();
                 }}
                 renderItem={(rowData, rowMap) => (
-                  <View style={[styles.expressionRow, { backgroundColor: '#478375' }]}>
+                  <View style={[styles.expressionRow, { backgroundColor: '#d62d20' }]}>
                     <Text style={styles.expressionRowText}>{rowData.item.content}</Text>
                   </View>
                 )}
                 renderHiddenItem={(rowData, rowMap) => (
                   <View style={styles.expressionRowBack}>
                     <TouchableOpacity
-                      style={[styles.expressionRowBackButton, {
-                        backgroundColor: 'blue',
-                        right: 100
-                      }]}
+                      style={[styles.expressionRowBackButton, styles.expressionRowBackButtonLeft]}
                       onPress={_ => {
                         rowMap[rowData.item.id].closeRow();
                         this.setState({
@@ -201,24 +192,22 @@ export default class ExpressionsTab extends Component {
                           }
                         })
                       }}>
-                      <Text>Edit</Text>
+											<Text style={styles.expressionRowText}>Edit</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
-                      style={[styles.expressionRowBackButton, {
-                        backgroundColor: 'red',
-                        right: 0
-                      }]}
+                      style={[styles.expressionRowBackButton, styles.expressionRowBackButtonRight]}
                       onPress={_ => {
                         rowMap[rowData.item.id].closeRow()
                         this.onDeleteExpression(rowData.item)
                       }}>
-                      <Text>Delete</Text>
+                      <Text style={styles.expressionRowText}>Delete</Text>
                     </TouchableOpacity>
                   </View>
                 )}
               />
+
               <Button
-                title={"Add New Message"}
+                title={"Add New Expression"}
                 onPress={() => {
                   let newExpression = this.state.expression;
                   newExpression.type = 2;
@@ -226,29 +215,47 @@ export default class ExpressionsTab extends Component {
                   this.showModal();
                 }}
               />
-            </Card>
-          </Col>
-          {modal}
-        </Grid >
+            </View>
+            {modal}
+          </View>
+        </View>
       )
     }
 
-    return (
-      <Container style={{ backgroundColor: '#dce9ef' }}>
-        {mainView}
-      </Container >
-    );
+    return mainView;
   }
 }
 
 
 const styles = StyleSheet.create({
+  mainView: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    backgroundColor: '#d0e1f9',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 5,
+    paddingRight: 5
+  },
+  mainSubView: {
+    flex: 1,
+    borderRadius: 5,
+    flexDirection: 'row',
+  },
+  listView: {
+    backgroundColor: '#4d648d',
+    flex: 1,
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 5,
+    marginRight: 5
+  },
   expressionRow: {
-    borderBottomColor: '#CCC',
+    flex: 1,
+    borderBottomColor: '#4d648d',
     borderBottomWidth: 1,
-    borderRightColor: '#CCC',
     paddingLeft: 15,
-    borderRightWidth: 1,
     justifyContent: 'center',
     height: 75,
   },
@@ -270,7 +277,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
-    width: 100,
+    width: 115,
   },
   text: {
     fontSize: 35,
@@ -283,16 +290,6 @@ const styles = StyleSheet.create({
     fontSize: 40,
     justifyContent: 'center'
   },
-  rowFront: {
-    backgroundColor: 'white',
-    borderBottomColor: '#CCC',
-    borderBottomWidth: 1,
-    borderRightColor: '#CCC',
-    paddingLeft: 15,
-    borderRightWidth: 1,
-    justifyContent: 'center',
-    height: 75,
-  },
   deleteButton: {
     backgroundColor: '#da635d',
     width: 200,
@@ -303,9 +300,19 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0
   },
-  noConnectionView: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center'
+  expressionListTitleText: {
+    color: 'white',
+    marginBottom: scale(5)
+  },
+  expressionRowBackButtonLeft: {
+    backgroundColor: '#eb6841',
+    right: 115
+  },
+  expressionRowBackButtonRight: {
+    backgroundColor: '#cc2a36',
+    right: 0
+  },
+  modalCard: {
+    borderRadius: 5
   }
 });

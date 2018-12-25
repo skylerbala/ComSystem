@@ -11,7 +11,7 @@ export default MainTabNavigator = createBottomTabNavigator({
   MainPanel: {
     screen: MainPanel,
     navigationOptions: {
-      title: 'MainPanel',
+      title: 'eMessage Panel',
       tabBarIcon: ({ tintColor }) => {
         return (<Icon type="FontAwesome" name="tachometer" style={{ color: tintColor }} />)
       }

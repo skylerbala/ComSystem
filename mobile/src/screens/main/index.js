@@ -12,8 +12,8 @@ export default class Main extends Component {
         messages: [],
         employees: [],
         expressions: [],
-        endpoint: "",
-        isConnected: false,
+        messageBoxIP: "",
+        messageBoxIsConnected: false,
         ring: null
     }
 
@@ -35,8 +35,8 @@ export default class Main extends Component {
 
     componentDidMount() {
         this.storage = new AsyncStorageAPI;
-        this.storage.retrieveItem('endpoint').then((result) => {
-            this.setState({ endpoint: result })
+        this.storage.retrieveItem('messageBoxIP').then((result) => {
+            this.setState({ messageBoxIP: result })
             this.setSocketIOClient("http://" + result + ":3000")
         }).catch((err) => {
             console.log(err);
@@ -60,8 +60,8 @@ export default class Main extends Component {
         clearInterval(this.timer)
     }
 
-    setSocketIOClient(endpoint) {
-        this.socket = SocketIOClient(endpoint);
+    setSocketIOClient(messageBoxIP) {
+        this.socket = SocketIOClient(messageBoxIP);
         this.socket.on('initializeState', (data) => this.initializeState(data));
         this.socket.on('addMessage', (data) => this.handleReceivedMessage(data));
         this.socket.on('addEmployee', (data) => this.handleReceivedEmployee(data));
@@ -199,11 +199,11 @@ export default class Main extends Component {
             messages: [],
             employees: [],
             expressions: [],
-            endpoint: data,
+            messageBoxIP: data,
         }
-        this.storage.storeItem('endpoint', data)
+        this.storage.storeItem('messageBoxIP', data)
         this.setState(newState, () => {
-            if (this.state.endpoint.length > 1) {
+            if (this.state.messageBoxIP.length > 1) {
                 this.socket.close();
             }
             this.setSocketIOClient("http://" + data + ":3000");
@@ -223,7 +223,7 @@ export default class Main extends Component {
             messages: [],
             employees: [],
             expressions: [],
-            isConnected: false
+            messageBoxIsConnected: false
         })
     }
 
@@ -236,7 +236,7 @@ export default class Main extends Component {
             if (timeElapsed === "Invalid date") {
                 timeElapsed = "00:00";
             }
-            if (duration.minutes % 2 === 0 && duration.seconds === 0) {
+            if (duration.minutes % 3 === 0 && duration.seconds === 0) {
                 // this.playSound();
             }
             e.timeElapsed = timeElapsed;
@@ -251,30 +251,28 @@ export default class Main extends Component {
     render() {
         return (
             <MainTabNavigator
-                screenProps={
-                    {
-                        messages: this.state.messages,
-                        employees: this.state.employees,
-                        expressions: this.state.expressions,
-                        endpoint: this.state.endpoint,
-                        isConnected: this.state.isConnected,
-                        ring: this.state.ring,
+                screenProps={{
+                    messages: this.state.messages,
+                    employees: this.state.employees,
+                    expressions: this.state.expressions,
+                    messageBoxIP: this.state.messageBoxIP,
+                    messageBoxIsConnected: this.state.messageBoxIsConnected,
+                    ring: this.state.ring,
 
-                        handleSendMessage: this.handleSendMessage,
-                        handleAddEmployee: this.handleAddEmployee,
-                        handleAddExpression: this.handleAddExpression,
-                        handleUpdateEmployee: this.handleUpdateEmployee,
-                        handleUpdateExpression: this.handleUpdateExpression,
-                        handleDeleteMessage: this.handleDeleteMessage,
-                        handleDeleteEmployee: this.handleDeleteEmployee,
-                        handleDeleteExpression: this.handleDeleteExpression,
+                    handleSendMessage: this.handleSendMessage,
+                    handleAddEmployee: this.handleAddEmployee,
+                    handleAddExpression: this.handleAddExpression,
+                    handleUpdateEmployee: this.handleUpdateEmployee,
+                    handleUpdateExpression: this.handleUpdateExpression,
+                    handleDeleteMessage: this.handleDeleteMessage,
+                    handleDeleteEmployee: this.handleDeleteEmployee,
+                    handleDeleteExpression: this.handleDeleteExpression,
 
-                        handleIPChange: this.handleIPChange,
-                        handleRingChange: this.handleRingChange,
+                    handleIPChange: this.handleIPChange,
+                    handleRingChange: this.handleRingChange,
 
-                        handleSendMessageSound: this.playSound,
-                    }
-                }
+                    handleSendMessageSound: this.playSound,
+                }}
             >
             </MainTabNavigator>
         );

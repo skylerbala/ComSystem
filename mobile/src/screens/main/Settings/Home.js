@@ -1,15 +1,11 @@
 
 import React, { Component } from 'react';
 import { Container, Button, Content, Form, Item, Label, Input, Picker, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
-import { Col, Row, Grid } from 'react-native-easy-grid';
-import DialogInput from 'react-native-dialog-input';
-import { SwipeListView } from 'react-native-swipe-list-view';
 import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
-import styles from '../../../screens/Main/styles/SwipeListViewStyle';
 import Sounds from '../../../assets/sounds';
 
 
-class SettingsTab extends Component {
+export default class SettingsTab extends Component {
   static navigationOptions = ({ navigation }) => {
     const { params = {} } = navigation.state;
     return {
@@ -33,25 +29,31 @@ class SettingsTab extends Component {
 
   render() {
     let pickerOptions = Sounds.map((sound) => {
-      console.log(sound)
       return (
         <Picker.Item label={sound.name} value={sound.name} />
       )
     });
 
     return (
-      <Container>
-        <Content>
-          <Form>
+      <View style={styles.mainView}>
+        <View style={styles.mainSubView}>
+          <Form style={styles.formView}>
             <Item inlineLabel>
               <Label>eMessage Box IP</Label>
-              <Input placeholder="None" autoCapitalize='none' value={this.props.screenProps.endpoint} onChangeText={(input) => this.handleIPChange(input)} />
+              <Input
+                placeholder="None"
+                autoCapitalize='none'
+                autoCorrect={false}
+                value={this.props.screenProps.messageBoxIP} onChangeText={(input) => this.handleIPChange(input)}
+              />
             </Item>
             <Item picker>
+              <Label style={{ paddingLeft: 15 }}>Message Ringtone</Label>
+
               <Picker
                 mode="dropdown"
-                iosIcon={<Icon name="ios-arrow-down-outline" />}
-                placeholder="Select ring tone"
+
+                placeholder="Select Message Ringtone"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
                 selectedValue={this.props.screenProps.ring}
@@ -61,12 +63,30 @@ class SettingsTab extends Component {
               </Picker>
             </Item>
           </Form>
-          
-        </Content>
-      </Container>
+        </View>
+      </View>
     );
   }
 }
 
 
-export default SettingsTab;
+const styles = StyleSheet.create({
+  mainView: {
+    backgroundColor: '#d0e1f9',
+    flex: 1,
+    padding: 10
+  },
+  mainSubView: {
+    backgroundColor: '#4d648d',
+    flex: 1,
+    flexDirection: 'column',
+    borderRadius: 5,
+    padding: 10
+  },
+  formView: {
+    flex: 1,
+    borderRadius: 5,
+    padding: 10,
+    backgroundColor: 'white',
+  }
+});
