@@ -1,11 +1,10 @@
 import React from 'react';
-import { Icon } from 'native-base';
+import { Icon } from 'react-native-elements';
 import { createBottomTabNavigator } from 'react-navigation';
 import MainPanel from './MainPanel';
 import Employees from './Employees';
 import Expressions from './Expressions';
 import Settings from './Settings';
-
 
 export default MainTabNavigator = createBottomTabNavigator({
   MainPanel: {
@@ -13,7 +12,7 @@ export default MainTabNavigator = createBottomTabNavigator({
     navigationOptions: {
       title: 'eMessage Panel',
       tabBarIcon: ({ tintColor }) => {
-        return (<Icon type="FontAwesome" name="tachometer" style={{ color: tintColor }} />)
+        return (<Icon type="font-awesome" name="tachometer" color={tintColor} />)
       }
     }
   },
@@ -22,7 +21,7 @@ export default MainTabNavigator = createBottomTabNavigator({
     navigationOptions: {
       title: 'Employees',
       tabBarIcon: ({ tintColor }) => {
-        return (<Icon type="FontAwesome" name="user" style={{ color: tintColor }} />)
+        return (<Icon type="font-awesome" name="user" color={tintColor} />)
       }
     }
   },
@@ -31,7 +30,7 @@ export default MainTabNavigator = createBottomTabNavigator({
     navigationOptions: {
       title: 'Expressions',
       tabBarIcon: ({ tintColor }) => {
-        return (<Icon type="FontAwesome" name="envelope" style={{ color: tintColor }} />)
+        return (<Icon type="font-awesome" name="envelope" color={tintColor} />)
       }
     }
   },
@@ -40,7 +39,7 @@ export default MainTabNavigator = createBottomTabNavigator({
     navigationOptions: {
       title: 'Settings',
       tabBarIcon: ({ tintColor }) => {
-        return (<Icon type="FontAwesome" name="cog" style={{ color: tintColor }} />)
+        return (<Icon type="font-awesome" name="cog" color={tintColor} />)
       }
     }
   }

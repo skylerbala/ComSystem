@@ -8,6 +8,9 @@ export default NoConnectionView = (props) => {
       <Text style={styles.text}>
         No Connection
       </Text>
+      <Text style={styles.helperText}>
+        Go to Settings and set eMessage Box IP
+      </Text>
     </View>
   )
 }
@@ -22,4 +25,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 40
   },
+  helperText: {
+    textAlign: 'center',
+    fontSize: 20
+  }
 });

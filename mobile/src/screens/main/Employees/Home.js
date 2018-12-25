@@ -1,31 +1,17 @@
 import React from 'react';
-import { Container, Text } from 'native-base';
+import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import {
-	Dimensions,
-	TouchableOpacity,
-	StyleSheet,
-	View,
-} from 'react-native';
 import Modal from "react-native-modal";
-import NoConnectionView from '../common/components/NoConnectionView';
+import { HueSlider, SaturationSlider, LightnessSlider } from 'react-native-color';
+import tinycolor from 'tinycolor2';
 import { Card } from 'react-native-elements';
 import { FormLabel, FormInput } from 'react-native-elements';
-import {
-	HueSlider,
-	SaturationSlider,
-	LightnessSlider
-} from 'react-native-color';
-import tinycolor from 'tinycolor2';
+import NoConnectionView from '../common/components/NoConnectionView';
 import Button from '../common/components/Button'
-import { scale, verticalScale, moderateScale } from '../../../library/utils/ScalingAPI';
-
-
-
+import styles from './styles';
 
 export default class EmployeesTab extends React.Component {
 	static navigationOptions = ({ navigation }) => {
-		const { params = {} } = navigation.state;
 		return {
 			title: 'Employees',
 		}
@@ -43,15 +29,9 @@ export default class EmployeesTab extends React.Component {
 
 	constructor(props) {
 		super(props);
-
-		this.onAddEmployee = this.onAddEmployee.bind(this);
-		this.onEditEmployee = this.onEditEmployee.bind(this);
-		this.showModal = this.showModal.bind(this);
-		this.resetState = this.resetState.bind(this);
-
 	}
 
-	onAddEmployee() {
+	onAddEmployee = () => {
 		let newEmployee = {
 			name: this.state.employee.name,
 			color: tinycolor(this.state.employee.color).toHexString()
@@ -60,22 +40,28 @@ export default class EmployeesTab extends React.Component {
 		this.resetState();
 	}
 
-	onEditEmployee() {
+	onEditEmployee = () => {
 		let newEmployee = this.state.employee;
 		newEmployee.color = tinycolor(newEmployee.color).toHexString();
 		this.props.screenProps.handleUpdateEmployee(this.state.employee);
 		this.resetState();
 	}
 
-	onDeleteEmployee(data) {
+	onUpdateEmployeeName = (name) => {
+		let newEmployee = this.state.employee;
+		newEmployee.name = name;
+		this.setState({ employee: newEmployee });
+	}
+
+	onDeleteEmployee = (data) => {
 		this.props.screenProps.handleDeleteEmployee(data);
 	}
 
-	showModal() {
+	showModal = () => {
 		this.setState({ isModalVisible: true });
 	}
 
-	resetState() {
+	resetState = () => {
 		this.setState({
 			isModalVisible: false,
 			isEditing: false,
@@ -87,7 +73,7 @@ export default class EmployeesTab extends React.Component {
 		});
 	}
 
-	updateHue(h) {
+	onUpdateHue = (h) => {
 		this.setState({
 			employee: {
 				id: this.state.employee.id,
@@ -97,7 +83,7 @@ export default class EmployeesTab extends React.Component {
 		});
 	}
 
-	updateSaturation(s) {
+	onUpdateSaturation = (s) => {
 		this.setState({
 			employee: {
 				id: this.state.employee.id,
@@ -107,7 +93,7 @@ export default class EmployeesTab extends React.Component {
 		});
 	}
 
-	updateLightness(l) {
+	onUpdateLightness = (l) => {
 		this.setState({
 			employee: {
 				id: this.state.employee.id,
@@ -117,10 +103,49 @@ export default class EmployeesTab extends React.Component {
 		});
 	}
 
-	render() {
+	renderEmployeeRowFront = (rowData) => {
+		return (
+			<View style={styles.employeeRowFront}>
+				<Text style={styles.employeeRowFrontText}>{rowData.item.name}</Text>
+				<View style={[styles.employeeRowFrontColorBox, { backgroundColor: rowData.item.color }]}></View>
+			</View>
+		);
+	}
+
+	renderEmployeeRowBack = (rowData, rowMap) => {
+		return (
+			<View style={styles.employeeRowBack}>
+				<TouchableOpacity style={[styles.employeeRowBackButton, styles.employeeRowBackButtonLeft]} onPress={_ => {
+					rowMap[rowData.item.id].closeRow()
+					this.setState({
+						isEditing: true,
+						employee: {
+							id: rowData.item.id,
+							name: rowData.item.name,
+							color: tinycolor(rowData.item.color).toHsl()
+						}
+					});
+					this.showModal();
+				}}>
+					<Text style={styles.employeeRowBackText}>Edit</Text>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={[styles.employeeRowBackButton, styles.employeeRowBackButtonRight]}
+					onPress={_ => {
+						rowMap[rowData.item.id].closeRow()
+						this.onDeleteEmployee(rowData.item)
+					}}>
+					<Text style={styles.employeeRowBackText}>Delete</Text>
+				</TouchableOpacity>
+			</View>
+		);
+	}
+
+	render = () => {
 		let mainView = <NoConnectionView />
 
 		if (this.props.screenProps.messageBoxIsConnected) {
+
 			let modalTitle = "Add Employee";
 			let modalOnPress = this.onAddEmployee;
 
@@ -129,50 +154,40 @@ export default class EmployeesTab extends React.Component {
 				modalOnPress = this.onEditEmployee;
 			}
 
-			const modal = (
+			let modal = (
 				<Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
 					<Card title={modalTitle} containerStyle={styles.modalCard}>
 						<FormLabel>Employee Name</FormLabel>
-						<FormInput onChangeText={
-							(name) => {
-								let newEmployee = this.state.employee;
-								newEmployee.name = name;
-								this.setState({ employee: newEmployee });
-							}} />
+						<FormInput onChangeText={(name) => this.onUpdateEmployeeName(name)} />
 						<FormLabel>Color</FormLabel>
 						<FormLabel>Hue</FormLabel>
 						<HueSlider
 							gradientSteps={40}
 							value={this.state.employee.color.h}
 							color={this.state.employee.color}
-							onValueChange={(h) => this.updateHue(h)}
+							onValueChange={(h) => this.onUpdateHue(h)}
 						/>
 						<FormLabel style={styles.componentText}>Saturation</FormLabel>
 						<SaturationSlider
 							gradientSteps={20}
 							value={this.state.employee.color.s}
 							color={this.state.employee.color}
-							onValueChange={(s) => this.updateSaturation(s)}
+							onValueChange={(s) => this.onUpdateSaturation(s)}
 						/>
 						<FormLabel style={styles.componentText}>Lightness</FormLabel>
 						<LightnessSlider
 							gradientSteps={20}
 							value={this.state.employee.color.l}
 							color={this.state.employee.color}
-							onValueChange={(l) => this.updateLightness(l)}
+							onValueChange={(l) => this.onUpdateLightness(l)}
 						/>
-						<View style={
-							[
-								styles.employeePreview,
-								{ backgroundColor: tinycolor(this.state.employee.color).toHexString() }
-							]
-						}>
-							<Text style={styles.employeePreviewText}>{this.state.employee.name}</Text>
+						<View style={[styles.employeeRowFront, { backgroundColor: tinycolor(this.state.employee.color).toHexString() }]}>
+							<Text style={styles.employeeRowFrontText}>{this.state.employee.name}</Text>
 						</View>
 						<Button title='Save' onPress={modalOnPress} />
 					</Card>
 				</Modal>
-			)
+			);
 
 			mainView = (
 				<View style={styles.mainView}>
@@ -184,46 +199,14 @@ export default class EmployeesTab extends React.Component {
 								disableRightSwipe
 								rightOpenValue={-250}
 								stopRightSwipe={-250}
-								swipeToOpenPercent={50}
+								swipeToOpenPercent={25}
 								data={this.props.screenProps.employees}
-								keyExtractor={(rowData, index) => {
-									return rowData.id.toString();
-								}}
-								renderItem={(rowData, rowMap) => (
-									<View style={styles.employeeRow}>
-										<Text style={styles.employeeRowText}>{rowData.item.name}</Text>
-										<View style={[styles.employeeRowColorBox, { backgroundColor: rowData.item.color }]}></View>
-									</View>
-								)}
-								renderHiddenItem={(rowData, rowMap) => (
-									<View style={styles.employeeRowBack}>
-										<TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={_ => {
-											rowMap[rowData.item.id].closeRow()
-											this.setState({
-												isEditing: true,
-												employee: {
-													id: rowData.item.id,
-													name: rowData.item.name,
-													color: tinycolor(rowData.item.color).toHsl()
-												}
-											});
-											this.showModal();
-										}}>
-											<Text style={styles.backTextWhite}>Edit</Text>
-										</TouchableOpacity>
-										<TouchableOpacity
-											style={[styles.backRightBtn, styles.backRightBtnRight]}
-											onPress={_ => {
-												rowMap[rowData.item.id].closeRow()
-												this.onDeleteEmployee(rowData.item)
-											}}>
-											<Text style={styles.backTextWhite}>Delete</Text>
-										</TouchableOpacity>
-									</View>
-								)}
+								keyExtractor={(rowData) => rowData.id.toString()}
+								renderItem={(rowData) => this.renderEmployeeRowFront(rowData)}
+								renderHiddenItem={(rowData, rowMap) => this.renderEmployeeRowBack(rowData, rowMap)}
 							/>
 						</View>
-							<Button title={"Add Employee"} onPress={this.showModal} />
+						<Button title={"Add"} onPress={this.showModal} />
 						{modal}
 					</View>
 				</View>
@@ -233,77 +216,3 @@ export default class EmployeesTab extends React.Component {
 		return mainView;
 	}
 }
-
-const styles = StyleSheet.create({
-	mainView: {
-		backgroundColor: '#d0e1f9',
-		flex: 1,
-		padding: scale(5) // Might not be necessary
-	},
-	mainSubView: {
-		backgroundColor: '#4d648d',
-		flex: 1,
-		flexDirection: 'column',
-		borderRadius: 5,
-		padding: scale(5) // Might not be necessary
-	},
-	employeesView: {
-		flex: 10,
-	},
-	employeeRow: {
-		backgroundColor: '#1e1f26',
-		borderBottomColor: '#4d648d',
-		borderBottomWidth: 1,
-		paddingLeft: scale(7.5),
-		height: scale(35),
-		flexDirection: 'row',
-		alignItems: 'center',
-	},
-	employeeRowText: {
-		fontSize: scale(17.5),
-		color: 'white',
-		flex: 1,
-	},
-	employeeRowColorBox: {
-		height: scale(25),
-		width: scale(25),
-		marginRight: scale(7.5)
-	},
-	employeeRowBack: {
-		flex: 1,
-		paddingLeft: scale(7.5),
-	},
-	backTextWhite: {
-		color: '#FFF',
-		fontSize: scale(17.5),
-	},
-	backRightBtn: {
-		alignItems: 'center',
-		bottom: 0,
-		justifyContent: 'center',
-		position: 'absolute',
-		top: 0,
-		width: 125
-	},
-	backRightBtnLeft: {
-		backgroundColor: '#eb6841',
-		right: 125
-	},
-	backRightBtnRight: {
-		backgroundColor: '#cc2a36',
-		right: 0
-	},
-	employeePreview: {
-		height: scale(35),
-		padding: scale(2.5),
-		alignItems: 'center',
-		justifyContent: 'center'
-	},
-	employeePreviewText: {
-		fontSize: scale(17.5),
-		color: 'white',
-	},
-	modalCard: {
-		borderRadius: 5
-	}
-});

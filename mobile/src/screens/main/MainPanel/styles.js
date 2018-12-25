@@ -1,11 +1,9 @@
-
 import { Dimensions, StyleSheet } from 'react-native';
 import { scale } from '../../../library/utils/ScalingAPI';
 
 export default styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    flexDirection: 'column',
     backgroundColor: '#d0e1f9',
     padding: 10
   },
@@ -35,7 +33,7 @@ export default styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   messageRowFrontContentText: {
-    fontSize: scale(25), // change?
+    fontSize: scale(25),
     color: 'white',
   },
   messageRowFrontTimer: {

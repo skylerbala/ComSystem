@@ -1,49 +1,44 @@
 "use strict"
 
-const app = require('http').createServer().listen(3000, '0.0.0.0')
-const io = require('socket.io').listen(app).sockets;
-const db = require('./models');
+const app = require("http").createServer().listen(3000, "0.0.0.0")
+const io = require("socket.io").listen(app).sockets;
+const db = require("./models");
 
-// Connect to Socket.io
-io.on('connection', (socket) => {
+io.on("connection", (socket) => {
 
-  let messages = db.Message;
-  let employees = db.Employee;
-  let expressions = db.Expression;
-
-
-  console.log('New Connection: ' + socket.id);
+  console.log("New Connection: " + socket.id);
 
   let initialState = {}
 
-  const all_messages = messages.findAll({ order: [['createdAt', 'ASC']] })
-  const all_employees = employees.findAll({ order: [['createdAt', 'ASC']] })
-  const all_expressions = expressions.findAll({ order: [['createdAt', 'ASC']] })
+  let allMessages = db.Message.findAll({ order: [["createdAt", "ASC"]] });
+  let allEmployees = db.Employee.findAll({ order: [["createdAt", "ASC"]] });
+  let allExpressions = db.Expression.findAll({ order: [["createdAt", "ASC"]] });
 
   Promise
-    .all([all_messages, all_employees, all_expressions])
-    .then((res) => {
-      initialState.messages = res[0]
-      initialState.employees = res[1]
-      initialState.expressions = res[2]
-      initialState.isConnected = true
+    .all([allMessages, allEmployees, allExpressions])
+    .then((result) => {
+      initialState.messages = result[0];
+      initialState.employees = result[1];
+      initialState.expressions = result[2];
+      initialState.messageBoxIsConnected = true;
 
-      console.log('Sending Initial State: ' + initialState);
+      socket.emit("initState", initialState);
 
-      socket.emit('initializeState', initialState);
+      console.log("Sending Initial State: " + initialState);
     })
-    .catch(err => {
-      console.log(err.message);
+    .catch(error => {
+      console.log(error.message);
     });
 
-  // Add
-  socket.on('addMessage', (data) => {
+  socket.on("sendMessage", (data) => {
     let name = data.name;
     let content = data.content;
     let color = data.color;
 
-    if (name === '' || content === '') {
-      sendStatus('Please enter a name and message');
+    if (content === "") {
+      sendStatus({
+        message: "Error: No message entered"
+      });
     }
     else {
       let newMessage = {
@@ -52,52 +47,51 @@ io.on('connection', (socket) => {
         color: color
       };
 
-      messages.create(newMessage).then((res) => {
-        io.emit('addMessage', res);
-        console.log("Message Added")
-
+      db.Message.create(newMessage).then((result) => {
+        io.emit("sendMessage", result);
         sendStatus({
-          message: 'Message Sent',
+          message: "Success: Message Sent"
         });
-      }).catch((err) => {
-        console.log('***There was an error creating', JSON.stringify(err))
+
+      }).catch((error) => {
+        sendStatus({ message: "Error: " + error });
       });
     }
   });
 
-  socket.on('addEmployee', (data) => {
+  socket.on("addEmployee", (data) => {
     let name = data.name;
     let color = data.color;
 
-    if (name === '') {
-      sendStatus('Please enter employee name');
-    }
-    else if (color === '') {
-      sendStatus('Please enter color')
+    if (name === "") {
+      sendStatus({
+        message: "Error: No employee name entered"
+      });
     }
     else {
       let newEmployee = {
         name: name,
         color: color
       };
-      employees.create(newEmployee).then((res) => {
-        io.emit('addEmployee', res);
-        console.log("Employee Added")
+      db.Employee.create(newEmployee).then((result) => {
+        io.emit("addEmployee", result);
         sendStatus({
-          message: 'Employee Sent',
+          message: "Success: Employee Added",
         });
-      }).catch((err) => {
-        console.log('***There was an error creating', JSON.stringify(err))
+      }).catch((error) => {
+        sendStatus({ message: "Error: " + error });
       });
     }
   });
 
-  socket.on('addExpression', (data) => {
+  socket.on("addExpression", (data) => {
     let content = data.content;
     let type = data.type;
 
-    if (content === '') {
-      sendStatus('Please enter a expression');
+    if (content === "") {
+      sendStatus({
+        message: "Error: No expression entered",
+      });
     }
     else {
       let newExpression = {
@@ -105,101 +99,102 @@ io.on('connection', (socket) => {
         type: type
       };
 
-      expressions.create(newExpression).then((res) => {
-        io.emit('addExpression', res);
-        console.log("Expression Added")
+      db.Expression.create(newExpression).then((result) => {
+        io.emit("addExpression", result);
 
         sendStatus({
-          message: 'Expression Sent',
+          message: "Success: Expression Added",
         });
-      }).catch((err) => {
-        console.log('***There was an error creating', JSON.stringify(err))
+      }).catch((error) => {
+        sendStatus({ message: "Error: " + error });
       });
     }
   });
 
-  // Update
-  socket.on('updateEmployee', (data) => {
+  socket.on("updateEmployee", (data) => {
     console.log(data)
     let id = data.id
     let name = data.name
     let color = data.color
 
-    employees.findById(id).then((res) => {
-      res.update({ name: name, color: color });
-      io.emit('updateEmployee', data);
-      console.log("Employee Updated")
-
-    }).catch((err) => {
-      console.log('***Error deleting', JSON.stringify(err))
+    db.Employee.findById(id).then((result) => {
+      result.update({ name: name, color: color });
+      io.emit("updateEmployee", data);
+      sendStatus({
+        message: "Success: Employee Updated",
+      });
+    }).catch((error) => {
+      console.log("***Error deleting", JSON.stringify(error))
     })
   });
 
-  socket.on('updateExpression', (data) => {
+  socket.on("updateExpression", (data) => {
     let id = data.id
     let content = data.content;
 
-    expressions.findById(id).then((res) => {
-      res.update({ content: content });
-      io.emit('updateExpression', data);
-      console.log("Expression Updated")
-
-    }).catch((err) => {
-      console.log('***Error deleting', JSON.stringify(err))
+    db.Expression.findById(id).then((result) => {
+      result.update({ content: content });
+      io.emit("updateExpression", data);
+      sendStatus({
+        message: "Success: Expression Updated",
+      });
+    }).catch((error) => {
+      console.log("***Error deleting", JSON.stringify(error))
     })
   });
 
-  // Delete
-  socket.on('deleteMessage', (data) => {
+  socket.on("deleteMessage", (data) => {
     let id = data.id
 
-    messages.findById(id).then((res) => {
-      res.destroy({ force: true });
-      io.emit('deleteMessage', data);
-      console.log("Message Deleted")
-
-    }).catch((err) => {
-      console.log('***Error deleting', JSON.stringify(err))
+    db.Message.findById(id).then((result) => {
+      result.destroy({ force: true });
+      io.emit("deleteMessage", data);
+      sendStatus({
+        message: "Success: Message Deleted",
+      });
+    }).catch((error) => {
+      console.log("***Error deleting", JSON.stringify(error))
     })
   });
 
-  socket.on('deleteEmployee', (data) => {
+  socket.on("deleteEmployee", (data) => {
     let id = data.id
 
-    employees.findById(id).then((res) => {
-      res.destroy({ force: true });
-      io.emit('deleteEmployee', data);
-      console.log("Employee Deleted")
-
-    }).catch((err) => {
-      console.log('***Error deleting', JSON.stringify(err))
+    db.Employee.findById(id).then((result) => {
+      result.destroy({ force: true });
+      io.emit("deleteEmployee", data);
+      sendStatus({
+        message: "Success: Employee Deleted",
+      });
+    }).catch((error) => {
+      console.log("***Error deleting", JSON.stringify(error))
     })
   });
 
-  socket.on('deleteExpression', (data) => {
+  socket.on("deleteExpression", (data) => {
     let id = data.id
 
-    expressions.findById(id).then((res) => {
-      res.destroy({ force: true });
-      io.emit('deleteExpression', data);
-      console.log("Expression Deleted")
-
-    }).catch((err) => {
-      console.log('***Error deleting', JSON.stringify(err))
+    db.Expression.findById(id).then((result) => {
+      result.destroy({ force: true });
+      io.emit("deleteExpression", data);
+      sendStatus({
+        message: "Success: Expression Updated",
+      });
+    }).catch((error) => {
+      console.log("***Error deleting", JSON.stringify(error))
     })
   });
 
   const sendStatus = (s) => {
-    socket.emit('status', s);
+    socket.emit("status", s);
   }
 
-  socket.on('disconnect', () => {
-    console.log('Disconnected: ', socket.id)
-
+  socket.on("disconnect", () => {
+    console.log("Disconnected: ", socket.id)
   })
 
-  socket.on('error', function (err) {
-    console.log('Socket Error: ', socket.id)
-    console.log(err)
+  socket.on("error", function (error) {
+    console.log("Socket Error: ", socket.id)
+    console.log(error)
   })
 });

@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
-import { Container, Button, Content, Form, Item, Label, Input, Picker, Text, Fab, Body, Icon, alert, Header, Left, Right, Title } from 'native-base';
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { Form, Item, Label, Input, Picker } from 'native-base';
+import { View, StyleSheet } from 'react-native';
 import Sounds from '../../../assets/sounds';
 
 
@@ -13,24 +13,22 @@ export default class SettingsTab extends Component {
     }
   };
 
-
-
   constructor(props) {
     super(props);
   }
 
-  handleIPChange(IP) {
-    this.props.screenProps.handleIPChange(IP);
+  onMessageBoxIPChange(IP) {
+    this.props.screenProps.handleMessageBoxIPChange(IP);
   }
 
-  handleRingChange(ring) {
-    this.props.screenProps.handleRingChange(ring);
+  onRingtoneChange(ringtone) {
+    this.props.screenProps.handleRingtoneChange(ringtone);
   }
 
   render() {
     let pickerOptions = Sounds.map((sound) => {
       return (
-        <Picker.Item label={sound.name} value={sound.name} />
+        <Picker.Item key={sound.name} label={sound.name} value={sound.name} />
       )
     });
 
@@ -44,7 +42,7 @@ export default class SettingsTab extends Component {
                 placeholder="None"
                 autoCapitalize='none'
                 autoCorrect={false}
-                value={this.props.screenProps.messageBoxIP} onChangeText={(input) => this.handleIPChange(input)}
+                value={this.props.screenProps.messageBoxIP} onChangeText={(input) => this.onMessageBoxIPChange(input)}
               />
             </Item>
             <Item picker>
@@ -56,8 +54,8 @@ export default class SettingsTab extends Component {
                 placeholder="Select Message Ringtone"
                 placeholderStyle={{ color: "#bfc6ea" }}
                 placeholderIconColor="#007aff"
-                selectedValue={this.props.screenProps.ring}
-                onValueChange={(value) => this.handleRingChange(value)}
+                selectedValue={this.props.screenProps.ringtone}
+                onValueChange={(value) => this.onRingtoneChange(value)}
               >
                 {pickerOptions}
               </Picker>

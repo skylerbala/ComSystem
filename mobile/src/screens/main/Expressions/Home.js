@@ -1,8 +1,7 @@
 
 import React, { Component } from 'react';
-import { Container, Text } from 'native-base';
 import { SwipeListView } from 'react-native-swipe-list-view';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
 import NoConnectionView from '../common/components/NoConnectionView';
 import { Card, FormLabel, FormInput } from 'react-native-elements';
 import Modal from "react-native-modal";
@@ -111,8 +110,9 @@ export default class ExpressionsTab extends Component {
                 useFlatList
                 closeOnRowBeginSwipe
                 disableRightSwipe
-                rightOpenValue={-230}
-                swipeToOpenPercent={50}
+                rightOpenValue={-250}
+                stopRightSwipe={-250} 
+                swipeToOpenPercent={25}
                 data={expressions1}
                 keyExtractor={(rowData, index) => {
                   return rowData.id.toString();
@@ -151,7 +151,7 @@ export default class ExpressionsTab extends Component {
                 )}
               />
               <Button
-                title={"Add New Expression"}
+                title={"Add"}
                 onPress={() => {
                   let newExpression = this.state.expression;
                   newExpression.type = 1;
@@ -166,8 +166,9 @@ export default class ExpressionsTab extends Component {
                 useFlatList
                 closeOnRowBeginSwipe
                 disableRightSwipe
-                rightOpenValue={-230}
-                swipeToOpenPercent={50}
+                rightOpenValue={-250}
+                stopRightSwipe={-250}
+                swipeToOpenPercent={25}
                 data={expressions2}
                 keyExtractor={(rowData, index) => {
                   return rowData.id.toString();
@@ -192,7 +193,7 @@ export default class ExpressionsTab extends Component {
                           }
                         })
                       }}>
-											<Text style={styles.expressionRowText}>Edit</Text>
+                      <Text style={styles.expressionRowText}>Edit</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={[styles.expressionRowBackButton, styles.expressionRowBackButtonRight]}
@@ -207,7 +208,7 @@ export default class ExpressionsTab extends Component {
               />
 
               <Button
-                title={"Add New Expression"}
+                title={"Add"}
                 onPress={() => {
                   let newExpression = this.state.expression;
                   newExpression.type = 2;
@@ -230,8 +231,6 @@ export default class ExpressionsTab extends Component {
 const styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
     backgroundColor: '#d0e1f9',
     paddingTop: 10,
     paddingBottom: 10,
@@ -277,7 +276,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'absolute',
     top: 0,
-    width: 115,
+    width: 125,
   },
   text: {
     fontSize: 35,
@@ -290,23 +289,13 @@ const styles = StyleSheet.create({
     fontSize: 40,
     justifyContent: 'center'
   },
-  deleteButton: {
-    backgroundColor: '#da635d',
-    width: 200,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    bottom: 0,
-    top: 0,
-    right: 0
-  },
   expressionListTitleText: {
     color: 'white',
     marginBottom: scale(5)
   },
   expressionRowBackButtonLeft: {
     backgroundColor: '#eb6841',
-    right: 115
+    right: 125
   },
   expressionRowBackButtonRight: {
     backgroundColor: '#cc2a36',

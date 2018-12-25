@@ -12,7 +12,7 @@ const TableView = (props) => {
       closeOnRowBeginSwipe
       disableRightSwipe
       rightOpenValue={-200}
-      swipeToOpenPercent={50}
+      swipeToOpenPercent={25}
       data={props.data}
       keyExtractor={(rowData, index) => {
         return rowData.id.toString();

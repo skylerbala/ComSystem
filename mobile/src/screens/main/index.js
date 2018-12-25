@@ -1,251 +1,267 @@
 import React, { Component } from 'react';
+import { View } from 'react-native';
 import SocketIOClient from 'socket.io-client';
 import moment from 'moment';
 import { Audio } from 'expo';
 import MainTabNavigator from './MainTabNavigator';
 import AsyncStorageAPI from '../../library/utils/AsyncStorageAPI';
 import Sounds from '../../assets/sounds';
-
+import Toast from 'react-native-root-toast';
 
 export default class Main extends Component {
     state = {
         messages: [],
         employees: [],
         expressions: [],
-        messageBoxIP: "",
+        messageBoxIP: null,
         messageBoxIsConnected: false,
-        ring: null
+        ringtone: null
     }
 
     constructor(props) {
         super(props);
-
-        this.handleSendMessage = this.handleSendMessage.bind(this)
-        this.handleAddEmployee = this.handleAddEmployee.bind(this)
-        this.handleAddExpression = this.handleAddExpression.bind(this)
-        this.handleUpdateEmployee = this.handleUpdateEmployee.bind(this)
-        this.handleUpdateExpression = this.handleUpdateExpression.bind(this)
-        this.handleDeleteMessage = this.handleDeleteMessage.bind(this)
-        this.handleDeleteEmployee = this.handleDeleteEmployee.bind(this)
-        this.handleDeleteExpression = this.handleDeleteExpression.bind(this)
-        this.handleIPChange = this.handleIPChange.bind(this)
-        this.handleRingChange = this.handleRingChange.bind(this)
-        this.handleSendMessageSound = this.playSound.bind(this)
+        this.socket = null;
+        this.storage = new AsyncStorageAPI;
+        this.timer = setInterval(() => this.timerTick(), 1000);
+        this.toast = null;
     }
 
     componentDidMount() {
-        this.storage = new AsyncStorageAPI;
         this.storage.retrieveItem('messageBoxIP').then((result) => {
-            this.setState({ messageBoxIP: result })
-            this.setSocketIOClient("http://" + result + ":3000")
-        }).catch((err) => {
-            console.log(err);
+            this.initSocketIOClient(result);
+        }).catch((error) => {
+            console.log(error);
         });
 
-        this.storage.retrieveItem('ring').then((result) => {
-            let ring = result
-            if (ring == null) {
-                ring = Sounds[0].name;
+        this.storage.retrieveItem('ringtone').then((result) => {
+            let ringtone = result
+            if (ringtone == null) {
+                ringtone = Sounds[0].name;
             }
-            this.setState({ ring: ring })
-        }).catch((err) => {
-            console.log(err);
+            this.setState({ ringtone: ringtone })
+        }).catch((error) => {
+            console.log(error);
         });
 
-        this.timer = setInterval(() => this.tick(), 1000);
     }
 
     componentWillUnmount() {
         this.socket.close();
-        clearInterval(this.timer)
+        clearInterval(this.timer);
     }
 
-    setSocketIOClient(messageBoxIP) {
-        this.socket = SocketIOClient(messageBoxIP);
-        this.socket.on('initializeState', (data) => this.initializeState(data));
-        this.socket.on('addMessage', (data) => this.handleReceivedMessage(data));
-        this.socket.on('addEmployee', (data) => this.handleReceivedEmployee(data));
-        this.socket.on('addExpression', (data) => this.handleReceivedExpression(data));
-        this.socket.on('updateEmployee', (data) => this.handleReceivedUpdateEmployee(data));
-        this.socket.on('updateExpression', (data) => this.handleReceivedUpdateExpression(data));
-        this.socket.on('deleteMessage', (data) => this.handleReceivedDeleteMessage(data));
-        this.socket.on('deleteEmployee', (data) => this.handleReceivedDeleteEmployee(data));
-        this.socket.on('deleteExpression', (data) => this.handleReceivedDeleteExpression(data));
-        this.socket.on('disconnect', (data) => this.handleDisconnect(data));
+    initSocketIOClient = (messageBoxIP) => {
+        this.setState({ messageBoxIP: messageBoxIP });
+        this.socket = SocketIOClient("http://" + messageBoxIP + ":3000");
+        this.socket.on('initState', (data) => this.initState(data));
+        this.socket.on('sendMessage', (data) => this.handleInputSendMessage(data));
+        this.socket.on('addEmployee', (data) => this.handleInputAddEmployee(data));
+        this.socket.on('addExpression', (data) => this.handleInputAddExpression(data));
+        this.socket.on('updateEmployee', (data) => this.handleInputUpdateEmployee(data));
+        this.socket.on('updateExpression', (data) => this.handleInputUpdateExpression(data));
+        this.socket.on('deleteMessage', (data) => this.handleInputDeleteMessage(data));
+        this.socket.on('deleteEmployee', (data) => this.handleInputDeleteEmployee(data));
+        this.socket.on('deleteExpression', (data) => this.handleInputDeleteExpression(data));
+        this.socket.on('status', (data) => this.handleInputStatus(data));
+        this.socket.on('disconnect', (data) => this.handleInputDisconnect());
     }
 
-    async playSound() {
+    initState = (data) => {
+        this.setState({
+            messages: data.messages,
+            employees: data.employees,
+            expressions: data.expressions,
+            messageBoxIsConnected: true
+        });
+    }
+
+    handleInputSendMessage = (data) => {
+        this.setState({
+            messages: [...this.state.messages, data]
+        });
+        this.playRingtone();
+    }
+
+    handleInputAddEmployee = (data) => {
+        this.setState({
+            employees: [...this.state.employees, data]
+        });
+    }
+
+    handleInputAddExpression = (data) => {
+        this.setState({
+            expressions: [...this.state.expressions, data]
+        });
+    }
+
+    handleInputUpdateEmployee = (data) => {
+        let updatedEmployees = this.state.employees;
+        let target = updatedEmployees.findIndex(e => e.id === data.id);
+        updatedEmployees[target] = data;
+        this.setState({
+            employees: updatedEmployees
+        });
+    }
+
+    handleInputUpdateExpression = (data) => {
+        let updatedExpressions = this.state.expressions;
+        let target = updatedExpressions.findIndex(e => e.id === data.id);
+        updatedExpressions[target] = data;
+        this.setState({
+            expressions: updatedExpressions
+        });
+    }
+
+    handleInputDeleteMessage = (data) => {
+        let updatedMessages = this.state.messages;
+        let target = updatedMessages.findIndex(e => e.id === data.id);
+        updatedMessages.splice(target, 1);
+        this.setState({
+            messages: updatedMessages
+        });
+    }
+
+    handleInputDeleteEmployee = (data) => {
+        let updatedEmployees = this.state.employees;
+        let target = updatedEmployees.findIndex(e => e.id === data.id);
+        updatedEmployees.splice(target, 1);
+        this.setState({
+            employees: updatedEmployees
+        });
+    }
+
+    handleInputDeleteExpression = (data) => {
+        let updatedExpressions = this.state.expressions;
+        let target = updatedExpressions.findIndex(e => e.id === data.id);
+        updatedExpressions.splice(target, 1);
+        this.setState({
+            expressions: updatedExpressions
+        });
+    }
+
+    handleInputStatus = (data) => {
+        let message = data.message;
+        console.log(this.toast)
+        // this.toast.show(message)
+
+        let toast = Toast.show(message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.CENTER,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 500,
+            onShow: () => {
+                // calls on toast\`s appear animation start
+            },
+            onShown: () => {
+                // calls on toast\`s appear animation end.
+            },
+            onHide: () => {
+                // calls on toast\`s hide animation start.
+            },
+            onHidden: () => {
+                // calls on toast\`s hide animation end.
+            }
+        });
+
+    }
+
+    handleInputDisconnect = () => {
+        this.setState({
+            messages: [],
+            employees: [],
+            expressions: [],
+            messageBoxIsConnected: false,
+        });
+    }
+
+    handleOutputSendMessage = (data) => {
+        this.socket.emit('sendMessage', data);
+    }
+
+    handleOutputAddEmployee = (data) => {
+        this.socket.emit('addEmployee', data);
+    }
+
+    handleOutputAddExpression = (data) => {
+        this.socket.emit('addExpression', data);
+    }
+
+    handleOutputUpdateEmployee = (data) => {
+        this.socket.emit('updateEmployee', data);
+    }
+
+    handleOutputUpdateExpression = (data) => {
+        this.socket.emit('updateExpression', data);
+    }
+
+    handleOutputDeleteMessage = (data) => {
+        this.socket.emit('deleteMessage', data);
+    }
+
+    handleOutputDeleteEmployee = (data) => {
+        this.socket.emit('deleteEmployee', data);
+    }
+
+    handleOutputDeleteExpression = (data) => {
+        this.socket.emit('deleteExpression', data);
+    }
+
+    handleMessageBoxIPChange = async (data) => {
+        this.storage.storeItem('messageBoxIP', data);
+        this.setState({ messageBoxIP: data }, () => {
+            this.socket.close();
+
+            if (this.state.messageBoxIP.length > 1) {
+                this.initSocketIOClient(data);
+            }
+        });
+    }
+
+    handleRingtoneChange = async (data) => {
+        this.storage.storeItem('ringtone', data);
+        this.setState({
+            ringtone: data
+        }, () => {
+            this.playRingtone();
+        });
+    }
+
+    playRingtone = async () => {
         let sound = new Audio.Sound();
 
         try {
-            ring = await Sounds.find((e) => {
-                if (e.name == this.state.ring) {
+            ringtone = await Sounds.find((e) => {
+                if (e.name == this.state.ringtone) {
                     return e.path
                 }
             })
 
-            // console.log(ring)
-
-            await sound.loadAsync(ring.path);
+            await sound.loadAsync(ringtone.path);
             await sound.playAsync();
 
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.log(error);
         }
     }
 
-    initializeState(data) {
-        this.setState(data);
-    }
-
-    handleReceivedMessage(data) {
-        this.setState({
-            messages: [...this.state.messages, data]
-        })
-        this.playSound()
-    }
-
-    handleReceivedEmployee(data) {
-        this.setState({
-            employees: [...this.state.employees, data]
-        })
-    }
-
-    handleReceivedExpression(data) {
-        this.setState({
-            expressions: [...this.state.expressions, data]
-        })
-    }
-
-    handleReceivedUpdateEmployee(data) {
-        let newEmployees = this.state.employees;
-        updateIndex = newEmployees.findIndex(e => e.id == data.id)
-        newEmployees[updateIndex] = data;
-        this.setState({
-            employees: newEmployees
-        });
-    }
-
-    handleReceivedUpdateExpression(data) {
-        let newExpressions = this.state.expressions;
-        updateIndex = newExpressions.findIndex(e => e.id == data.id)
-        newExpressions[updateIndex] = data;
-        this.setState({
-            expressions: newExpressions
-        });
-    }
-
-    handleReceivedDeleteMessage(data) {
+    timerTick = () => {
         let newMessages = this.state.messages;
-        deleteIndex = newMessages.findIndex(e => e.id == data.id)
-        newMessages.splice(deleteIndex, 1)
-        this.setState({
-            messages: newMessages
-        });
-    }
-
-    handleReceivedDeleteEmployee(data) {
-        let newEmployees = this.state.employees;
-        deleteIndex = newEmployees.findIndex(e => e.id == data.id)
-        newEmployees.splice(deleteIndex, 1)
-        this.setState({
-            employees: newEmployees
-        });
-    }
-
-    handleReceivedDeleteExpression(data) {
-        let newExpressions = this.state.expressions;
-        deleteIndex = newExpressions.findIndex(e => e.id == data.id)
-        newExpressions.splice(deleteIndex, 1)
-        this.setState({
-            expressions: newExpressions
-        });
-    }
-
-    handleSendMessage(data) {
-        this.socket.emit('addMessage', data);
-    }
-
-    handleAddEmployee(data) {
-        this.socket.emit('addEmployee', data);
-    }
-
-    handleAddExpression(data) {
-        this.socket.emit('addExpression', data);
-    }
-
-    handleUpdateEmployee(data) {
-        this.socket.emit('updateEmployee', data);
-    }
-
-    handleUpdateExpression(data) {
-        this.socket.emit('updateExpression', data);
-    }
-
-    handleDeleteMessage(data) {
-        this.socket.emit('deleteMessage', data);
-    }
-
-    handleDeleteEmployee(data) {
-        this.socket.emit('deleteEmployee', data);
-    }
-
-    handleDeleteExpression(data) {
-        this.socket.emit('deleteExpression', data);
-    }
-
-    async handleIPChange(data) {
-        newState = {
-            messages: [],
-            employees: [],
-            expressions: [],
-            messageBoxIP: data,
-        }
-        this.storage.storeItem('messageBoxIP', data)
-        this.setState(newState, () => {
-            if (this.state.messageBoxIP.length > 1) {
-                this.socket.close();
-            }
-            this.setSocketIOClient("http://" + data + ":3000");
-        });
-    }
-
-    async handleRingChange(data) {
-        this.storage.storeItem('ring', data)
-        this.setState({
-            ring: data
-        })
-    }
-
-
-    handleDisconnect(data) {
-        this.setState({
-            messages: [],
-            employees: [],
-            expressions: [],
-            messageBoxIsConnected: false
-        })
-    }
-
-    tick() {
-        var newMessages = this.state.messages.map((e) => {
-            let dateNow = moment(Date.now())
-            let dateCreated = moment(e.createdAt)
+        newMessages.forEach(message => {
+            let dateNow = moment(Date.now());
+            let dateCreated = moment(message.createdAt)
             let duration = moment.duration(dateNow - dateCreated)._data;
             let timeElapsed = moment(duration).format('mm:ss')
             if (timeElapsed === "Invalid date") {
                 timeElapsed = "00:00";
             }
             if (duration.minutes % 3 === 0 && duration.seconds === 0) {
-                // this.playSound();
+                // this.playRingtone();
             }
-            e.timeElapsed = timeElapsed;
-            return e
+            message.timeElapsed = timeElapsed;
         });
-        this.setState({
-            messages: newMessages
-        });
-
+        this.setState({ messages: newMessages });
     }
 
     render() {
@@ -257,21 +273,21 @@ export default class Main extends Component {
                     expressions: this.state.expressions,
                     messageBoxIP: this.state.messageBoxIP,
                     messageBoxIsConnected: this.state.messageBoxIsConnected,
-                    ring: this.state.ring,
+                    ringtone: this.state.ringtone,
 
-                    handleSendMessage: this.handleSendMessage,
-                    handleAddEmployee: this.handleAddEmployee,
-                    handleAddExpression: this.handleAddExpression,
-                    handleUpdateEmployee: this.handleUpdateEmployee,
-                    handleUpdateExpression: this.handleUpdateExpression,
-                    handleDeleteMessage: this.handleDeleteMessage,
-                    handleDeleteEmployee: this.handleDeleteEmployee,
-                    handleDeleteExpression: this.handleDeleteExpression,
+                    handleSendMessage: this.handleOutputSendMessage,
+                    handleAddEmployee: this.handleOutputAddEmployee,
+                    handleAddExpression: this.handleOutputAddExpression,
+                    handleUpdateEmployee: this.handleOutputUpdateEmployee,
+                    handleUpdateExpression: this.handleOutputUpdateExpression,
+                    handleDeleteMessage: this.handleOutputDeleteMessage,
+                    handleDeleteEmployee: this.handleOutputDeleteEmployee,
+                    handleDeleteExpression: this.handleOutputDeleteExpression,
 
-                    handleIPChange: this.handleIPChange,
-                    handleRingChange: this.handleRingChange,
+                    handleMessageBoxIPChange: this.handleMessageBoxIPChange,
+                    handleRingtoneChange: this.handleRingtoneChange,
 
-                    handleSendMessageSound: this.playSound,
+                    playRingtone: this.playRingtone,
                 }}
             >
             </MainTabNavigator>
