@@ -31,7 +31,7 @@ export default class EmployeesTab extends React.Component {
 		super(props);
 	}
 
-	onAddEmployee = () => {
+	onSaveEmployeePress = () => {
 		let newEmployee = {
 			name: this.state.employee.name,
 			color: tinycolor(this.state.employee.color).toHexString()
@@ -40,7 +40,7 @@ export default class EmployeesTab extends React.Component {
 		this.resetState();
 	}
 
-	onEditEmployee = () => {
+	onEditEmployeePress = () => {
 		let newEmployee = this.state.employee;
 		newEmployee.color = tinycolor(newEmployee.color).toHexString();
 		this.props.screenProps.handleUpdateEmployee(this.state.employee);
@@ -53,7 +53,7 @@ export default class EmployeesTab extends React.Component {
 		this.setState({ employee: newEmployee });
 	}
 
-	onDeleteEmployee = (data) => {
+	onDeleteEmployeePress = (data) => {
 		this.props.screenProps.handleDeleteEmployee(data);
 	}
 
@@ -115,25 +115,28 @@ export default class EmployeesTab extends React.Component {
 	renderEmployeeRowBack = (rowData, rowMap) => {
 		return (
 			<View style={styles.employeeRowBack}>
-				<TouchableOpacity style={[styles.employeeRowBackButton, styles.employeeRowBackButtonLeft]} onPress={_ => {
-					rowMap[rowData.item.id].closeRow()
-					this.setState({
-						isEditing: true,
-						employee: {
-							id: rowData.item.id,
-							name: rowData.item.name,
-							color: tinycolor(rowData.item.color).toHsl()
-						}
-					});
-					this.showModal();
-				}}>
+				<TouchableOpacity
+					style={[styles.employeeRowBackButton, styles.employeeRowBackButtonLeft]}
+					onPress={_ => {
+						rowMap[rowData.item.id].closeRow()
+						this.setState({
+							isEditing: true,
+							employee: {
+								id: rowData.item.id,
+								name: rowData.item.name,
+								color: tinycolor(rowData.item.color).toHsl()
+							}
+						});
+						this.showModal();
+					}}
+				>
 					<Text style={styles.employeeRowBackText}>Edit</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={[styles.employeeRowBackButton, styles.employeeRowBackButtonRight]}
 					onPress={_ => {
 						rowMap[rowData.item.id].closeRow()
-						this.onDeleteEmployee(rowData.item)
+						this.onDeleteEmployeePress(rowData.item)
 					}}>
 					<Text style={styles.employeeRowBackText}>Delete</Text>
 				</TouchableOpacity>
@@ -151,40 +154,40 @@ export default class EmployeesTab extends React.Component {
 
 			if (this.state.isEditing) {
 				modalTitle = "Edit Employee";
-				modalOnPress = this.onEditEmployee;
+				modalOnPress = this.onEditEmployeePress;
 			}
 
 			let modal = (
 				<Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
 					<Card title={modalTitle} containerStyle={styles.modalCard}>
 						<FormLabel>Employee Name</FormLabel>
-						<FormInput onChangeText={(name) => this.onUpdateEmployeeName(name)} />
+						<FormInput onChangeText={this.onUpdateEmployeeName} />
 						<FormLabel>Color</FormLabel>
 						<FormLabel>Hue</FormLabel>
 						<HueSlider
 							gradientSteps={40}
 							value={this.state.employee.color.h}
 							color={this.state.employee.color}
-							onValueChange={(h) => this.onUpdateHue(h)}
+							onValueChange={this.onUpdateHue}
 						/>
 						<FormLabel style={styles.componentText}>Saturation</FormLabel>
 						<SaturationSlider
 							gradientSteps={20}
 							value={this.state.employee.color.s}
 							color={this.state.employee.color}
-							onValueChange={(s) => this.onUpdateSaturation(s)}
+							onValueChange={this.onUpdateSaturation}
 						/>
 						<FormLabel style={styles.componentText}>Lightness</FormLabel>
 						<LightnessSlider
 							gradientSteps={20}
 							value={this.state.employee.color.l}
 							color={this.state.employee.color}
-							onValueChange={(l) => this.onUpdateLightness(l)}
+							onValueChange={this.onUpdateLightness}
 						/>
 						<View style={[styles.employeeRowFront, { backgroundColor: tinycolor(this.state.employee.color).toHexString() }]}>
 							<Text style={styles.employeeRowFrontText}>{this.state.employee.name}</Text>
 						</View>
-						<Button title='Save' onPress={modalOnPress} />
+						<Button title='Save' onPress={this.onSaveEmployeePress} />
 					</Card>
 				</Modal>
 			);
@@ -202,8 +205,8 @@ export default class EmployeesTab extends React.Component {
 								swipeToOpenPercent={25}
 								data={this.props.screenProps.employees}
 								keyExtractor={(rowData) => rowData.id.toString()}
-								renderItem={(rowData) => this.renderEmployeeRowFront(rowData)}
-								renderHiddenItem={(rowData, rowMap) => this.renderEmployeeRowBack(rowData, rowMap)}
+								renderItem={this.renderEmployeeRowFront}
+								renderHiddenItem={this.renderEmployeeRowBack}
 							/>
 						</View>
 						<Button title={"Add"} onPress={this.showModal} />

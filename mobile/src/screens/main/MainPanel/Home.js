@@ -123,7 +123,7 @@ export default class MainPanel extends Component {
   }
 
   renderExpression = (rowData) => {
-    let expressionBackgroundColor = rowData.item.type == 1 ? "#0057e7" : "#d62d20"
+    let expressionBackgroundColor = rowData.item.type == 1 ? "#0057e7" : "#d62d20";
 
     return (
       <TouchableOpacity
@@ -189,7 +189,7 @@ export default class MainPanel extends Component {
       let modal = (
         <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
           <Card title={"Send Message"} containerStyle={styles.modalCard}>
-            <Text>Expressions 1</Text>
+            <Text style={styles.expressionCategoryText}>Expressions 1</Text>
             <View style={styles.expressionsView}>
               <FlatList
                 contentContainerStyle={styles.listContainer}
@@ -199,7 +199,7 @@ export default class MainPanel extends Component {
                 numColumns={3}
               />
             </View>
-            <Text>Expressions 2</Text>
+            <Text style={styles.expressionCategoryText}>Expressions 2</Text>
             <View style={styles.expressionsView}>
               <FlatList
                 contentContainerStyle={styles.listContainer}
@@ -241,8 +241,8 @@ export default class MainPanel extends Component {
                 swipeToOpenPercent={25}
                 data={this.props.screenProps.messages}
                 keyExtractor={(rowData) => rowData.id.toString()}
-                renderItem={(rowData) => this.renderMessageRowFront(rowData)}
-                renderHiddenItem={(rowData, rowMap) => this.renderMessageRowBack(rowData, rowMap)}
+                renderItem={this.renderMessageRowFront}
+                renderHiddenItem={this.renderMessageRowBack}
               />
             </ScrollView>
           </View>
@@ -251,7 +251,7 @@ export default class MainPanel extends Component {
               <FlatList
                 contentContainerStyle={styles.listContainer}
                 data={this.props.screenProps.employees}
-                renderItem={(rowData) => this.renderEmployeeButton(rowData)}
+                renderItem={this.renderEmployeeButton}
                 keyExtractor={(rowData) => rowData.id.toString()}
                 numColumns={4}
               />

@@ -33,7 +33,7 @@ export default styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   messageRowFrontContentText: {
-    fontSize: scale(25),
+    fontSize: scale(45),
     color: 'white',
   },
   messageRowFrontTimer: {
@@ -42,7 +42,7 @@ export default styles = StyleSheet.create({
     justifyContent: 'flex-end'
   },
   messageRowFrontTimerText: {
-    fontSize: scale(10),
+    fontSize: scale(15),
     color: 'white'
   },
   messageRowBack: {
@@ -62,7 +62,7 @@ export default styles = StyleSheet.create({
   },
   messageRowBackDeleteButtonText: {
     color: "white",
-    fontSize: scale(25),
+    fontSize: scale(45),
   },
   employeeButtonsView: {
     flex: 1,
@@ -87,12 +87,15 @@ export default styles = StyleSheet.create({
     paddingRight: 5
   },
   employeeButtonsText: {
-    fontSize: scale(10),
+    fontSize: scale(17.5),
     color: 'white',
     alignSelf: 'center'
   },
   modalCard: {
     borderRadius: 5
+  },
+  expressionCategoryText: {
+    fontWeight: '600'
   },
   expressionsView: {
     flexDirection: 'row',
@@ -109,7 +112,7 @@ export default styles = StyleSheet.create({
     margin: 5
   },
   expressionsText: {
-    fontSize: scale(10),
+    fontSize: scale(17.5),
     color: 'white',
     alignSelf: 'center'
   },

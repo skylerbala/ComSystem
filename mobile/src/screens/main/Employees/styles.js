@@ -29,13 +29,13 @@ export default styles = StyleSheet.create({
 		borderRadius: 5
 	},
 	employeeRowFrontText: {
-		fontSize: scale(25),
+    fontSize: scale(35),
 		color: 'white',
 		flex: 1,
 	},
 	employeeRowFrontColorBox: {
-		height: scale(20),
-		width: scale(20),
+		height: scale(35),
+		width: scale(35),
 		borderRadius: 5
 	},
 	employeeRowBack: {
@@ -60,7 +60,7 @@ export default styles = StyleSheet.create({
 	},
 	employeeRowBackText: {
 		color: '#FFF',
-		fontSize: scale(17.5),
+		fontSize: scale(15),
 	},
 	modalCard: {
 		borderRadius: 5

@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
+import { scale } from '../../../../library/utils/ScalingAPI';
 
 export default NoConnectionView = (props) => {
   return (
@@ -23,10 +24,10 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: 'center',
-    fontSize: 40
+    fontSize: scale(45)
   },
   helperText: {
     textAlign: 'center',
-    fontSize: 20
+    fontSize: scale(20)
   }
 });

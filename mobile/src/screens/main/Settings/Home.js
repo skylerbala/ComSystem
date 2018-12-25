@@ -1,13 +1,15 @@
 
 import React, { Component } from 'react';
-import { Form, Item, Label, Input, Picker } from 'native-base';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Picker } from 'react-native';
+import { FormLabel, FormInput, Divider } from 'react-native-elements';
+import RNPickerSelect from 'react-native-picker-select';
 import Sounds from '../../../assets/sounds';
+import { scale } from '../../../library/utils/ScalingAPI';
+
 
 
 export default class SettingsTab extends Component {
   static navigationOptions = ({ navigation }) => {
-    const { params = {} } = navigation.state;
     return {
       title: 'Settings',
     }
@@ -35,32 +37,42 @@ export default class SettingsTab extends Component {
     return (
       <View style={styles.mainView}>
         <View style={styles.mainSubView}>
-          <Form style={styles.formView}>
-            <Item inlineLabel>
-              <Label>eMessage Box IP</Label>
-              <Input
-                placeholder="None"
-                autoCapitalize='none'
-                autoCorrect={false}
-                value={this.props.screenProps.messageBoxIP} onChangeText={(input) => this.onMessageBoxIPChange(input)}
-              />
-            </Item>
-            <Item picker>
-              <Label style={{ paddingLeft: 15 }}>Message Ringtone</Label>
+          <View style={styles.formView}>
 
-              <Picker
-                mode="dropdown"
-
-                placeholder="Select Message Ringtone"
-                placeholderStyle={{ color: "#bfc6ea" }}
-                placeholderIconColor="#007aff"
-                selectedValue={this.props.screenProps.ringtone}
+            <FormLabel>eMessage Box IP</FormLabel>
+            <FormInput
+              placeholder="None"
+              autoCapitalize='none'
+              autoCorrect={false}
+              value={this.props.screenProps.messageBoxIP} onChangeText={(input) => this.onMessageBoxIPChange(input)}
+            />
+            <FormLabel>Message Ringtone</FormLabel>
+            <View style={{
+              marginLeft: 20,
+              marginRight: 20,
+              marginTop: 15,
+              marginBottom: 5,
+            }}>
+              <RNPickerSelect
+                placeholder={{
+                  label: 'Select a ringtone...',
+                  value: null,
+                  color: '#bdc6cf',
+                }}
+                style={{
+                  fontColor: "#bdc6cf",
+                  fontSize: scale(12),
+                }}
+                placeholderTextColor={"#bdc6cf"}
+                items={Sounds}
                 onValueChange={(value) => this.onRingtoneChange(value)}
-              >
-                {pickerOptions}
-              </Picker>
-            </Item>
-          </Form>
+                value={this.props.screenProps.ringtone}
+                hideIcon
+                useNativeAndroidPickerStyle={false}
+              />
+              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+            </View>
+          </View>
         </View>
       </View>
     );
