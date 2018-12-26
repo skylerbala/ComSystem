@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "eMessage",
+    "description": "Dental office intra-communication app",
+    "slug": "SmartCom",
+    "privacy": "unlisted",
+    "sdkVersion": "31.0.0",
+    "version": "1.0.0",
+    "platforms": [
+      "ios",
+      "android"
+    ],
+    // "githubUrl": "",
+    "orientation": "portrait",
+    // "icon": "./assets/images/icon.png",
+    "splash": {
+      // "image": "./assets/images/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.skylerbala.apps.dentalcom",
+      // "icon": "./assets/images/icon.png",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.skylerbala.apps.dentalcom",
+      // "icon": "./assets/images/icon.png",
+      "versionCode": 1
+    },
+  }
+}

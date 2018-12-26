@@ -112,7 +112,6 @@ io.on("connection", (socket) => {
   });
 
   socket.on("updateEmployee", (data) => {
-    console.log(data)
     let id = data.id
     let name = data.name
     let color = data.color
@@ -144,7 +143,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("deleteMessage", (data) => {
-    let id = data.id
+    let id = data.id;
 
     db.Message.findById(id).then((result) => {
       result.destroy({ force: true });
