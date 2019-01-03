@@ -6,8 +6,16 @@ const db = require("./models");
 
 io.on("connection", (socket) => {
 
-  const sendStatus = (s) => {
+  const sendSelfStatus = (s) => {
     socket.emit("status", s);
+  }
+
+  const sendReceivedStatus = (s) => {
+    socket.broadcast.emit("status", s);
+  }
+
+  const sendAllStatus = (s) => {
+    io.emit("status", s);
   }
 
   console.log("New Connection: " + socket.id);
@@ -18,7 +26,7 @@ io.on("connection", (socket) => {
   let allEmployees = db.Employee.findAll({ order: [["createdAt", "ASC"]] });
   let allExpressions = db.Expression.findAll({ order: [["createdAt", "ASC"]] });
 
-  sendStatus({
+  sendSelfStatus({
     message: "Success: Connection Established",
   });
   
@@ -44,7 +52,7 @@ io.on("connection", (socket) => {
     let color = data.color;
 
     if (content === "") {
-      sendStatus({
+      sendSelfStatus({
         message: "Error: No message entered"
       });
     }
@@ -57,12 +65,17 @@ io.on("connection", (socket) => {
 
       db.Message.create(newMessage).then((result) => {
         io.emit("sendMessage", result);
-        sendStatus({
-          message: "Success: Message Sent"
+
+        sendReceivedStatus({
+          message: "Message Received"
+        });
+        
+        sendSelfStatus({
+          message: "Message Sent"
         });
 
       }).catch((error) => {
-        sendStatus({ message: "Error: " + error });
+        sendSelfStatus({ message: "Error: " + error });
       });
     }
   });
@@ -72,7 +85,7 @@ io.on("connection", (socket) => {
     let color = data.color;
 
     if (name === "") {
-      sendStatus({
+      sendSelfStatus({
         message: "Error: No employee name entered"
       });
     }
@@ -83,11 +96,11 @@ io.on("connection", (socket) => {
       };
       db.Employee.create(newEmployee).then((result) => {
         io.emit("addEmployee", result);
-        sendStatus({
-          message: "Success: Employee Added",
+        sendAllStatus({
+          message: "Employee Added",
         });
       }).catch((error) => {
-        sendStatus({ message: "Error: " + error });
+        sendSelfStatus({ message: "Error: " + error });
       });
     }
   });
@@ -97,7 +110,7 @@ io.on("connection", (socket) => {
     let type = data.type;
 
     if (content === "") {
-      sendStatus({
+      sendSelfStatus({
         message: "Error: No expression entered",
       });
     }
@@ -110,11 +123,11 @@ io.on("connection", (socket) => {
       db.Expression.create(newExpression).then((result) => {
         io.emit("addExpression", result);
 
-        sendStatus({
-          message: "Success: Expression Added",
+        sendAllStatus({
+          message: "Expression Added",
         });
       }).catch((error) => {
-        sendStatus({ message: "Error: " + error });
+        sendSelfStatus({ message: "Error: " + error });
       });
     }
   });
@@ -127,10 +140,13 @@ io.on("connection", (socket) => {
     db.Employee.findById(id).then((result) => {
       result.update({ name: name, color: color });
       io.emit("updateEmployee", data);
-      sendStatus({
-        message: "Success: Employee Updated",
+      sendAllStatus({
+        message: "Employee Updated",
       });
     }).catch((error) => {
+      sendSelfStatus({
+        message: "Error: Employee Update Fail",
+      });
       console.log("***Error deleting", JSON.stringify(error))
     })
   });
@@ -142,10 +158,13 @@ io.on("connection", (socket) => {
     db.Expression.findById(id).then((result) => {
       result.update({ content: content });
       io.emit("updateExpression", data);
-      sendStatus({
-        message: "Success: Expression Updated",
+      sendAllStatus({
+        message: "Expression Updated",
       });
     }).catch((error) => {
+      sendSelfStatus({
+        message: "Error: Expression Updated Fail",
+      });
       console.log("***Error deleting", JSON.stringify(error))
     })
   });
@@ -156,10 +175,13 @@ io.on("connection", (socket) => {
     db.Message.findById(id).then((result) => {
       result.destroy({ force: true });
       io.emit("deleteMessage", data);
-      sendStatus({
-        message: "Success: Message Deleted",
+      sendAllStatus({
+        message: "Message Deleted",
       });
     }).catch((error) => {
+      sendSelfStatus({
+        message: "Error: Message Delete Fail",
+      });
       console.log("***Error deleting", JSON.stringify(error))
     })
   });
@@ -170,10 +192,13 @@ io.on("connection", (socket) => {
     db.Employee.findById(id).then((result) => {
       result.destroy({ force: true });
       io.emit("deleteEmployee", data);
-      sendStatus({
-        message: "Success: Employee Deleted",
+      sendAllStatus({
+        message: "Employee Deleted",
       });
     }).catch((error) => {
+      sendSelfStatus({
+        message: "Error: Employee Delete Fail",
+      });
       console.log("***Error deleting", JSON.stringify(error))
     })
   });
@@ -184,23 +209,26 @@ io.on("connection", (socket) => {
     db.Expression.findById(id).then((result) => {
       result.destroy({ force: true });
       io.emit("deleteExpression", data);
-      sendStatus({
-        message: "Success: Expression Updated",
+      sendAllStatus({
+        message: "Expression Deleted",
       });
     }).catch((error) => {
+      sendSelfStatus({
+        message: "Error: Expression Delete Fail",
+      });
       console.log("***Error deleting", JSON.stringify(error))
     })
   });
 
   socket.on("disconnect", () => {
-    sendStatus({
+    sendSelfStatus({
       message: "Disconnected",
     });
     console.log("Disconnected: ", socket.id)
   })
 
   socket.on("error", function (error) {
-    sendStatus({
+    sendSelfStatus({
       message: "eMessage Box Error",
     });
     console.log("Socket Error: ", socket.id)
