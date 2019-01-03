@@ -14,6 +14,10 @@ io.on("connection", (socket) => {
   let allEmployees = db.Employee.findAll({ order: [["createdAt", "ASC"]] });
   let allExpressions = db.Expression.findAll({ order: [["createdAt", "ASC"]] });
 
+  sendStatus({
+    message: "Success: Connection Established",
+  });
+  
   Promise
     .all([allMessages, allEmployees, allExpressions])
     .then((result) => {
@@ -189,10 +193,16 @@ io.on("connection", (socket) => {
   }
 
   socket.on("disconnect", () => {
+    sendStatus({
+      message: "Disconnected",
+    });
     console.log("Disconnected: ", socket.id)
   })
 
   socket.on("error", function (error) {
+    sendStatus({
+      message: "eMessage Box Error",
+    });
     console.log("Socket Error: ", socket.id)
     console.log(error)
   })
