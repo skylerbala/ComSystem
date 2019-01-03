@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     flexDirection: 'column',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    backgroundColor: '#d0e1f9',
   },
   text: {
     textAlign: 'center',

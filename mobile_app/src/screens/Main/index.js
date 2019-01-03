@@ -246,7 +246,6 @@ export default class Main extends Component {
     }
 
     render() {
-        console.log('Main');
         return (
             <MainTabNavigator
                 screenProps={{

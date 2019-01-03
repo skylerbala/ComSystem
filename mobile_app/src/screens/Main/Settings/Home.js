@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { View, StyleSheet, Picker, Text } from 'react-native';
 import { FormLabel, FormInput, Divider } from 'react-native-elements';
@@ -11,7 +10,13 @@ import { scale } from '../../../library/utils/ScalingAPI';
 export default class SettingsTab extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Settings',
+      headerTitle: () => {
+        return (
+          <Text style={{ fontWeight: '600' }}>
+            Settings
+          </Text>
+        );
+      }
     }
   };
 
@@ -28,8 +33,6 @@ export default class SettingsTab extends React.Component {
   }
 
   render() {
-    console.log('Settings')
-
     let pickerOptions = Sounds.map((sound) => {
       return (
         <Picker.Item key={sound.name} label={sound.name} value={sound.name} />
@@ -53,8 +56,7 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{fontSize: scale(20)}}>{status}</Text>
-              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+              <Text style={{ fontSize: scale(20) }}>{status}</Text>
             </View>
             <FormLabel>eMessage Box IP</FormLabel>
             <FormInput
@@ -91,6 +93,64 @@ export default class SettingsTab extends React.Component {
                 hideIcon
                 useNativeAndroidPickerStyle={false}
               />
+              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+            </View>
+            <FormLabel>FAQs</FormLabel>
+
+            <FormLabel>How do I establish a connections between the eMessage Box and my tablets?</FormLabel>
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 15,
+                marginBottom: 5,
+              }}
+            >
+              <Text style={{ fontSize: scale(12) }}>
+                Find your eMessage Box's IP address and set it in the Settings tab.
+              </Text>
+              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+            </View>
+            <FormLabel>How do I lookup my eMessage Box IP?</FormLabel>
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 15,
+                marginBottom: 5,
+              }}
+            >
+              <Text style={{ fontSize: scale(12) }}>
+                There are several ways to lookup the eMessage Box's IP Address. One way to accomplish this is by using Pi Finder (Download: http://ivanx.com/raspberrypi/).
+              </Text>
+              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+            </View>
+            <FormLabel>Which tablets support eMessage?</FormLabel>
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 15,
+                marginBottom: 5,
+              }}
+            >
+              <Text style={{ fontSize: scale(12) }}>
+                eMessage is available on all iOS, Android, and Kindle Fire platforms.
+              </Text>
+              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+            </View>
+            <FormLabel>Tech Support</FormLabel>
+            <View
+              style={{
+                marginLeft: 20,
+                marginRight: 20,
+                marginTop: 15,
+                marginBottom: 5,
+              }}
+            >
+              <Text style={{ fontSize: scale(12) }}>
+                Please direct all questions, comments or concerns to ssbala@ucdavis.edu
+              </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
           </View>

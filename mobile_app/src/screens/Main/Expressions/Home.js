@@ -17,7 +17,13 @@ import shallowequal from 'shallowequal';
 export default class ExpressionsTab extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'Expressions',
+      headerTitle: () => {
+        return (
+          <Text style={{ fontWeight: '600' }}>
+            Expressions
+          </Text>
+        );
+      }
     }
   };
 
@@ -28,7 +34,7 @@ export default class ExpressionsTab extends React.Component {
     else if (!shallowequal(this.state, nextState)) {
       return true;
     }
-    
+
     return false;
   }
 
@@ -52,10 +58,10 @@ export default class ExpressionsTab extends React.Component {
     else if (!shallowequal(this.state, nextState)) {
       return true;
     }
-    
+
     return false;
   }
-  
+
 
   onSaveExpressionPress = () => {
     let newExpression = {

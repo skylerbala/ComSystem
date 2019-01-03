@@ -6,15 +6,16 @@ import AsyncStorageAPI from './library/utils/AsyncStorageAPI';
 
 class App extends React.Component {
   state = {
-    isOnBoarding: true,
+    isOnBoarding: false,
   }
 
   constructor(props) {
     super(props);
+
+    this.storage = new AsyncStorageAPI;
   }
 
   componentDidMount() {
-    this.storage = new AsyncStorageAPI;
     this.storage.retrieveItem('isOnBoarding').then((result) => {
       if (result === 'false') {
         this.setState({ isOnBoarding: false });
@@ -22,7 +23,7 @@ class App extends React.Component {
       else {
         this.setState({ isOnBoarding: true });
       }
-    })
+    });
   }
 
   onOnBoardingFinish = () => {
@@ -31,17 +32,16 @@ class App extends React.Component {
   }
 
   render() {
-    let view = <Main />
+    let mainView = null;
 
-    if (this.state.isOnBoarding) {
-      view = (
-        <OnBoarding
-          handleOnBoardingFinish={this.onOnBoardingFinish}
-        />
-      );
+    if (!this.state.isOnBoarding) {
+      mainView = <Main />
+    }
+    else {
+      mainView = <OnBoarding handleOnBoardingFinish={this.onOnBoardingFinish} />
     }
 
-    return view;
+    return mainView;
   }
 }
 

@@ -4,7 +4,6 @@ import { scale } from '../../../../library/utils/ScalingAPI';
 
 export default class EmployeeFront extends React.PureComponent {  
   render() {
-    console.log("EmployeeFront")
     return (
       <View style={styles.employeeRowFront}>
         <Text style={styles.employeeRowFrontText}>{this.props.name}</Text>

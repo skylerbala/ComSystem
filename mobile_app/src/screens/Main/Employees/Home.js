@@ -18,7 +18,13 @@ import shallowequal from 'shallowequal';
 export default class EmployeesTab extends React.Component {
 	static navigationOptions = ({ navigation }) => {
 		return {
-			title: 'Employees',
+			headerTitle: () => {
+        return (
+          <Text style={{ fontWeight: '600' }}>
+            Employees
+          </Text>
+        );
+      }
 		}
 	};
 
@@ -153,8 +159,6 @@ export default class EmployeesTab extends React.Component {
 	}
 
 	render() {
-		console.log('Employees')
-
 		let mainView = <NoConnectionView />
 
 		if (this.props.screenProps.messageBoxIsConnected) {

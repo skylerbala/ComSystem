@@ -37,10 +37,6 @@ export default class MainPanel extends React.Component {
         color: null
       }
     };
-
-    this.props.screenProps.messages.forEach((message) => {
-      message.selected = false;
-    });
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -74,26 +70,24 @@ export default class MainPanel extends React.Component {
   }
 
   onExpressionPress = (expression) => {
-    // need to reset select
-    expression.selected = !expression.selected;
-    if (expression.selected) {
-      this.setState({
-        message: {
-          name: this.state.message.name,
-          content: [...this.state.message.content, expression.content],
-          color: this.state.message.color,
-        }
-      });
-    }
-    else {
-      this.setState({
-        message: {
-          name: this.state.message.name,
-          content: this.state.message.content.filter((content) => content != expression.content),
-          color: this.state.message.color,
-        }
-      });
-    }
+    this.setState({
+      message: {
+        name: this.state.message.name,
+        content: [...this.state.message.content, expression.content],
+        color: this.state.message.color,
+      }
+    });
+  }
+
+
+  onClearPress = () => {
+    this.setState({
+      message: {
+        name: this.state.message.name,
+        content: [],
+        color: this.state.message.color,
+      }
+    });
   }
 
   onSendMessagePress = () => {
@@ -214,7 +208,10 @@ export default class MainPanel extends React.Component {
               content={this.getFinalMessage(this.state.message).content}
               playRingtone={this.props.screenProps.playRingtone}
             />
-            <Button onPress={this.onSendMessagePress} title={"Send"} />
+            <View style={{ flexDirection: 'row' }}>
+              <Button containerStyle={{ flex: 1, margin: 5, backgroundColor: 'red' }} onPress={this.onClearPress} title={"Clear"} />
+              <Button containerStyle={{ flex: 1, margin: 5}} onPress={this.onSendMessagePress} title={"Send"} />
+            </View>
           </Card>
         </Modal>
       )

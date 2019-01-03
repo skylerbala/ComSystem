@@ -6,7 +6,7 @@ export default class Button extends React.PureComponent {
   render() {
     return (
       <TouchableOpacity
-        style={styles.view}
+        style={[styles.view, this.props.containerStyle]}
         onPress={this.props.onPress}
       >
         <Text style={styles.text}>{this.props.title}</Text>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     marginTop: scale(5),
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 5
+    borderRadius: 5,
   },
   text: {
     fontSize: scale(25),
