@@ -6,6 +6,10 @@ const db = require("./models");
 
 io.on("connection", (socket) => {
 
+  const sendStatus = (s) => {
+    socket.emit("status", s);
+  }
+
   console.log("New Connection: " + socket.id);
 
   let initialState = {}
@@ -187,10 +191,6 @@ io.on("connection", (socket) => {
       console.log("***Error deleting", JSON.stringify(error))
     })
   });
-
-  const sendStatus = (s) => {
-    socket.emit("status", s);
-  }
 
   socket.on("disconnect", () => {
     sendStatus({
