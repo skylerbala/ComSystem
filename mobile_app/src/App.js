@@ -1,7 +1,7 @@
 import React from 'react';
 import Main from './screens/Main';
 import OnBoarding from './screens/OnBoarding';
-import { registerRootComponent } from 'expo';
+import { registerRootComponent, ScreenOrientation } from 'expo';
 import AsyncStorageAPI from './library/utils/AsyncStorageAPI';
 
 class App extends React.Component {
@@ -13,6 +13,8 @@ class App extends React.Component {
     super(props);
 
     this.storage = new AsyncStorageAPI;
+    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.ALL);
+
   }
 
   componentDidMount() {
