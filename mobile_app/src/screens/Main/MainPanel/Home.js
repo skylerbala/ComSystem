@@ -12,6 +12,7 @@ import ExpressionButton from '../common/components/ExpressionButton';
 import EmployeeButton from '../common/components/EmployeeButton';
 import MessageFront from './components/MessageFront';
 import MessageBack from './components/MessageBack';
+import Sounds from '../../../assets/sounds';
 
 
 export default class MainPanel extends React.Component {
@@ -53,14 +54,15 @@ export default class MainPanel extends React.Component {
     return false;
   }
 
-  onEmployeeButtonPress = (name, color) => {
+  onEmployeeButtonPress = (name, color, ringtone) => {
     this.setState({
       isModalVisible: true,
       message: {
         name: name,
         content: [],
         color: color,
-        createdAt: null
+        createdAt: null,
+        ringtone: ringtone
       }
     });
   }
@@ -75,6 +77,7 @@ export default class MainPanel extends React.Component {
         name: this.state.message.name,
         content: [...this.state.message.content, expression.content],
         color: this.state.message.color,
+        ringtone: this.state.message.ringtone,
       }
     });
   }
@@ -128,6 +131,7 @@ export default class MainPanel extends React.Component {
       <EmployeeButton
         name={rowData.item.name}
         color={rowData.item.color}
+        ringtone={rowData.item.ringtone}
         onClick={this.onEmployeeButtonPress}
       />
     );
@@ -149,7 +153,9 @@ export default class MainPanel extends React.Component {
         name={rowData.item.name}
         createdAt={rowData.item.createdAt}
         content={rowData.item.content}
+        ringtone={rowData.item.ringtone}
         playRingtone={this.props.screenProps.playRingtone}
+        hasTimer
       />
     );
   }

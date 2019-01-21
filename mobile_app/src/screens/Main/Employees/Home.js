@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, View } from 'react-native';
+import { Text, View } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Modal from "react-native-modal";
 import { HueSlider, SaturationSlider, LightnessSlider } from 'react-native-color';
@@ -13,18 +13,21 @@ import EmployeeButton from '../common/components/EmployeeButton';
 import EmployeeFront from './components/EmployeeFront';
 import EmployeeBack from './components/EmployeeBack';
 import shallowequal from 'shallowequal';
+import RNPickerSelect from 'react-native-picker-select';
+import { scale } from '../../../library/utils/ScalingAPI';
+import Sounds from '../../../assets/sounds';
 
 
 export default class EmployeesTab extends React.Component {
 	static navigationOptions = ({ navigation }) => {
 		return {
 			headerTitle: () => {
-        return (
-          <Text style={{ fontWeight: '600' }}>
-            Employees
+				return (
+					<Text style={{ fontWeight: '600' }}>
+						Employees
           </Text>
-        );
-      }
+				);
+			}
 		}
 	};
 
@@ -35,28 +38,30 @@ export default class EmployeesTab extends React.Component {
 			employee: {
 				id: null,
 				name: "",
-				color: tinycolor('#70c1b3').toHsl()
+				color: tinycolor('#70c1b3').toHsl(),
+				ringtone: Sounds[0].name
 			},
 			isEditing: false
 		};
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-    if (!shallowequal(this.props.screenProps.employees, nextProps.screenProps.employees)) {
-      return true;
-    }
-    else if (!shallowequal(this.state, nextState)) {
-      return true;
-    }
-    
-    return false;
-  }
+		if (!shallowequal(this.props.screenProps.employees, nextProps.screenProps.employees)) {
+			return true;
+		}
+		else if (!shallowequal(this.state, nextState)) {
+			return true;
+		}
+
+		return false;
+	}
 
 	onSaveEmployeePress = () => {
 		let newEmployee = {
 			id: this.state.employee.id,
 			name: this.state.employee.name,
-			color: tinycolor(this.state.employee.color).toHexString()
+			color: tinycolor(this.state.employee.color).toHexString(),
+			ringtone: this.state.employee.ringtone
 		}
 		if (this.state.isEditing) {
 			this.props.screenProps.handleUpdateEmployee(newEmployee);
@@ -73,7 +78,8 @@ export default class EmployeesTab extends React.Component {
 			employee: {
 				id: employee.id,
 				name: employee.name,
-				color: tinycolor(employee.color).toHsl()
+				color: tinycolor(employee.color).toHsl(),
+				ringtone: employee.ringtone
 			}
 		});
 		this.showModal();
@@ -84,13 +90,26 @@ export default class EmployeesTab extends React.Component {
 			employee: {
 				id: this.state.employee.id,
 				name: name,
-				color: this.state.employee.color
+				color: this.state.employee.color,
+				ringtone: this.state.employee.ringtone
 			}
 		});
 	}
 
 	onDeleteEmployeePress = (employee) => {
 		this.props.screenProps.handleDeleteEmployee(employee);
+	}
+
+	onRingtoneChange = (ringtone) => {
+		this.setState({
+			employee: {
+				id: this.state.employee.id,
+				name: this.state.employee.name,
+				color: this.state.employee.color,
+				ringtone: ringtone
+			}
+		});
+		this.props.screenProps.playRingtone(ringtone);
 	}
 
 	showModal = () => {
@@ -104,7 +123,8 @@ export default class EmployeesTab extends React.Component {
 			employee: {
 				id: null,
 				name: "",
-				color: tinycolor('#70c1b3').toHsl()
+				color: tinycolor('#70c1b3').toHsl(),
+				ringtone: ""
 			},
 		});
 	}
@@ -114,7 +134,8 @@ export default class EmployeesTab extends React.Component {
 			employee: {
 				id: this.state.employee.id,
 				name: this.state.employee.name,
-				color: { ...this.state.employee.color, h }
+				color: { ...this.state.employee.color, h },
+				ringtone: this.state.employee.ringtone
 			}
 		});
 	}
@@ -124,7 +145,8 @@ export default class EmployeesTab extends React.Component {
 			employee: {
 				id: this.state.employee.id,
 				name: this.state.employee.name,
-				color: { ...this.state.employee.color, s }
+				color: { ...this.state.employee.color, s },
+				ringtone: this.state.employee.ringtone
 			}
 		});
 	}
@@ -134,7 +156,8 @@ export default class EmployeesTab extends React.Component {
 			employee: {
 				id: this.state.employee.id,
 				name: this.state.employee.name,
-				color: { ...this.state.employee.color, l }
+				color: { ...this.state.employee.color, l },
+				ringtone: this.state.employee.ringtone
 			}
 		});
 	}
@@ -144,6 +167,7 @@ export default class EmployeesTab extends React.Component {
 			<EmployeeFront
 				name={rowData.item.name}
 				color={rowData.item.color}
+				ringtone={rowData.item.ringtone}
 			/>
 		);
 	}
@@ -172,9 +196,37 @@ export default class EmployeesTab extends React.Component {
 			let modal = (
 				<Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
 					<Card title={modalTitle} containerStyle={styles.modalCard}>
-						<FormLabel>Employee Name</FormLabel>
+						<FormLabel labelStyle={{ fontSize: scale(14) }}>Employee Name</FormLabel>
 						<FormInput onChangeText={this.onUpdateEmployeeName} />
-						<FormLabel>Color</FormLabel>
+						<FormLabel labelStyle={{ fontSize: scale(14) }}>Message Ringtone</FormLabel>
+						<View
+							style={{
+								marginLeft: 20,
+								marginRight: 20,
+								marginTop: 15,
+								marginBottom: 5,
+							}}
+						>
+							<RNPickerSelect
+								placeholder={{
+									label: 'Select a ringtone...',
+									value: null,
+									color: '#bdc6cf',
+									fontSize: scale(30),
+								}}
+								style={{
+									fontColor: "#bdc6cf",
+									fontSize: scale(16),
+								}}
+								placeholderTextColor={"#bdc6cf"}
+								items={Sounds}
+								onValueChange={(value) => this.onRingtoneChange(value)}
+								value={this.state.employee.ringtone}
+								hideIcon
+								useNativeAndroidPickerStyle={false}
+							/>
+						</View>
+						<FormLabel labelStyle={{ fontSize: scale(14) }}>Color</FormLabel>
 						<FormLabel>Hue</FormLabel>
 						<HueSlider
 							gradientSteps={5}

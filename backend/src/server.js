@@ -50,6 +50,7 @@ io.on("connection", (socket) => {
     let name = data.name;
     let content = data.content;
     let color = data.color;
+    let ringtone = data.ringtone;
 
     if (content === "") {
       sendSelfStatus({
@@ -60,7 +61,8 @@ io.on("connection", (socket) => {
       let newMessage = {
         name: name,
         content: content,
-        color: color
+        color: color,
+        ringtone: ringtone
       };
 
       db.Message.create(newMessage).then((result) => {
@@ -83,16 +85,23 @@ io.on("connection", (socket) => {
   socket.on("addEmployee", (data) => {
     let name = data.name;
     let color = data.color;
+    let ringtone = data.ringtone;
 
     if (name === "") {
       sendSelfStatus({
         message: "Error: No employee name entered"
       });
     }
+    else if (ringtone === "") {
+      sendSelfStatus({
+        message: "Error: No ringtone entered"
+      });
+    } 
     else {
       let newEmployee = {
         name: name,
-        color: color
+        color: color,
+        ringtone: ringtone
       };
       db.Employee.create(newEmployee).then((result) => {
         io.emit("addEmployee", result);
@@ -136,9 +145,10 @@ io.on("connection", (socket) => {
     let id = data.id
     let name = data.name
     let color = data.color
+    let ringtone = data.ringtone
 
     db.Employee.findById(id).then((result) => {
-      result.update({ name: name, color: color });
+      result.update({ name: name, color: color, ringtone: ringtone });
       io.emit("updateEmployee", data);
       sendAllStatus({
         message: "Employee Updated",

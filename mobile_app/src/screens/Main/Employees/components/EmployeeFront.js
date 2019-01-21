@@ -6,7 +6,8 @@ export default class EmployeeFront extends React.PureComponent {
   render() {
     return (
       <View style={styles.employeeRowFront}>
-        <Text style={styles.employeeRowFrontText}>{this.props.name}</Text>
+        <Text style={styles.employeeRowFrontName}>{this.props.name}</Text>
+        <Text style={styles.employeeRowFrontRingtone}>{this.props.ringtone}</Text>
         <View style={[styles.employeeRowFrontColorBox, { backgroundColor: this.props.color }]}></View>
       </View>
     );
@@ -25,14 +26,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 5
   },
-  employeeRowFrontText: {
+  employeeRowFrontName: {
     fontSize: scale(35),
     color: 'white',
     flex: 1,
   },
+  employeeRowFrontRingtone: {
+    fontSize: scale(14),
+    color: 'white',
+  },
   employeeRowFrontColorBox: {
     height: scale(35),
     width: scale(35),
-    borderRadius: 5
+    borderRadius: 5,
+    marginLeft: 15
   },
 });

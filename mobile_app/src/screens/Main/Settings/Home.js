@@ -28,10 +28,6 @@ export default class SettingsTab extends React.Component {
     this.props.screenProps.handleMessageBoxIPChange(IP);
   }
 
-  onRingtoneChange(ringtone) {
-    this.props.screenProps.handleRingtoneChange(ringtone);
-  }
-
   render() {
     let pickerOptions = Sounds.map((sound) => {
       return (
@@ -39,15 +35,17 @@ export default class SettingsTab extends React.Component {
       )
     });
     let status = "No Connection";
+    let statusColor = 'red'
     if (this.props.screenProps.messageBoxIsConnected) {
       status = "Connected";
+      statusColor = 'green'
     }
 
     return (
       <View style={styles.mainView}>
         <View style={styles.mainSubView}>
           <View style={styles.formView}>
-            <FormLabel>Connection Status</FormLabel>
+            <FormLabel labelStyle={{fontSize: scale(16)}}>Connection Status</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -56,9 +54,9 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(20) }}>{status}</Text>
+              <Text style={{ fontSize: scale(40), color: statusColor, borderRadius: 5 }}>{status}</Text>
             </View>
-            <FormLabel>eMessage Box IP</FormLabel>
+            <FormLabel labelStyle={{fontSize: scale(16)}}>eMessage Box IP</FormLabel>
             <FormInput
               placeholder="None"
               autoCapitalize='none'
@@ -66,38 +64,9 @@ export default class SettingsTab extends React.Component {
               value={this.props.screenProps.messageBoxIP}
               onChangeText={(input) => this.onMessageBoxIPChange(input)}
             />
-            <FormLabel>Message Ringtone</FormLabel>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                marginTop: 15,
-                marginBottom: 5,
-              }}
-            >
-              <RNPickerSelect
-                placeholder={{
-                  label: 'Select a ringtone...',
-                  value: null,
-                  color: '#bdc6cf',
-                  fontSize: scale(30),
-                }}
-                style={{
-                  fontColor: "#bdc6cf",
-                  fontSize: scale(12),
-                }}
-                placeholderTextColor={"#bdc6cf"}
-                items={Sounds}
-                onValueChange={(value) => this.onRingtoneChange(value)}
-                value={this.props.screenProps.ringtone}
-                hideIcon
-                useNativeAndroidPickerStyle={false}
-              />
-              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
-            </View>
-            <FormLabel>FAQs</FormLabel>
+            <FormLabel labelStyle={{fontSize: scale(16)}}>FAQs</FormLabel>
 
-            <FormLabel>How do I establish a connections between the eMessage Box and my tablets?</FormLabel>
+            <FormLabel labelStyle={{fontSize: scale(16)}}>How do I establish a connection between the eMessage Box and my tablets?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -106,12 +75,12 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(12) }}>
-                Find your eMessage Box's IP address and set it in the Settings tab.
+              <Text style={{ fontSize: scale(16) }}>
+                Find your eMessage Box's IP address and set it in eMessage Box IP input above in the tab.
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel>How do I lookup my eMessage Box IP?</FormLabel>
+            <FormLabel labelStyle={{fontSize: scale(16)}}>How do I lookup my eMessage Box IP?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -120,12 +89,12 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(12) }}>
+              <Text style={{ fontSize: scale(16) }}>
                 There are several ways to lookup the eMessage Box's IP Address. One way to accomplish this is by using Pi Finder (Download: http://ivanx.com/raspberrypi/).
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel>Which tablets support eMessage?</FormLabel>
+            <FormLabel labelStyle={{fontSize: scale(16)}}>Which tablets support eMessage?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -134,12 +103,12 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(12) }}>
+              <Text style={{ fontSize: scale(16) }}>
                 eMessage is available on all iOS, Android, and Kindle Fire platforms.
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel>Tech Support</FormLabel>
+            <FormLabel labelStyle={{fontSize: scale(16)}}>Tech Support</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -148,8 +117,8 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(12) }}>
-                Please direct all questions, comments or concerns to ssbala@ucdavis.edu
+              <Text style={{ fontSize: scale(16) }}>
+                Please direct all questions, comments or concerns to skyler.bala@gmail.com
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>

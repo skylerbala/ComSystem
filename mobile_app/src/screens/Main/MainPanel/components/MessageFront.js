@@ -10,7 +10,9 @@ export default class MessageFront extends React.PureComponent {
   }
 
   componentDidMount() {
-    this.timer = setInterval(() => this.timerTick(), 1000);
+    if (this.props.hasTimer) {
+      this.timer = setInterval(() => this.timerTick(), 1000);
+    }
   }
 
   timerTick = () => {
@@ -22,10 +24,14 @@ export default class MessageFront extends React.PureComponent {
       timeElapsed = "00:00";
     }
     if (duration.minutes % 3 === 0 && duration.seconds === 0) {
-      // this.props.playRingtone();
+      this.props.playRingtone(this.props.ringtone);
     }
     this.timeElapsed = timeElapsed;
     this.forceUpdate();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   render() {
@@ -62,7 +68,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   messageRowFrontContentText: {
-    fontSize: scale(45),
+    fontSize: scale(55),
     color: 'white',
   },
   messageRowFrontTimer: {

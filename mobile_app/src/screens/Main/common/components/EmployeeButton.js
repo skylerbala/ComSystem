@@ -6,7 +6,7 @@ export default class EmployeeButton extends React.PureComponent {
   
   onEmployeeButtonPress = () => {
     if (this.props.onClick != null) {
-      this.props.onClick(this.props.name, this.props.color);
+      this.props.onClick(this.props.name, this.props.color, this.props.ringtone);
     }
   }
 
@@ -27,15 +27,15 @@ export default class EmployeeButton extends React.PureComponent {
 const styles = StyleSheet.create({
   employeeButtons: {
     justifyContent: 'center',
-    height: Dimensions.get('window').height / 24,
-    width: Dimensions.get('window').width / 4.5,
+    height: Dimensions.get('window').height / 20,
+    width: Dimensions.get('window').width / 4.35,
     margin: 5,
     borderRadius: 5,
     paddingLeft: 5,
     paddingRight: 5
   },
   employeeButtonsText: {
-    fontSize: scale(17.5),
+    fontSize: scale(30),
     color: 'white',
     alignSelf: 'center'
   },

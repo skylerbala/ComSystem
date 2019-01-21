@@ -78,7 +78,8 @@ export default class Main extends Component {
         this.setState({
             messages: [...this.state.messages, data]
         });
-        this.playRingtone();
+        console.log(data)
+        this.playRingtone(data.ringtone);
     }
 
     handleInputAddEmployee = (data) => {
@@ -227,12 +228,12 @@ export default class Main extends Component {
         });
     }
 
-    playRingtone = async () => {
+    playRingtone = async (name) => {
         let sound = new Audio.Sound();
 
         try {
             ringtone = await Sounds.find((e) => {
-                if (e.name == this.state.ringtone) {
+                if (e.name == name) {
                     return e.path
                 }
             })
