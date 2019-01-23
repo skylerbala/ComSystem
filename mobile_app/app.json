@@ -2,7 +2,7 @@
   "expo": {
     "name": "eMessage",
     "description": "Dental office intra-communication app",
-    "slug": "SmartCom",
+    "slug": "e-message",
     "privacy": "unlisted",
     "sdkVersion": "31.0.0",
     "version": "1.0.0",
@@ -10,13 +10,17 @@
       "ios",
       "android"
     ],
-    // "githubUrl": "",
     "orientation": "portrait",
-    // "icon": "./assets/images/icon.png",
+    "primaryColor": "#74CFEE",
+    "icon": "./src/assets/images/logo-no-text.png",
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#74CFEE"
+    },
     "splash": {
-      // "image": "./assets/images/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#ffffff",
+      "image": "./src/assets/images/full-logo.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -25,14 +29,20 @@
       "**/*"
     ],
     "ios": {
-      "bundleIdentifier": "com.skylerbala.apps.dentalcom",
-      // "icon": "./assets/images/icon.png",
-      "supportsTablet": true
+      "bundleIdentifier": "com.skylerbala.apps.emessage",
+      "buildNumber": "1.0.0",
+      "icon": "./src/assets/images/logo-no-text.png",
+      "supportsTablet": true,
+      "splash": {
+        "resizeMode": "contain",
+        "backgroundColor": "#ffffff",
+        "image": "./src/assets/images/full-logo.png"
+      },
     },
     "android": {
-      "package": "com.skylerbala.apps.dentalcom",
-      // "icon": "./assets/images/icon.png",
-      "versionCode": 1
+      "package": "com.skylerbala.apps.emessage",
+      "versionCode": 1,
+      "icon": "./src/assets/images/logo-no-text.png",
     },
   }
 }
