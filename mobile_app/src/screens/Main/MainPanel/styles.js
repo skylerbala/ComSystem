@@ -4,12 +4,12 @@ import { scale } from '../../../library/utils/ScalingAPI';
 export default styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    backgroundColor: '#d0e1f9',
+    backgroundColor: '#DAF5FE',
     padding: 10
   },
   messagesView: {
     flex: 3,
-    backgroundColor: '#4d648d',
+    backgroundColor: '#2BA7D0',
     borderRadius: 5,
     marginBottom: 10
   },
@@ -20,7 +20,7 @@ export default styles = StyleSheet.create({
   },
   employeeButtonsView: {
     flex: 1,
-    backgroundColor: '#4d648d',
+    backgroundColor: '#2BA7D0',
     borderRadius: 5
   },
   employeeButtonsScrollView: {

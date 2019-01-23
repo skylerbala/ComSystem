@@ -6,7 +6,7 @@ export default class ExpressionFront extends React.PureComponent {
   render() {
     console.log('ExpressionFront')
 
-    let expressionBackgroundColor = this.props.type == 1 ? "#0057e7" : "#d62d20";
+    let expressionBackgroundColor = this.props.type == 1 ? "#73D0F3" : "#ff7676";
     return (
       <View style={[styles.expressionRowFront, { backgroundColor: expressionBackgroundColor }]}>
         <Text style={styles.expressionRowFrontText}>{this.props.content}</Text>
@@ -19,7 +19,6 @@ const styles = StyleSheet.create({
   expressionRowFront: {
     flex: 1,
     borderBottomColor: '#4d648d',
-    borderBottomWidth: 1,
     paddingLeft: 15,
     justifyContent: 'center',
     minHeight: scale(40),

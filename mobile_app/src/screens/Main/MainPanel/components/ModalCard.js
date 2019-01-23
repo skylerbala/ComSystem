@@ -96,7 +96,7 @@ export default class ModalCard extends React.PureComponent {
                     playRingtone={this.props.playRingtone}
                 />
                 <View style={{ flexDirection: 'row' }}>
-                    <Button containerStyle={{ flex: 1, marginRight: 5, backgroundColor: 'red' }} onPress={this.onClearPress} title={"Clear"} />
+                    <Button containerStyle={{ flex: 1, marginRight: 5, backgroundColor: '#FF2E29' }} onPress={this.onClearPress} title={"Clear"} />
                     <Button containerStyle={{ flex: 1, marginLeft: 5 }} onPress={this.onSendMessagePress} title={"Send"} />
                 </View>
             </Card>

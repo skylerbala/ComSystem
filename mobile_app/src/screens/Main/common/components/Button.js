@@ -16,7 +16,7 @@ export default Button = (props) => {
 const styles = StyleSheet.create({
   view: {
     minHeight: scale(30),
-    backgroundColor: '#63ace5',
+    backgroundColor: '#25E832',
     padding: scale(2.5),
     marginTop: scale(5),
     alignItems: 'center',

@@ -19,10 +19,23 @@ export default class ExpressionsTab extends React.Component {
     return {
       headerTitle: () => {
         return (
-          <Text style={{ fontWeight: '600' }}>
-            Expressions
-          </Text>
+          <View style={{
+            textAlign: 'center',
+          }}>
+            <Text
+              style={{
+                fontWeight: '600',
+                fontSize: scale(14)
+
+              }}
+            >
+              Expressions
+            </Text>
+          </View>
         );
+      },
+      headerStyle: {
+        backgroundColor: '#74d0f0'
       },
     }
   };
@@ -173,7 +186,7 @@ export default class ExpressionsTab extends React.Component {
       modal = (
         <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
           <Card title={modalTitle} containerStyle={styles.modalCard}>
-            <FormLabel labelStyle={{ fontSize: scale(14), color: "#43484D" }}>New Expression</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(14), color: "#43484D" }}>Expression</FormLabel>
             <FormInput onChangeText={this.onUpdateExpressionContent} />
             <View style={{ flex: 1, alignItems: 'center', marginBottom: 50, marginTop: 5 }}>
               <ExpressionButton

@@ -24,11 +24,24 @@ export default class EmployeesTab extends React.Component {
 		return {
 			headerTitle: () => {
 				return (
-					<Text style={{ fontWeight: '600' }}>
-						Employees
-          </Text>
+				  <View style={{
+					textAlign: 'center',
+				  }}>
+					<Text
+					  style={{
+						fontWeight: '600',
+						fontSize: scale(14)
+
+					  }}
+					>
+					  Employees
+					</Text>
+				  </View>
 				);
-			},
+			  },
+			  headerStyle: {
+				backgroundColor: '#74d0f0'
+			  },
 		}
 	};
 

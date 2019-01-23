@@ -18,9 +18,8 @@ export default class EmployeeFront extends React.PureComponent {
 
 const styles = StyleSheet.create({
   employeeRowFront: {
-    backgroundColor: '#1e1f26',
+    backgroundColor: '#73D0F3',
     borderBottomColor: '#4d648d',
-    borderBottomWidth: 1,
     paddingLeft: 10,
     paddingRight: 10,
     marginBottom: 5,

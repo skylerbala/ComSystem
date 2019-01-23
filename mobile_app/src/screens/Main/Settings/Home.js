@@ -12,10 +12,22 @@ export default class SettingsTab extends React.Component {
     return {
       headerTitle: () => {
         return (
-          <Text style={{ fontWeight: '600' }}>
-            Settings
-          </Text>
+          <View style={{
+            textAlign: 'center',
+          }}>
+            <Text
+              style={{
+                fontWeight: '600',
+                fontSize: scale(14)
+              }}
+            >
+              Settings
+            </Text>
+          </View>
         );
+      },
+      headerStyle: {
+        backgroundColor: '#74d0f0'
       },
     }
   };
@@ -39,7 +51,7 @@ export default class SettingsTab extends React.Component {
     let statusColor = 'red'
     if (this.props.screenProps.messageBoxIsConnected) {
       status = "Connected";
-      statusColor = 'green'
+      statusColor = '#25E832'
     }
 
     return (

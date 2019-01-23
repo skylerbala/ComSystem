@@ -18,7 +18,7 @@ class App extends React.Component {
 
   componentDidMount() {
     this.storage.retrieveItem('isOnBoarding').then((result) => {
-      if (result === 'false') {
+      if (result === 'true') {
         this.setState({ isOnBoarding: false });
       }
       else {

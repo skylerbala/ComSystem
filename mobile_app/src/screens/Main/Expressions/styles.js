@@ -4,7 +4,7 @@ import { scale } from '../../../library/utils/ScalingAPI';
 export default styles = StyleSheet.create({
   mainView: {
     flex: 1,
-    backgroundColor: '#d0e1f9',
+    backgroundColor: '#DAF5FE',
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 5,
@@ -16,7 +16,7 @@ export default styles = StyleSheet.create({
     flexDirection: 'row',
   },
   listView: {
-    backgroundColor: '#4d648d',
+    backgroundColor: '#2BA7D0',
     flex: 1,
     padding: 10,
     borderRadius: 5,

@@ -10,13 +10,13 @@ export default class OnBoarding extends Component {
       <Onboarding
         pages={[
           {
-            backgroundColor: '#d0e1f9',
+            backgroundColor: '#D9F4FE',
             image: <Image source={require('../../assets/images/full-logo.png')} />,
             title: 'Welcome to eMessage',
             subtitle: 'All your office communications in one fully-customizable, intuitive app.',
           },
           {
-            backgroundColor: '#d0e1f9',
+            backgroundColor: '#D9F4FE',
             image:<View
                   style={{
                     width: scale(550),
@@ -37,7 +37,7 @@ export default class OnBoarding extends Component {
             subtitle: 'Send a message by clicking on a message recipient\'s employee button in the bottom view.',
           },
           {
-            backgroundColor: '#d0e1f9',
+            backgroundColor: '#D9F4FE',
             image:<View
                   style={{
                     width: scale(550),
@@ -58,7 +58,7 @@ export default class OnBoarding extends Component {
             subtitle: 'Combine different user-defined expressions to create different messages.',
           },
           {
-            backgroundColor: '#d0e1f9',
+            backgroundColor: '#D9F4FE',
             image:<View
                   style={{
                     width: scale(550),
@@ -79,7 +79,7 @@ export default class OnBoarding extends Component {
             subtitle: 'Delete messages as soon as they\'ve been read.',
           },
           {
-            backgroundColor: '#d0e1f9',
+            backgroundColor: '#D9F4FE',
             image:<View
                   style={{
                     width: scale(550),
@@ -100,7 +100,7 @@ export default class OnBoarding extends Component {
             subtitle: 'Add, Edit, and Delete Employees.',
           },
           {
-            backgroundColor: '#d0e1f9',
+            backgroundColor: '#D9F4FE',
             image:<View
                   style={{
                     width: scale(550),
@@ -121,7 +121,7 @@ export default class OnBoarding extends Component {
             subtitle: 'Add, Edit, and Delete Expressions.',
           },
           {
-            backgroundColor: '#d0e1f9',
+            backgroundColor: '#D9F4FE',
             image:<View
                   style={{
                     width: scale(550),

@@ -27,6 +27,12 @@ export default class MainPanel extends React.Component {
         />
       );
     },
+    headerTitleStyle: {
+      
+    },
+    headerStyle: {
+      backgroundColor: '#74d0f0'
+    },
   }
 
   constructor(props) {
