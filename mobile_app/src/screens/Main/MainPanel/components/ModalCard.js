@@ -94,6 +94,7 @@ export default class ModalCard extends React.PureComponent {
                     name={this.props.name}
                     content={this.getFinalContent()}
                     playRingtone={this.props.playRingtone}
+                    isPreview
                 />
                 <View style={{ flexDirection: 'row' }}>
                     <Button containerStyle={{ flex: 1, marginRight: 5, backgroundColor: '#FF2E29' }} onPress={this.onClearPress} title={"Clear"} />

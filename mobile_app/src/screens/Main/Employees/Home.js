@@ -31,7 +31,6 @@ export default class EmployeesTab extends React.Component {
 					  style={{
 						fontWeight: '600',
 						fontSize: scale(14)
-
 					  }}
 					>
 					  Employees
@@ -51,7 +50,7 @@ export default class EmployeesTab extends React.Component {
 			isModalVisible: false,
 			employee: {
 				name: "",
-				color: tinycolor('#70c1b3').toHsl(),
+				color: tinycolor('#'+(Math.random()*0xFFFFFF<<0).toString(16)).toHsl(),
 				ringtone: Sounds[0].name
 			},
 			isEditing: false
@@ -82,6 +81,18 @@ export default class EmployeesTab extends React.Component {
 			this.props.screenProps.handleAddEmployee(newEmployee);
 		}
 		this.resetState();
+	}
+
+	onAddEmployeePress = () => {
+		let index = Math.floor(Math.random()*30)
+		this.setState({ isModalVisible: true, 
+			employee: {
+				name: this.state.employee.name,
+				color: tinycolor('#'+(Math.random()*0xFFFFFF<<0).toString(16)).toHsl(),
+				ringtone: Sounds[index].name
+			},
+		 });
+		 this.showModal();
 	}
 
 	onEditEmployeePress = (employee) => {
@@ -195,8 +206,6 @@ export default class EmployeesTab extends React.Component {
 	}
 
 	render() {
-		console.log('Employee')
-
 		let mainView = <NoConnectionView />
 
 		if (this.props.screenProps.messageBoxIsConnected) {
@@ -306,7 +315,7 @@ export default class EmployeesTab extends React.Component {
 								renderHiddenItem={this.renderEmployeeRowBack}
 							/>
 						</View>
-						<Button title={"Add"} onPress={this.showModal} />
+						<Button title={"Add"} onPress={this.onAddEmployeePress} />
 						{modal}
 					</View>
 				</View>

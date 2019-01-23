@@ -40,10 +40,23 @@ export default class MessageFront extends React.PureComponent {
   }
 
   render() {
+    let previewText;
+    if (this.props.isPreview) {
+      previewText = {
+        fontSize: scale(42.5),
+        color: 'white',
+      }
+    }
+    else {
+      previewText = {
+        fontSize: scale(50),
+        color: 'white',
+      }
+    }
     return (
       <View style={[styles.messageRowFront, { backgroundColor: this.props.color }]}>
         <View style={styles.messageRowFrontContent}>
-          <Text style={styles.messageRowFrontContentText}>
+          <Text style={previewText}>
             {this.props.name}: {this.props.content}
           </Text>
         </View>
@@ -73,7 +86,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   messageRowFrontContentText: {
-    fontSize: scale(55),
+    fontSize: scale(50),
     color: 'white',
   },
   messageRowFrontTimer: {

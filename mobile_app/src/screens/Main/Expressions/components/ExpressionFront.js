@@ -4,8 +4,6 @@ import { scale } from '../../../../library/utils/ScalingAPI';
 
 export default class ExpressionFront extends React.PureComponent {  
   render() {
-    console.log('ExpressionFront')
-
     let expressionBackgroundColor = this.props.type == 1 ? "#73D0F3" : "#ff7676";
     return (
       <View style={[styles.expressionRowFront, { backgroundColor: expressionBackgroundColor }]}>

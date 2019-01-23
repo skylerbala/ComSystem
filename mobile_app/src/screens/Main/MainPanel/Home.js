@@ -123,7 +123,6 @@ export default class MainPanel extends React.Component {
   }
 
   render() {
-    console.log('MainPanel')
     let mainPanelView = <NoConnectionView />;
 
     if (this.props.screenProps.messageBoxIsConnected) {

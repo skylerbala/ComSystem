@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
   messageRowBackDeleteButton: {
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#cc2a36',
+    backgroundColor: '#FF2D2D',
     width: 200,
     position: 'absolute',
     bottom: 0,

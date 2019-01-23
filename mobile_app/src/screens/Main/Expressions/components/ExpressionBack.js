@@ -54,11 +54,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   expressionRowBackButtonLeft: {
-    backgroundColor: '#eb6841',
+    backgroundColor: '#FF992D',
     right: 125
   },
   expressionRowBackButtonRight: {
-    backgroundColor: '#cc2a36',
+    backgroundColor: '#FF2D2D',
     right: 0
   },
   expressionRowBackText: {
