@@ -23,20 +23,9 @@ export default class ExpressionsTab extends React.Component {
             Expressions
           </Text>
         );
-      }
+      },
     }
   };
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (!shallowequal(this.props.screenProps.expressions, nextProps.screenProps.expressions)) {
-      return true;
-    }
-    else if (!shallowequal(this.state, nextState)) {
-      return true;
-    }
-
-    return false;
-  }
 
   constructor(props) {
     super(props);
@@ -160,6 +149,8 @@ export default class ExpressionsTab extends React.Component {
   }
 
   render() {
+    console.log('Expression')
+
     let mainView = <NoConnectionView />
 
     if (this.props.screenProps.messageBoxIsConnected) {

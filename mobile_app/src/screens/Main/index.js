@@ -23,6 +23,7 @@ export default class Main extends Component {
         this.storage = new AsyncStorageAPI;
         // this.timer = setInterval(() => this.timerTick(), 1000);
         this.toast = null;
+        global.currTab = 'MainPanel'
     }
 
     componentDidMount() {
@@ -78,7 +79,6 @@ export default class Main extends Component {
         this.setState({
             messages: [...this.state.messages, data]
         });
-        console.log(data)
         this.playRingtone(data.ringtone);
     }
 

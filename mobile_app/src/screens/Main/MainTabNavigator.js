@@ -13,6 +13,10 @@ const MainTabNavigator = createBottomTabNavigator({
       title: 'eMessage Panel',
       tabBarIcon: ({ tintColor }) => {
         return (<Icon type="font-awesome" name="tachometer" color={tintColor} />)
+      },
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        defaultHandler()
+        global.currTab = 'MainPanel'
       }
     }
   },
@@ -22,6 +26,10 @@ const MainTabNavigator = createBottomTabNavigator({
       title: 'Employees',
       tabBarIcon: ({ tintColor }) => {
         return (<Icon type="font-awesome" name="user" color={tintColor} />)
+      },
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        defaultHandler()
+        global.currTab = 'Employees'
       }
     }
   },
@@ -31,6 +39,10 @@ const MainTabNavigator = createBottomTabNavigator({
       title: 'Expressions',
       tabBarIcon: ({ tintColor }) => {
         return (<Icon type="font-awesome" name="envelope" color={tintColor} />)
+      },
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        defaultHandler()
+        global.currTab = 'Expressions'
       }
     }
   },
@@ -40,6 +52,10 @@ const MainTabNavigator = createBottomTabNavigator({
       title: 'Settings',
       tabBarIcon: ({ tintColor }) => {
         return (<Icon type="font-awesome" name="cog" color={tintColor} />)
+      },
+      tabBarOnPress: ({ navigation, defaultHandler }) => {
+        defaultHandler()
+        global.currTab = 'Settings'
       }
     }
   }

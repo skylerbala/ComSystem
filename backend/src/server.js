@@ -86,13 +86,12 @@ io.on("connection", (socket) => {
     let name = data.name;
     let color = data.color;
     let ringtone = data.ringtone;
-
     if (name === "") {
       sendSelfStatus({
         message: "Error: No employee name entered"
       });
     }
-    else if (ringtone === "") {
+    else if (ringtone === null || ringtone.substring(0, 4) != "Ring") {
       sendSelfStatus({
         message: "Error: No ringtone entered"
       });

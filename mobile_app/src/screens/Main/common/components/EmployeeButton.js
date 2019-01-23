@@ -11,6 +11,8 @@ export default class EmployeeButton extends React.PureComponent {
   }
 
   render() {
+    console.log('Employee Button')
+
     return (
       <TouchableOpacity
         style={[styles.employeeButtons, { backgroundColor: this.props.color }]}

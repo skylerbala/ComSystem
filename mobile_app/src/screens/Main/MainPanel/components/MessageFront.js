@@ -4,9 +4,12 @@ import { scale } from '../../../../library/utils/ScalingAPI';
 import moment from 'moment';
 
 export default class MessageFront extends React.PureComponent {
-
   constructor(props) {
     super(props);
+  }
+
+  state = {
+    timeElapsed: ""
   }
 
   componentDidMount() {
@@ -26,8 +29,10 @@ export default class MessageFront extends React.PureComponent {
     if (duration.minutes % 3 === 0 && duration.seconds === 0) {
       this.props.playRingtone(this.props.ringtone);
     }
-    this.timeElapsed = timeElapsed;
-    this.forceUpdate();
+
+    if (global.currTab === "MainPanel") {
+      this.setState({timeElapsed: timeElapsed})
+    }
   }
 
   componentWillUnmount() {
@@ -44,7 +49,7 @@ export default class MessageFront extends React.PureComponent {
         </View>
         <View style={styles.messageRowFrontTimer}>
           <Text style={styles.messageRowFrontTimerText}>
-            {this.timeElapsed}
+            {this.state.timeElapsed}
           </Text>
         </View>
       </View>

@@ -12,6 +12,7 @@ import styles from './styles';
 import EmployeeButton from '../common/components/EmployeeButton';
 import EmployeeFront from './components/EmployeeFront';
 import EmployeeBack from './components/EmployeeBack';
+import ModalCard from './components/ModalCard';
 import shallowequal from 'shallowequal';
 import RNPickerSelect from 'react-native-picker-select';
 import { scale } from '../../../library/utils/ScalingAPI';
@@ -27,7 +28,7 @@ export default class EmployeesTab extends React.Component {
 						Employees
           </Text>
 				);
-			}
+			},
 		}
 	};
 
@@ -36,7 +37,6 @@ export default class EmployeesTab extends React.Component {
 		this.state = {
 			isModalVisible: false,
 			employee: {
-				id: null,
 				name: "",
 				color: tinycolor('#70c1b3').toHsl(),
 				ringtone: Sounds[0].name
@@ -52,7 +52,6 @@ export default class EmployeesTab extends React.Component {
 		else if (!shallowequal(this.state, nextState)) {
 			return true;
 		}
-
 		return false;
 	}
 
@@ -183,6 +182,8 @@ export default class EmployeesTab extends React.Component {
 	}
 
 	render() {
+		console.log('Employee')
+
 		let mainView = <NoConnectionView />
 
 		if (this.props.screenProps.messageBoxIsConnected) {
@@ -195,7 +196,11 @@ export default class EmployeesTab extends React.Component {
 
 			let modal = (
 				<Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
-					<Card title={modalTitle} containerStyle={styles.modalCard}>
+					<ModalCard
+						modalTitle={modalTitle}
+						employee={this.state.employee}
+					/>
+					{/* <Card title={modalTitle} containerStyle={styles.modalCard}>
 						<FormLabel labelStyle={{ fontSize: scale(14) }}>Employee Name</FormLabel>
 						<FormInput onChangeText={this.onUpdateEmployeeName} />
 						<FormLabel labelStyle={{ fontSize: scale(14) }}>Message Ringtone</FormLabel>
@@ -229,21 +234,21 @@ export default class EmployeesTab extends React.Component {
 						<FormLabel labelStyle={{ fontSize: scale(14) }}>Color</FormLabel>
 						<FormLabel>Hue</FormLabel>
 						<HueSlider
-							gradientSteps={5}
+							gradientSteps={100}
 							value={this.state.employee.color.h}
 							color={this.state.employee.color}
 							onValueChange={this.onUpdateHue}
 						/>
 						<FormLabel style={styles.componentText}>Saturation</FormLabel>
 						<SaturationSlider
-							gradientSteps={5}
+							gradientSteps={100}
 							value={this.state.employee.color.s}
 							color={this.state.employee.color}
 							onValueChange={this.onUpdateSaturation}
 						/>
 						<FormLabel style={styles.componentText}>Lightness</FormLabel>
 						<LightnessSlider
-							gradientSteps={5}
+							gradientSteps={100}
 							value={this.state.employee.color.l}
 							color={this.state.employee.color}
 							onValueChange={this.onUpdateLightness}
@@ -256,7 +261,7 @@ export default class EmployeesTab extends React.Component {
 							/>
 						</View>
 						<Button title='Save' onPress={this.onSaveEmployeePress} />
-					</Card>
+					</Card> */}
 				</Modal>
 			);
 

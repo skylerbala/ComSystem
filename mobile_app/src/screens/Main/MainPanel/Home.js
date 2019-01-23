@@ -12,6 +12,7 @@ import ExpressionButton from '../common/components/ExpressionButton';
 import EmployeeButton from '../common/components/EmployeeButton';
 import MessageFront from './components/MessageFront';
 import MessageBack from './components/MessageBack';
+import ModalCard from './components/ModalCard';
 import Sounds from '../../../assets/sounds';
 
 
@@ -25,19 +26,20 @@ export default class MainPanel extends React.Component {
           source={require('../../../assets/images/logo.png')}
         />
       );
-    }
+    },
   }
 
   constructor(props) {
     super(props);
     this.state = {
       isModalVisible: false,
-      message: {
-        name: null,
-        content: [],
-        color: null
-      }
     };
+
+    this.message = {
+      name: "",
+      color: "",
+      ringtone: ""
+    }
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -57,73 +59,27 @@ export default class MainPanel extends React.Component {
   onEmployeeButtonPress = (name, color, ringtone) => {
     this.setState({
       isModalVisible: true,
-      message: {
-        name: name,
-        content: [],
-        color: color,
-        createdAt: null,
-        ringtone: ringtone
-      }
     });
+    this.message = {
+      name: name,
+      color: color,
+      ringtone: ringtone
+    }
   }
 
   onMessageDeletePress = (message) => {
     this.props.screenProps.handleDeleteMessage(message);
   }
 
-  onExpressionPress = (expression) => {
-    this.setState({
-      message: {
-        name: this.state.message.name,
-        content: [...this.state.message.content, expression.content],
-        color: this.state.message.color,
-        ringtone: this.state.message.ringtone,
-      }
-    });
-  }
-
-
-  onClearPress = () => {
-    this.setState({
-      message: {
-        name: this.state.message.name,
-        content: [],
-        color: this.state.message.color,
-      }
-    });
-  }
-
-  onSendMessagePress = () => {
-    let newMessage = this.getFinalMessage(this.state.message);
-    this.props.screenProps.handleSendMessage(newMessage);
-
-    this.resetState();
-  }
-
   resetState = () => {
-    this.setState({ isModalVisible: false }, () => {
-      setTimeout(() => {
-        this.setState({
-          message: {
-            name: null,
-            content: [],
-            color: null
-          }
-        });
-      }, 500);
+    this.setState({
+      isModalVisible: false,
     });
-
-    this.props.screenProps.expressions.forEach((expression) => {
-      expression.selected = false;
-    });
-  }
-
-  getFinalMessage = (message) => {
-    let newMessage = Object.assign({}, this.state.message);
-    if (newMessage.content != []) {
-      newMessage.content = newMessage.content.join(' ');
+    this.message = {
+      name: "",
+      color: "",
+      ringtone: ""
     }
-    return newMessage;
   }
 
   renderEmployeeButton = (rowData) => {
@@ -133,15 +89,6 @@ export default class MainPanel extends React.Component {
         color={rowData.item.color}
         ringtone={rowData.item.ringtone}
         onClick={this.onEmployeeButtonPress}
-      />
-    );
-  }
-
-  renderExpressionButton = (rowData) => {
-    return (
-      <ExpressionButton
-        expression={rowData.item}
-        onClick={this.onExpressionPress}
       />
     );
   }
@@ -170,10 +117,10 @@ export default class MainPanel extends React.Component {
   }
 
   render() {
+    console.log('MainPanel')
     let mainPanelView = <NoConnectionView />;
 
     if (this.props.screenProps.messageBoxIsConnected) {
-
       let [expressionsType1, expressionsType2] = this.props.screenProps.expressions.reduce((result, expression) => {
         if (expression.type == 1) {
           result[0].push(expression);
@@ -186,39 +133,17 @@ export default class MainPanel extends React.Component {
 
       let modal = (
         <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
-          <Card title={"Send Message"} containerStyle={styles.modalCard}>
-            <Text style={styles.expressionCategoryText}>Expressions 1</Text>
-            <View style={styles.expressionsView}>
-              <FlatList
-                contentContainerStyle={styles.listContainer}
-                data={expressionsType1}
-                renderItem={this.renderExpressionButton}
-                keyExtractor={(rowData) => rowData.id.toString()}
-                numColumns={3}
-              />
-            </View>
-            <Text style={styles.expressionCategoryText}>Expressions 2</Text>
-            <View style={styles.expressionsView}>
-              <FlatList
-                contentContainerStyle={styles.listContainer}
-                data={expressionsType2}
-                renderItem={this.renderExpressionButton}
-                keyExtractor={(rowData) => rowData.id.toString()}
-                numColumns={3}
-              />
-            </View>
-            <MessageFront
-              color={this.state.message.color}
-              name={this.state.message.name}
-              createdAt={this.state.message.createdAt}
-              content={this.getFinalMessage(this.state.message).content}
-              playRingtone={this.props.screenProps.playRingtone}
-            />
-            <View style={{ flexDirection: 'row' }}>
-              <Button containerStyle={{ flex: 1, margin: 5, backgroundColor: 'red' }} onPress={this.onClearPress} title={"Clear"} />
-              <Button containerStyle={{ flex: 1, margin: 5}} onPress={this.onSendMessagePress} title={"Send"} />
-            </View>
-          </Card>
+          <ModalCard
+            expressionsType1={expressionsType1}
+            expressionsType2={expressionsType2}
+            name={this.message.name}
+            color={this.message.color}
+            ringtone={this.message.ringtone}
+            getFinalMessageHandler={this.getFinalMessage}
+            playRingtone={this.props.screenProps.playRingtone()}
+            handleSendMessage={this.props.screenProps.handleSendMessage}
+            handleResetState={this.resetState}
+          />
         </Modal>
       )
 

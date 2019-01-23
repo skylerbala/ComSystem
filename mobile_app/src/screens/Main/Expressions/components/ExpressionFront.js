@@ -4,6 +4,8 @@ import { scale } from '../../../../library/utils/ScalingAPI';
 
 export default class ExpressionFront extends React.PureComponent {  
   render() {
+    console.log('ExpressionFront')
+
     let expressionBackgroundColor = this.props.type == 1 ? "#0057e7" : "#d62d20";
     return (
       <View style={[styles.expressionRowFront, { backgroundColor: expressionBackgroundColor }]}>
@@ -21,7 +23,9 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     justifyContent: 'center',
     minHeight: scale(40),
-    borderRadius: 5
+    borderRadius: 5,
+    marginBottom: 5,
+
   },
   expressionRowFrontText: {
     fontSize: scale(35),

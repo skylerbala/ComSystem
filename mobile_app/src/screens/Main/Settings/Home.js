@@ -16,7 +16,7 @@ export default class SettingsTab extends React.Component {
             Settings
           </Text>
         );
-      }
+      },
     }
   };
 
@@ -29,6 +29,7 @@ export default class SettingsTab extends React.Component {
   }
 
   render() {
+    console.log("Settings")
     let pickerOptions = Sounds.map((sound) => {
       return (
         <Picker.Item key={sound.name} label={sound.name} value={sound.name} />
@@ -45,7 +46,7 @@ export default class SettingsTab extends React.Component {
       <View style={styles.mainView}>
         <View style={styles.mainSubView}>
           <View style={styles.formView}>
-            <FormLabel labelStyle={{fontSize: scale(16)}}>Connection Status</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(16) }}>Connection Status</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -56,7 +57,7 @@ export default class SettingsTab extends React.Component {
             >
               <Text style={{ fontSize: scale(40), color: statusColor, borderRadius: 5 }}>{status}</Text>
             </View>
-            <FormLabel labelStyle={{fontSize: scale(16)}}>eMessage Box IP</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(16) }}>eMessage Box IP</FormLabel>
             <FormInput
               placeholder="None"
               autoCapitalize='none'
@@ -64,9 +65,9 @@ export default class SettingsTab extends React.Component {
               value={this.props.screenProps.messageBoxIP}
               onChangeText={(input) => this.onMessageBoxIPChange(input)}
             />
-            <FormLabel labelStyle={{fontSize: scale(16)}}>FAQs</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(16) }}>FAQs</FormLabel>
 
-            <FormLabel labelStyle={{fontSize: scale(16)}}>How do I establish a connection between the eMessage Box and my tablets?</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(16) }}>How do I establish a connection between the eMessage Box and my tablets?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -80,7 +81,7 @@ export default class SettingsTab extends React.Component {
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel labelStyle={{fontSize: scale(16)}}>How do I lookup my eMessage Box IP?</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(16) }}>How do I lookup my eMessage Box IP?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -94,7 +95,7 @@ export default class SettingsTab extends React.Component {
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel labelStyle={{fontSize: scale(16)}}>Which tablets support eMessage?</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(16) }}>Which tablets support eMessage?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -108,7 +109,7 @@ export default class SettingsTab extends React.Component {
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel labelStyle={{fontSize: scale(16)}}>Tech Support</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(16) }}>Tech Support</FormLabel>
             <View
               style={{
                 marginLeft: 20,

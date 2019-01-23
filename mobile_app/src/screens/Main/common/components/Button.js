@@ -2,17 +2,15 @@ import React from 'react';
 import { TouchableOpacity, StyleSheet, Text } from 'react-native';
 import { scale } from '../../../../library/utils/ScalingAPI';
 
-export default class Button extends React.PureComponent {
-  render() {
-    return (
-      <TouchableOpacity
-        style={[styles.view, this.props.containerStyle]}
-        onPress={this.props.onPress}
-      >
-        <Text style={styles.text}>{this.props.title}</Text>
-      </TouchableOpacity>
-    );
-  }
+export default Button = (props) => {
+  return (
+    <TouchableOpacity
+      style={[styles.view, props.containerStyle]}
+      onPress={props.onPress}
+    >
+      <Text style={styles.text}>{props.title}</Text>
+    </TouchableOpacity>
+  );
 }
 
 const styles = StyleSheet.create({

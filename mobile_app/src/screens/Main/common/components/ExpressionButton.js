@@ -11,6 +11,8 @@ export default class ExpressionButton extends React.PureComponent {
   }
 
   render() {
+    console.log('Expression Button')
+
     let expressionBackgroundColor = this.props.expression.type == 1 ? "#0057e7" : "#d62d20";
 
     return (

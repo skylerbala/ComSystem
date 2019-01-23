@@ -5,6 +5,8 @@ import { scale } from '../../../../library/utils/ScalingAPI';
 
 export default class NoConnectionView extends React.PureComponent {
   render() {
+    console.log('NoConnection')
+
     return (
       <View style={styles.view}>
         <Text style={styles.text}>

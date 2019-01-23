@@ -13,6 +13,8 @@ export default class EmployeeBack extends React.PureComponent {
   }
 
   render() {
+    console.log('EmployeeBack')
+
     return (
       <TouchableOpacity style={styles.employeeRowBack}>
         <TouchableOpacity
@@ -44,6 +46,8 @@ const styles = StyleSheet.create({
     top: 0,
     width: 125,
     borderRadius: 5,
+    marginBottom: 5,
+
   },
   employeeRowBackButtonLeft: {
     backgroundColor: '#eb6841',

@@ -4,6 +4,8 @@ import { scale } from '../../../../library/utils/ScalingAPI';
 
 export default class EmployeeFront extends React.PureComponent {  
   render() {
+    console.log('EmployeeFront')
+
     return (
       <View style={styles.employeeRowFront}>
         <Text style={styles.employeeRowFrontName}>{this.props.name}</Text>
@@ -21,6 +23,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingLeft: 10,
     paddingRight: 10,
+    marginBottom: 5,
     minHeight: scale(30),
     flexDirection: 'row',
     alignItems: 'center',
