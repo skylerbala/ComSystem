@@ -23,7 +23,7 @@ export default class MainPanel extends React.Component {
         <Image
           style={{ width: 100, height: 40, flex: 1 }}
           resizeMode="contain"
-          source={require('../../../assets/images/logo.png')}
+          source={require('../../../assets/images/logo-text.png')}
         />
       );
     },

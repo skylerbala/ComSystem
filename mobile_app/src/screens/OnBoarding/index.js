@@ -11,9 +11,9 @@ export default class OnBoarding extends Component {
         pages={[
           {
             backgroundColor: '#d0e1f9',
-            image: <Image source={require('../../assets/images/logo.png')} />,
+            image: <Image source={require('../../assets/images/full-logo.png')} />,
             title: 'Welcome to eMessage',
-            subtitle: 'All your team communications in one instant, secure app.',
+            subtitle: 'All your office communications in one fully-customizable, intuitive app.',
           },
           {
             backgroundColor: '#d0e1f9',

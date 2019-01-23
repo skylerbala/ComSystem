@@ -14,7 +14,6 @@ class App extends React.Component {
 
     this.storage = new AsyncStorageAPI;
     ScreenOrientation.allowAsync(ScreenOrientation.Orientation.ALL);
-
   }
 
   componentDidMount() {

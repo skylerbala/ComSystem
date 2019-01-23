@@ -196,11 +196,12 @@ export default class EmployeesTab extends React.Component {
 
 			let modal = (
 				<Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
-					<ModalCard
+					{/* <ModalCard
 						modalTitle={modalTitle}
 						employee={this.state.employee}
-					/>
-					{/* <Card title={modalTitle} containerStyle={styles.modalCard}>
+						playRingtone={this.props.screenProps.playRingtone}
+					/> */}
+					<Card title={modalTitle} containerStyle={styles.modalCard}>
 						<FormLabel labelStyle={{ fontSize: scale(14) }}>Employee Name</FormLabel>
 						<FormInput onChangeText={this.onUpdateEmployeeName} />
 						<FormLabel labelStyle={{ fontSize: scale(14) }}>Message Ringtone</FormLabel>
@@ -261,7 +262,7 @@ export default class EmployeesTab extends React.Component {
 							/>
 						</View>
 						<Button title='Save' onPress={this.onSaveEmployeePress} />
-					</Card> */}
+					</Card>
 				</Modal>
 			);
 

@@ -35,11 +35,13 @@ export default styles = StyleSheet.create({
     borderRadius: 5
   },
   expressionCategoryText: {
-    fontWeight: '600'
+    fontWeight: '600',
+    fontSize: scale(12.5),
+    color: '#43484D'
   },
   expressionsView: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    padding: 5
+    margin: 5
   },
 });

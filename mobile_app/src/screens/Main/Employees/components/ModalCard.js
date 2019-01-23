@@ -18,8 +18,16 @@ export default class ModalCard extends React.PureComponent {
         this.state = {
             employee: props.employee
         }
-        console.log(this.state)
     }
+
+    onRingtoneChange = (ringtone) => {
+		this.setState({
+			employee: {
+				ringtone: ringtone
+			}
+		});
+		this.props.playRingtone(ringtone);
+	}
 
     render() {
         return (

@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     minHeight: scale(30),
     borderRadius: 5,
-    marginBottom: 10,
+    marginBottom: 5,
     paddingLeft: 10,
     paddingRight: 10,
   },
