@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
         });
 
       }).catch((error) => {
-        sendSelfStatus({ message: "Error: " + error });
+        // sendSelfStatus({ message: "Error: " + error });
       });
     }
   });
@@ -108,7 +108,7 @@ io.on("connection", (socket) => {
           message: "Employee Added",
         });
       }).catch((error) => {
-        sendSelfStatus({ message: "Error: " + error });
+        // sendSelfStatus({ message: "Error: " + error });
       });
     }
   });
@@ -135,7 +135,7 @@ io.on("connection", (socket) => {
           message: "Expression Added",
         });
       }).catch((error) => {
-        sendSelfStatus({ message: "Error: " + error });
+        // sendSelfStatus({ message: "Error: " + error });
       });
     }
   });
