@@ -202,9 +202,9 @@ export default class EmployeesTab extends React.Component {
 						playRingtone={this.props.screenProps.playRingtone}
 					/> */}
 					<Card title={modalTitle} containerStyle={styles.modalCard}>
-						<FormLabel labelStyle={{ fontSize: scale(14) }}>Employee Name</FormLabel>
+						<FormLabel labelStyle={{ fontSize: scale(12.5), color: "#43484D" }}>Employee Name</FormLabel>
 						<FormInput onChangeText={this.onUpdateEmployeeName} />
-						<FormLabel labelStyle={{ fontSize: scale(14) }}>Message Ringtone</FormLabel>
+						<FormLabel labelStyle={{ fontSize: scale(12.5), color: "#43484D" }}>Message Ringtone</FormLabel>
 						<View
 							style={{
 								marginLeft: 20,
@@ -217,12 +217,12 @@ export default class EmployeesTab extends React.Component {
 								placeholder={{
 									label: 'Select a ringtone...',
 									value: null,
-									color: '#bdc6cf',
-									fontSize: scale(30),
+									color: '#43484D',
+									fontSize: scale(12.5),
 								}}
 								style={{
-									fontColor: "#bdc6cf",
-									fontSize: scale(16),
+									fontColor: "#43484D",
+									fontSize: scale(12.5),
 								}}
 								placeholderTextColor={"#bdc6cf"}
 								items={Sounds}
@@ -232,29 +232,39 @@ export default class EmployeesTab extends React.Component {
 								useNativeAndroidPickerStyle={false}
 							/>
 						</View>
-						<FormLabel labelStyle={{ fontSize: scale(14) }}>Color</FormLabel>
-						<FormLabel>Hue</FormLabel>
-						<HueSlider
-							gradientSteps={100}
-							value={this.state.employee.color.h}
-							color={this.state.employee.color}
-							onValueChange={this.onUpdateHue}
-						/>
-						<FormLabel style={styles.componentText}>Saturation</FormLabel>
-						<SaturationSlider
-							gradientSteps={100}
-							value={this.state.employee.color.s}
-							color={this.state.employee.color}
-							onValueChange={this.onUpdateSaturation}
-						/>
-						<FormLabel style={styles.componentText}>Lightness</FormLabel>
-						<LightnessSlider
-							gradientSteps={100}
-							value={this.state.employee.color.l}
-							color={this.state.employee.color}
-							onValueChange={this.onUpdateLightness}
-						/>
-						<View style={{ flex: 1, alignItems: 'center', marginBottom: 50 }}>
+						<FormLabel labelStyle={{ fontSize: scale(12.5), color: "#43484D" }}>Color</FormLabel>
+						<View
+							style={{
+								marginLeft: 20,
+								marginRight: 20,
+								marginBottom: 5,
+							}}
+						>
+
+							<FormLabel labelStyle={{ fontSize: scale(10), color: "#43484D" }}>Hue</FormLabel>
+							<HueSlider
+								gradientSteps={100}
+								value={this.state.employee.color.h}
+								color={this.state.employee.color}
+								onValueChange={this.onUpdateHue}
+							/>
+							<FormLabel labelStyle={{ fontSize: scale(10), color: "#43484D" }}>Saturation</FormLabel>
+							<SaturationSlider
+								gradientSteps={100}
+								value={this.state.employee.color.s}
+								color={this.state.employee.color}
+								onValueChange={this.onUpdateSaturation}
+							/>
+							<FormLabel labelStyle={{ fontSize: scale(10), color: "#43484D" }}>Lightness</FormLabel>
+							<LightnessSlider
+								gradientSteps={100}
+								value={this.state.employee.color.l}
+								color={this.state.employee.color}
+								onValueChange={this.onUpdateLightness}
+							/>
+						</View>
+
+						<View style={{ flex: 1, alignItems: 'center', marginBottom: 60 }}>
 							<EmployeeButton
 								name={this.state.employee.name}
 								color={tinycolor(this.state.employee.color).toHexString()}

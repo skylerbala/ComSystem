@@ -36,7 +36,7 @@ export default styles = StyleSheet.create({
   },
   expressionCategoryText: {
     fontWeight: '600',
-    fontSize: scale(12.5),
+    fontSize: scale(14),
     color: '#43484D'
   },
   expressionsView: {

@@ -173,9 +173,9 @@ export default class ExpressionsTab extends React.Component {
       modal = (
         <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
           <Card title={modalTitle} containerStyle={styles.modalCard}>
-            <FormLabel>New Expression</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(14), color: "#43484D" }}>New Expression</FormLabel>
             <FormInput onChangeText={this.onUpdateExpressionContent} />
-            <View style={{ flex: 1, alignItems: 'center', marginBottom: 50 }}>
+            <View style={{ flex: 1, alignItems: 'center', marginBottom: 50, marginTop: 5 }}>
               <ExpressionButton
                 expression={this.state.expression}
                 onClick={null}

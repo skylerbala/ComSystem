@@ -46,18 +46,16 @@ export default class SettingsTab extends React.Component {
       <View style={styles.mainView}>
         <View style={styles.mainSubView}>
           <View style={styles.formView}>
-            <FormLabel labelStyle={{ fontSize: scale(16) }}>Connection Status</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(14), color: "#43484D" }}>Connection Status</FormLabel>
             <View
               style={{
-                marginLeft: 20,
-                marginRight: 20,
-                marginTop: 15,
-                marginBottom: 5,
+                marginLeft: 17.5,
+                marginRight: 17.5,
               }}
             >
-              <Text style={{ fontSize: scale(40), color: statusColor, borderRadius: 5 }}>{status}</Text>
+              <Text style={{ fontSize: scale(40), color: statusColor }}>{status}</Text>
             </View>
-            <FormLabel labelStyle={{ fontSize: scale(16) }}>eMessage Box IP</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(14), color: "#43484D" }}>eMessage Box IP</FormLabel>
             <FormInput
               placeholder="None"
               autoCapitalize='none'
@@ -65,9 +63,9 @@ export default class SettingsTab extends React.Component {
               value={this.props.screenProps.messageBoxIP}
               onChangeText={(input) => this.onMessageBoxIPChange(input)}
             />
-            <FormLabel labelStyle={{ fontSize: scale(16) }}>FAQs</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(14), color: "#43484D" }}>FAQs</FormLabel>
 
-            <FormLabel labelStyle={{ fontSize: scale(16) }}>How do I establish a connection between the eMessage Box and my tablets?</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(12), color: "#43484D" }}>How do I establish a connection between the eMessage Box and my tablets?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -76,12 +74,12 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(16) }}>
-                Find your eMessage Box's IP address and set it in eMessage Box IP input above in the tab.
+              <Text style={{ fontSize: scale(12), color: "#86939E" }}>
+                Find your eMessage Box's IP address and set it in the eMessage Box IP input in Settings.
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel labelStyle={{ fontSize: scale(16) }}>How do I lookup my eMessage Box IP?</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(12), color: "#43484D" }}>How do I lookup my eMessage Box IP?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -90,12 +88,12 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(16) }}>
-                There are several ways to lookup the eMessage Box's IP Address. One way to accomplish this is by using Pi Finder (Download: http://ivanx.com/raspberrypi/).
+              <Text style={{ fontSize: scale(12), color: "#86939E" }}>
+                There are several ways to lookup the eMessage Box's IP Address. One of the easiest ways to accomplish this is by using Pi Finder (Download: http://ivanx.com/raspberrypi/).
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel labelStyle={{ fontSize: scale(16) }}>Which tablets support eMessage?</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(12), color: "#43484D" }}>Which tablets support eMessage?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -104,12 +102,12 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(16) }}>
+              <Text style={{ fontSize: scale(12), color: "#86939E" }}>
                 eMessage is available on all iOS, Android, and Kindle Fire platforms.
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>
-            <FormLabel labelStyle={{ fontSize: scale(16) }}>Tech Support</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(12), color: "#43484D" }}>Questions, Comments, or Concerns?</FormLabel>
             <View
               style={{
                 marginLeft: 20,
@@ -118,8 +116,8 @@ export default class SettingsTab extends React.Component {
                 marginBottom: 5,
               }}
             >
-              <Text style={{ fontSize: scale(16) }}>
-                Please direct all questions, comments or concerns to skyler.bala@gmail.com
+              <Text style={{ fontSize: scale(12), color: "#86939E" }}>
+                Please direct all questions, comments, and/or concerns to "skyler.bala@gmail.com". We're always happy to help :)
               </Text>
               <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
             </View>

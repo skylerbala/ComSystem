@@ -48,11 +48,11 @@ export default class ModalCard extends React.PureComponent {
                             label: 'Select a ringtone...',
                             value: null,
                             color: '#bdc6cf',
-                            fontSize: scale(30),
+                            fontSize: scale(14),
                         }}
                         style={{
                             fontColor: "#bdc6cf",
-                            fontSize: scale(16),
+                            fontSize: scale(14),
                         }}
                         placeholderTextColor={"#bdc6cf"}
                         items={Sounds}
@@ -63,21 +63,21 @@ export default class ModalCard extends React.PureComponent {
                     />
                 </View>
                 <FormLabel labelStyle={{ fontSize: scale(14) }}>Color</FormLabel>
-                <FormLabel>Hue</FormLabel>
+                <FormLabel labelStyle={{ fontSize: scale(12), color: "#43484D" }}>Hue</FormLabel>
                 <HueSlider
                     gradientSteps={100}
                     value={this.state.employee.color.h}
                     color={this.state.employee.color}
                     onValueChange={this.onUpdateHue}
                 />
-                <FormLabel style={styles.componentText}>Saturation</FormLabel>
+                <FormLabel labelStyle={{ fontSize: scale(12), color: "#43484D" }}>Saturation</FormLabel>
                 <SaturationSlider
                     gradientSteps={100}
                     value={this.state.employee.color.s}
                     color={this.state.employee.color}
                     onValueChange={this.onUpdateSaturation}
                 />
-                <FormLabel style={styles.componentText}>Lightness</FormLabel>
+                <FormLabel labelStyle={{ fontSize: scale(12), color: "#43484D" }}>Lightness</FormLabel>
                 <LightnessSlider
                     gradientSteps={100}
                     value={this.state.employee.color.l}
