@@ -6,10 +6,7 @@ import moment from 'moment';
 export default class MessageFront extends React.PureComponent {
   constructor(props) {
     super(props);
-  }
-
-  state = {
-    timeElapsed: ""
+    this.timeElapsed = null;
   }
 
   componentDidMount() {
@@ -24,14 +21,15 @@ export default class MessageFront extends React.PureComponent {
     let duration = moment.duration(dateNow - dateCreated)._data;
     let timeElapsed = moment(duration).format('mm:ss')
     if (timeElapsed === "Invalid date") {
-      timeElapsed = "00:00";
+      timeElapsed = "";
     }
-    if (duration.minutes % 3 === 0 && duration.seconds === 0) {
+    if (duration.minutes % 3 === 0 && duration.seconds === 0 && timeElapsed != "") {
       this.props.playRingtone(this.props.ringtone);
     }
 
     if (global.currTab === "MainPanel") {
-      this.setState({timeElapsed: timeElapsed})
+      this.timeElapsed = timeElapsed;
+      this.forceUpdate();
     }
   }
 
@@ -62,7 +60,7 @@ export default class MessageFront extends React.PureComponent {
         </View>
         <View style={styles.messageRowFrontTimer}>
           <Text style={styles.messageRowFrontTimerText}>
-            {this.state.timeElapsed}
+            {this.timeElapsed}
           </Text>
         </View>
       </View>

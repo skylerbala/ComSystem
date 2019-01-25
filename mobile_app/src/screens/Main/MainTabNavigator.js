@@ -10,7 +10,7 @@ const MainTabNavigator = createBottomTabNavigator({
   MainPanel: {
     screen: MainPanel,
     navigationOptions: {
-      title: 'eMessage Panel',
+      title: 'Main Panel',
       tabBarIcon: ({ tintColor }) => {
         return (<Icon type="font-awesome" name="tachometer" color={tintColor} />)
       },

@@ -93,7 +93,6 @@ export default class ModalCard extends React.PureComponent {
                     color={this.props.color}
                     name={this.props.name}
                     content={this.getFinalContent()}
-                    playRingtone={this.props.playRingtone}
                     isPreview
                 />
                 <View style={{ flexDirection: 'row' }}>

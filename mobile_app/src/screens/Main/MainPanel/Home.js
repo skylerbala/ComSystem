@@ -145,7 +145,6 @@ export default class MainPanel extends React.Component {
             color={this.message.color}
             ringtone={this.message.ringtone}
             getFinalMessageHandler={this.getFinalMessage}
-            playRingtone={this.props.screenProps.playRingtone()}
             handleSendMessage={this.props.screenProps.handleSendMessage}
             handleResetState={this.resetState}
           />

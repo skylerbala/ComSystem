@@ -32,9 +32,9 @@ export default class ModalCard extends React.PureComponent {
     render() {
         return (
             <Card title={this.props.modalTitle} containerStyle={styles.modalCard}>
-                <FormLabel labelStyle={{ fontSize: scale(14) }}>Employee Name</FormLabel>
+                <FormLabel labelStyle={{ fontSize: scale(16) }}>Employee Name</FormLabel>
                 <FormInput onChangeText={this.onUpdateEmployeeName} />
-                <FormLabel labelStyle={{ fontSize: scale(14) }}>Message Ringtone</FormLabel>
+                <FormLabel labelStyle={{ fontSize: scale(16) }}>Message Ringtone</FormLabel>
                 <View
                     style={{
                         marginLeft: 20,
@@ -48,11 +48,11 @@ export default class ModalCard extends React.PureComponent {
                             label: 'Select a ringtone...',
                             value: null,
                             color: '#bdc6cf',
-                            fontSize: scale(14),
+                            fontSize: scale(16),
                         }}
                         style={{
                             fontColor: "#bdc6cf",
-                            fontSize: scale(14),
+                            fontSize: scale(16),
                         }}
                         placeholderTextColor={"#bdc6cf"}
                         items={Sounds}
@@ -62,7 +62,7 @@ export default class ModalCard extends React.PureComponent {
                         useNativeAndroidPickerStyle={false}
                     />
                 </View>
-                <FormLabel labelStyle={{ fontSize: scale(14) }}>Color</FormLabel>
+                <FormLabel labelStyle={{ fontSize: scale(16) }}>Color</FormLabel>
                 <FormLabel labelStyle={{ fontSize: scale(12), color: "#43484D" }}>Hue</FormLabel>
                 <HueSlider
                     gradientSteps={100}

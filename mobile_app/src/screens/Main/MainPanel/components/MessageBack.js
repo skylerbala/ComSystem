@@ -23,7 +23,7 @@ export default class MessageBack extends React.PureComponent {
 const styles = StyleSheet.create({
   messageRowBack: {
     flex: 1,
-    marginBottom: 10
+    marginBottom: 5
   },
   messageRowBackDeleteButton: {
     alignItems: 'center',

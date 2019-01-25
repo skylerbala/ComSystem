@@ -11,14 +11,13 @@ class App extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.storage = new AsyncStorageAPI;
     ScreenOrientation.allowAsync(ScreenOrientation.Orientation.ALL);
   }
 
   componentDidMount() {
-    this.storage.retrieveItem('isOnBoarding').then((result) => {
-      if (result === 'true') {
+    this.storage.retrieveItem('isOnBoarding').then((res) => {
+      if (res === 'false') {
         this.setState({ isOnBoarding: false });
       }
       else {

@@ -25,7 +25,7 @@ export default class ExpressionsTab extends React.Component {
             <Text
               style={{
                 fontWeight: '600',
-                fontSize: scale(14)
+                fontSize: scale(16)
 
               }}
             >
@@ -162,8 +162,6 @@ export default class ExpressionsTab extends React.Component {
   }
 
   render() {
-    console.log('Expression')
-
     let mainView = <NoConnectionView />
 
     if (this.props.screenProps.messageBoxIsConnected) {
@@ -186,7 +184,7 @@ export default class ExpressionsTab extends React.Component {
       modal = (
         <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
           <Card title={modalTitle} containerStyle={styles.modalCard}>
-            <FormLabel labelStyle={{ fontSize: scale(14), color: "#43484D" }}>Expression</FormLabel>
+            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>Expression</FormLabel>
             <FormInput onChangeText={this.onUpdateExpressionContent} />
             <View style={{ flex: 1, alignItems: 'center', marginBottom: 50, marginTop: 5 }}>
               <ExpressionButton

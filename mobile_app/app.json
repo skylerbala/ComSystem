@@ -12,7 +12,7 @@
     ],
     "orientation": "portrait",
     "primaryColor": "#74CFEE",
-    "icon": "./src/assets/images/logo-no-text.png",
+    "icon": "./src/assets/images/app-icon.png",
     "androidStatusBar": {
       "barStyle": "light-content",
       "backgroundColor": "#74CFEE"
@@ -20,7 +20,7 @@
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff",
-      "image": "./src/assets/images/full-logo.png"
+      "image": "./src/assets/images/splash.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -31,18 +31,18 @@
     "ios": {
       "bundleIdentifier": "com.skylerbala.apps.emessage",
       "buildNumber": "1.0.0",
-      "icon": "./src/assets/images/logo-no-text.png",
+      "icon": "./src/assets/images/app-icon.png",
       "supportsTablet": true,
       "splash": {
         "resizeMode": "contain",
         "backgroundColor": "#ffffff",
-        "image": "./src/assets/images/full-logo.png"
+        "image": "./src/assets/images/splash.png"
       },
     },
     "android": {
       "package": "com.skylerbala.apps.emessage",
       "versionCode": 1,
-      "icon": "./src/assets/images/logo-no-text.png",
+      "icon": "./src/assets/images/app-icon.png",
     },
   }
 }

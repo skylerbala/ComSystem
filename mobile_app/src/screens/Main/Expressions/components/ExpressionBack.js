@@ -13,8 +13,6 @@ export default class ExpressionBack extends React.PureComponent {
   }
 
   render() {
-    console.log('ExpressionBack')
-
     return (
       <TouchableOpacity style={styles.expressionRowBack}>
         <TouchableOpacity

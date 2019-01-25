@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import SocketIOClient from 'socket.io-client';
-import moment from 'moment';
 import { Audio } from 'expo';
 import MainTabNavigator from './MainTabNavigator';
 import AsyncStorageAPI from '../../library/utils/AsyncStorageAPI';
@@ -79,7 +78,6 @@ export default class Main extends Component {
         this.setState({
             messages: [...this.state.messages, data]
         });
-        this.playRingtone(data.ringtone);
     }
 
     handleInputAddEmployee = (data) => {
@@ -219,15 +217,6 @@ export default class Main extends Component {
         });
     }
 
-    handleRingtoneChange = async (data) => {
-        this.storage.storeItem('ringtone', data);
-        this.setState({
-            ringtone: data
-        }, () => {
-            this.playRingtone();
-        });
-    }
-
     playRingtone = async (name) => {
         let sound = new Audio.Sound();
 
@@ -267,7 +256,6 @@ export default class Main extends Component {
                     handleDeleteExpression: this.handleOutputDeleteExpression,
 
                     handleMessageBoxIPChange: this.handleMessageBoxIPChange,
-                    handleRingtoneChange: this.handleRingtoneChange,
 
                     playRingtone: this.playRingtone,
                 }}

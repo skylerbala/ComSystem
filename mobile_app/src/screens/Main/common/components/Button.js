@@ -5,7 +5,7 @@ import { scale } from '../../../../library/utils/ScalingAPI';
 export default Button = (props) => {
   return (
     <TouchableOpacity
-      style={[styles.view, props.containerStyle]}
+      style={[styles.container, props.containerStyle]}
       onPress={props.onPress}
     >
       <Text style={styles.text}>{props.title}</Text>
@@ -14,14 +14,14 @@ export default Button = (props) => {
 }
 
 const styles = StyleSheet.create({
-  view: {
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
     minHeight: scale(30),
     backgroundColor: '#25E832',
     padding: scale(2.5),
     marginTop: scale(5),
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 5,
+    borderRadius: 5
   },
   text: {
     fontSize: scale(25),

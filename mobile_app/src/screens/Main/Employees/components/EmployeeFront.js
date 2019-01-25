@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   employeeRowFrontRingtone: {
-    fontSize: scale(14),
+    fontSize: scale(16),
     color: 'white',
   },
   employeeRowFrontColorBox: {
