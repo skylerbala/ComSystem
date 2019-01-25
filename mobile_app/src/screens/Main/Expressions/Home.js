@@ -1,42 +1,25 @@
 
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Text } from 'react-native';
-import { Card, FormLabel, FormInput } from 'react-native-elements';
+import { View, Text } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Modal from "react-native-modal";
 import NoConnectionView from '../common/components/NoConnectionView';
 import Button from '../common/components/Button'
-import { scale } from '../../../library/utils/ScalingAPI';
 import styles from './styles';
-import ExpressionButton from '../common/components/ExpressionButton';
 import ExpressionFront from './components/ExpressionFront';
 import ExpressionBack from './components/ExpressionBack';
 import shallowequal from 'shallowequal';
+import ModalCard from './components/ModalCard';
 
 
 export default class ExpressionsTab extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: () => {
-        return (
-          <View style={{
-            textAlign: 'center',
-          }}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: scale(16)
-
-              }}
-            >
-              Expressions
-            </Text>
-          </View>
-        );
-      },
+      headerTitleStyle: { alignSelf: 'center' },
+      title: 'Expressions',
       headerStyle: {
-        backgroundColor: '#74d0f0'
-      },
+        backgroundColor: colors.logoBlue
+      }
     }
   };
 
@@ -44,12 +27,12 @@ export default class ExpressionsTab extends React.Component {
     super(props);
     this.state = {
       isModalVisible: false,
-      expression: {
-        content: "",
-        type: null,
-        id: null,
-      },
       isEditing: false,
+    };
+    this.expression = {
+      content: null,
+      type: null,
+      id: null,
     };
   }
 
@@ -64,41 +47,12 @@ export default class ExpressionsTab extends React.Component {
     return false;
   }
 
-
-  onSaveExpressionPress = () => {
-    let newExpression = {
-      id: this.state.expression.id,
-      content: this.state.expression.content,
-      type: this.state.expression.type
-    }
-    if (this.state.isEditing) {
-      this.props.screenProps.handleUpdateExpression(newExpression);
-    }
-    else {
-      this.props.screenProps.handleAddExpression(newExpression);
-    }
-    this.resetState();
-  }
-
   onEditExpressionPress = (expression) => {
-    this.setState({
-      isEditing: true,
-      expression: {
-        id: expression.id,
-        type: expression.type
-      }
-    });
-    this.showModal();
-  }
-
-  onUpdateExpressionContent = (content) => {
-    this.setState({
-      expression: {
-        id: this.state.expression.id,
-        type: this.state.expression.type,
-        content: content
-      }
-    });
+    this.setState({ isModalVisible: true, isEditing: true })
+    this.expression = {
+      id: expression.id,
+      type: expression.type
+    };
   }
 
   onDeleteExpressionPress = (expression) => {
@@ -106,16 +60,14 @@ export default class ExpressionsTab extends React.Component {
   }
 
   onAddExpressionPress = (expressionType) => {
-    let newExpression = this.state.expression;
+    let newExpression = this.expression;
     newExpression.type = expressionType;
-    this.setState({
-      expression: {
-        id: this.state.expression.id,
-        type: expressionType,
-        content: this.state.expression.content
-      }
-    });
-    this.showModal();
+    this.expression = {
+      id: this.expression.id,
+      type: expressionType,
+      content: this.expression.content
+    };
+    this.setState({ isModalVisible: true });
   }
 
   onAddExpressionPress1 = () => {
@@ -126,20 +78,13 @@ export default class ExpressionsTab extends React.Component {
     this.onAddExpressionPress(2);
   }
 
-  showModal = () => {
-    this.setState({ isModalVisible: true })
-  }
-
   resetState = () => {
-    this.setState({
-      isModalVisible: false,
-      expression: {
-        content: "",
-        type: null,
-        id: null,
-      },
-      isEditing: false,
-    });
+    this.setState({ isModalVisible: false, isEditing: false });
+    this.expression = {
+      content: "",
+      type: null,
+      id: null,
+    };
   }
 
   renderExpressionRowFront = (rowData) => {
@@ -183,19 +128,17 @@ export default class ExpressionsTab extends React.Component {
 
       modal = (
         <Modal isVisible={this.state.isModalVisible} onBackdropPress={this.resetState}>
-          <Card title={modalTitle} containerStyle={styles.modalCard}>
-            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>Expression</FormLabel>
-            <FormInput onChangeText={this.onUpdateExpressionContent} />
-            <View style={{ flex: 1, alignItems: 'center', marginBottom: 50, marginTop: 5 }}>
-              <ExpressionButton
-                expression={this.state.expression}
-                onClick={null}
-              />
-            </View>
-            <Button title='Save' onPress={this.onSaveExpressionPress} />
-          </Card>
+          <ModalCard
+            modalTitle={modalTitle}
+            expression={this.expression}
+            playTone={this.props.screenProps.playTone}
+            handleAddExpression={this.props.screenProps.handleAddExpression}
+            handleUpdateExpression={this.props.screenProps.handleUpdateExpression}
+            handleResetState={this.resetState}
+            isEditing={this.state.isEditing}
+          />
         </Modal>
-      )
+      );
 
 
       mainView = (

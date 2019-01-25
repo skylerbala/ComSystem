@@ -1,34 +1,18 @@
 import React from 'react';
-import { View, StyleSheet, Picker, Text } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { FormLabel, FormInput, Divider } from 'react-native-elements';
-import RNPickerSelect from 'react-native-picker-select';
-import Sounds from '../../../assets/sounds';
 import { scale } from '../../../library/utils/ScalingAPI';
-
+import colors from '../common/styles/colors';
 
 
 export default class SettingsTab extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      headerTitle: () => {
-        return (
-          <View style={{
-            textAlign: 'center',
-          }}>
-            <Text
-              style={{
-                fontWeight: '600',
-                fontSize: scale(16)
-              }}
-            >
-              Settings
-            </Text>
-          </View>
-        );
-      },
+      headerTitleStyle: { alignSelf: 'center' },
+      title: 'Settings',
       headerStyle: {
-        backgroundColor: '#74d0f0'
-      },
+        backgroundColor: colors.logoBlue
+      }
     }
   };
 
@@ -41,32 +25,23 @@ export default class SettingsTab extends React.Component {
   }
 
   render() {
-    let pickerOptions = Sounds.map((sound) => {
-      return (
-        <Picker.Item key={sound.name} label={sound.name} value={sound.name} />
-      )
-    });
-    let status = "No Connection";
-    let statusColor = 'red'
+    let connectionStatus = "Not Connected";
+    let connectionStatusColor = colors.red;
+
     if (this.props.screenProps.messageBoxIsConnected) {
-      status = "Connected";
-      statusColor = '#25E832'
+      connectionStatus = "Connected";
+      connectionStatusColor = colors.green;
     }
 
     return (
       <View style={styles.mainView}>
         <View style={styles.mainSubView}>
           <View style={styles.formView}>
-            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>Connection Status</FormLabel>
-            <View
-              style={{
-                marginLeft: 17.5,
-                marginRight: 17.5,
-              }}
-            >
-              <Text style={{ fontSize: scale(40), color: statusColor }}>{status}</Text>
+            <FormLabel labelStyle={styles.formText}>Connection Status</FormLabel>
+            <View style={styles.textView}>
+              <Text style={{ fontSize: scale(40), color: connectionStatusColor }}>{connectionStatus}</Text>
             </View>
-            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>eMessage Box IP</FormLabel>
+            <FormLabel labelStyle={styles.formText}>eMessage Box IP</FormLabel>
             <FormInput
               placeholder="None"
               autoCapitalize='none'
@@ -74,63 +49,34 @@ export default class SettingsTab extends React.Component {
               value={this.props.screenProps.messageBoxIP}
               onChangeText={(input) => this.onMessageBoxIPChange(input)}
             />
-            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>FAQs</FormLabel>
-
-            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>How do I establish a connection between the eMessage Box and my tablets?</FormLabel>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                marginTop: 15,
-                marginBottom: 5,
-              }}
-            >
-              <Text style={{ fontSize: scale(16), color: "#86939E" }}>
+            <FormLabel labelStyle={styles.formText}>FAQs</FormLabel>
+            <FormLabel labelStyle={styles.formText}>How do I establish a connection between the eMessage Box and my tablets?</FormLabel>
+            <View style={styles.textView}>
+              <Text style={styles.text}>
                 Find your eMessage Box's IP address and set it in the eMessage Box IP input in Settings.
               </Text>
-              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+              <Divider style={styles.divider} />
             </View>
-            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>How do I lookup my eMessage Box IP?</FormLabel>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                marginTop: 15,
-                marginBottom: 5,
-              }}
-            >
-              <Text style={{ fontSize: scale(16), color: "#86939E" }}>
+            <FormLabel labelStyle={styles.formText}>How do I lookup my eMessage Box IP?</FormLabel>
+            <View style={styles.textView}>
+              <Text style={styles.text}>
                 There are several ways to lookup the eMessage Box's IP Address. One of the easiest ways to accomplish this is by using Pi Finder (Download: http://ivanx.com/raspberrypi/).
               </Text>
-              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+              <Divider style={styles.divider} />
             </View>
-            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>Which tablets support eMessage?</FormLabel>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                marginTop: 15,
-                marginBottom: 5,
-              }}
-            >
-              <Text style={{ fontSize: scale(16), color: "#86939E" }}>
+            <FormLabel labelStyle={styles.formText}>Which tablets support eMessage?</FormLabel>
+            <View style={styles.textView}>
+              <Text style={styles.text}>
                 eMessage is available on all iOS, Android, and Kindle Fire platforms.
               </Text>
-              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+              <Divider style={styles.divider} />
             </View>
-            <FormLabel labelStyle={{ fontSize: scale(16), color: "#43484D" }}>Questions, Comments, or Concerns?</FormLabel>
-            <View
-              style={{
-                marginLeft: 20,
-                marginRight: 20,
-                marginTop: 15,
-                marginBottom: 5,
-              }}
-            >
-              <Text style={{ fontSize: scale(16), color: "#86939E" }}>
+            <FormLabel labelStyle={styles.formText}>Questions, Comments, or Concerns?</FormLabel>
+            <View style={styles.textView}>
+              <Text style={styles.text}>
                 Please direct all questions, comments, and/or concerns to "skyler.bala@gmail.com".
               </Text>
-              <Divider style={{ backgroundColor: "#bdc6cf", marginTop: 10 }} />
+              <Divider style={styles.divider} />
             </View>
           </View>
         </View>
@@ -158,5 +104,23 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     backgroundColor: 'white',
+  },
+  formText: {
+    fontSize: scale(14),
+    color: colors.darkText
+  },
+  textView: {
+    marginLeft: 20,
+    marginRight: 20,
+    marginTop: 15,
+    marginBottom: 5,
+  },
+  text: {
+    fontSize: scale(14),
+    color: colors.gray
+  },
+  divider: {
+    backgroundColor: colors.gray,
+    marginTop: 10
   }
 });

@@ -1,19 +1,14 @@
 import React from 'react';
-import { View, Image, ScrollView, TouchableOpacity, Text, FlatList } from 'react-native';
-import tinycolor from 'tinycolor2';
-import { Card } from 'react-native-elements';
+import { View, Image, ScrollView, FlatList } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import Modal from "react-native-modal";
 import styles from './styles';
 import shallowequal from 'shallowequal';
 import NoConnectionView from '../common/components/NoConnectionView';
-import Button from '../common/components/Button';
-import ExpressionButton from '../common/components/ExpressionButton';
 import EmployeeButton from '../common/components/EmployeeButton';
 import MessageFront from './components/MessageFront';
 import MessageBack from './components/MessageBack';
 import ModalCard from './components/ModalCard';
-import Sounds from '../../../assets/sounds';
 
 
 export default class MainPanel extends React.Component {
@@ -21,14 +16,11 @@ export default class MainPanel extends React.Component {
     headerTitle: () => {
       return (
         <Image
-          style={{ width: 100, height: 40, flex: 1 }}
+          style={{ height: '70%' }}
           resizeMode="contain"
           source={require('../../../assets/images/logo-text.png')}
         />
       );
-    },
-    headerTitleStyle: {
-      
     },
     headerStyle: {
       backgroundColor: '#74d0f0'
@@ -42,9 +34,9 @@ export default class MainPanel extends React.Component {
     };
 
     this.message = {
-      name: "",
-      color: "",
-      ringtone: ""
+      name: null,
+      color: null,
+      ringtone: null
     }
   }
 
@@ -58,34 +50,32 @@ export default class MainPanel extends React.Component {
     else if (!shallowequal(this.state, nextState)) {
       return true;
     }
-
     return false;
   }
 
   onEmployeeButtonPress = (name, color, ringtone) => {
-    this.setState({
-      isModalVisible: true,
-    });
     this.message = {
       name: name,
       color: color,
       ringtone: ringtone
-    }
+    };
+    this.setState({ isModalVisible: true });
   }
 
-  onMessageDeletePress = (message) => {
+  onMessageDeleteButtonPress = (message) => {
     this.props.screenProps.handleDeleteMessage(message);
   }
 
   resetState = () => {
     this.setState({
       isModalVisible: false,
+    }, () => {
+      this.message = {
+        name: null,
+        color: null,
+        ringtone: null
+      };
     });
-    this.message = {
-      name: "",
-      color: "",
-      ringtone: ""
-    }
   }
 
   renderEmployeeButton = (rowData) => {
@@ -94,7 +84,7 @@ export default class MainPanel extends React.Component {
         name={rowData.item.name}
         color={rowData.item.color}
         ringtone={rowData.item.ringtone}
-        onClick={this.onEmployeeButtonPress}
+        onPress={this.onEmployeeButtonPress}
       />
     );
   }
@@ -107,7 +97,7 @@ export default class MainPanel extends React.Component {
         createdAt={rowData.item.createdAt}
         content={rowData.item.content}
         ringtone={rowData.item.ringtone}
-        playRingtone={this.props.screenProps.playRingtone}
+        playTone={this.props.screenProps.playTone}
         hasTimer
       />
     );
@@ -117,7 +107,7 @@ export default class MainPanel extends React.Component {
     return (
       <MessageBack
         message={rowData.item}
-        onClick={this.onMessageDeletePress}
+        onClick={this.onMessageDeleteButtonPress}
       />
     );
   }

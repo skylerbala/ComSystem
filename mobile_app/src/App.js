@@ -12,7 +12,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.storage = new AsyncStorageAPI;
-    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.ALL);
+    ScreenOrientation.allowAsync(ScreenOrientation.Orientation.PORTRAIT);
   }
 
   componentDidMount() {
@@ -32,6 +32,7 @@ class App extends React.Component {
   }
 
   render() {
+    console.log('App')
     let mainView = null;
 
     if (!this.state.isOnBoarding) {

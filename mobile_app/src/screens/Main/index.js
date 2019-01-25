@@ -15,14 +15,12 @@ export default class Main extends Component {
             employees: [],
             expressions: [],
             messageBoxIP: null,
-            messageBoxIsConnected: false,
-            ringtone: null
+            messageBoxIsConnected: false
         };
         this.socket = null;
         this.storage = new AsyncStorageAPI;
-        // this.timer = setInterval(() => this.timerTick(), 1000);
         this.toast = null;
-        global.currTab = 'MainPanel'
+        global.currTab = 'MainPanel';
     }
 
     componentDidMount() {
@@ -31,22 +29,10 @@ export default class Main extends Component {
         }).catch((error) => {
             // console.log(error);
         });
-
-        this.storage.retrieveItem('ringtone').then((result) => {
-            let ringtone = result
-            if (ringtone == null) {
-                ringtone = Sounds[0].name;
-            }
-            this.setState({ ringtone: ringtone })
-        }).catch((error) => {
-            // console.log(error);
-        });
-
     }
 
     componentWillUnmount() {
         this.socket.close();
-        clearInterval(this.timer);
     }
 
     initSocketIOClient = (messageBoxIP) => {
@@ -65,6 +51,17 @@ export default class Main extends Component {
         this.socket.on('disconnect', (data) => this.handleInputDisconnect());
     }
 
+    handleMessageBoxIPChange = async (data) => {
+        this.storage.storeItem('messageBoxIP', data);
+        this.setState({ messageBoxIP: data }, () => {
+            this.socket.close();
+
+            if (this.state.messageBoxIP.length > 1) {
+                this.initSocketIOClient(data);
+            }
+        });
+    }
+
     initState = (data) => {
         this.setState({
             messages: data.messages,
@@ -78,6 +75,7 @@ export default class Main extends Component {
         this.setState({
             messages: [...this.state.messages, data]
         });
+        this.playTone(data.ringtone);
     }
 
     handleInputAddEmployee = (data) => {
@@ -139,16 +137,14 @@ export default class Main extends Component {
 
     handleInputStatus = (data) => {
         let message = data.message;
-        // console.log(this.toast)
-        // this.toast.show(message)
 
-        let toast = Toast.show(message, {
+        Toast.show(message, {
             duration: Toast.durations.SHORT,
             position: Toast.positions.CENTER,
             shadow: true,
             animation: true,
             hideOnPress: true,
-            delay: 500,
+            delay: 250,
             onShow: () => {
                 // calls on toast\`s appear animation start
             },
@@ -162,7 +158,6 @@ export default class Main extends Component {
                 // calls on toast\`s hide animation end.
             }
         });
-
     }
 
     handleInputDisconnect = () => {
@@ -170,7 +165,7 @@ export default class Main extends Component {
             messages: [],
             employees: [],
             expressions: [],
-            messageBoxIsConnected: false,
+            messageBoxIsConnected: false
         });
     }
 
@@ -206,22 +201,10 @@ export default class Main extends Component {
         this.socket.emit('deleteExpression', data);
     }
 
-    handleMessageBoxIPChange = async (data) => {
-        this.storage.storeItem('messageBoxIP', data);
-        this.setState({ messageBoxIP: data }, () => {
-            this.socket.close();
-
-            if (this.state.messageBoxIP.length > 1) {
-                this.initSocketIOClient(data);
-            }
-        });
-    }
-
-    playRingtone = async (name) => {
+    playTone = async (name) => {
         let sound = new Audio.Sound();
-
         try {
-            ringtone = await Sounds.find((e) => {
+            let ringtone = await Sounds.find((e) => {
                 if (e.name == name) {
                     return e.path
                 }
@@ -229,9 +212,27 @@ export default class Main extends Component {
 
             await sound.loadAsync(ringtone.path);
             await sound.playAsync();
-
         } catch (error) {
-            // console.log(error);
+            Toast.show("Error: Unable to play tone", {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER,
+                shadow: true,
+                animation: true,
+                hideOnPress: true,
+                delay: 250,
+                onShow: () => {
+                    // calls on toast\`s appear animation start
+                },
+                onShown: () => {
+                    // calls on toast\`s appear animation end.
+                },
+                onHide: () => {
+                    // calls on toast\`s hide animation start.
+                },
+                onHidden: () => {
+                    // calls on toast\`s hide animation end.
+                }
+            });
         }
     }
 
@@ -244,7 +245,6 @@ export default class Main extends Component {
                     expressions: this.state.expressions,
                     messageBoxIP: this.state.messageBoxIP,
                     messageBoxIsConnected: this.state.messageBoxIsConnected,
-                    ringtone: this.state.ringtone,
 
                     handleSendMessage: this.handleOutputSendMessage,
                     handleAddEmployee: this.handleOutputAddEmployee,
@@ -257,7 +257,7 @@ export default class Main extends Component {
 
                     handleMessageBoxIPChange: this.handleMessageBoxIPChange,
 
-                    playRingtone: this.playRingtone,
+                    playTone: this.playTone,
                 }}
             >
             </MainTabNavigator>

@@ -3,10 +3,9 @@ import { TouchableOpacity, Dimensions, StyleSheet, Text } from 'react-native';
 import { scale } from '../../../../library/utils/ScalingAPI';
 
 export default class EmployeeButton extends React.PureComponent {
-  
-  onEmployeeButtonPress = () => {
-    if (this.props.onClick != null) {
-      this.props.onClick(this.props.name, this.props.color, this.props.ringtone);
+  onPress = () => {
+    if (this.props.onPress != null) {
+      this.props.onPress(this.props.name, this.props.color, this.props.ringtone);
     }
   }
 
@@ -14,7 +13,7 @@ export default class EmployeeButton extends React.PureComponent {
     return (
       <TouchableOpacity
         style={[styles.employeeButtons, { backgroundColor: this.props.color }]}
-        onPress={this.onEmployeeButtonPress}
+        onPress={this.onPress}
       >
         <Text style={styles.employeeButtonsText}>
           {this.props.name}
@@ -28,14 +27,14 @@ const styles = StyleSheet.create({
   employeeButtons: {
     justifyContent: 'center',
     height: Dimensions.get('window').height / 20,
-    width: Dimensions.get('window').width / 4.35,
+    width: Dimensions.get('window').width / 4.4,
     margin: 5,
     borderRadius: 5,
     paddingLeft: 5,
     paddingRight: 5
   },
   employeeButtonsText: {
-    fontSize: scale(30),
+    fontSize: scale(35),
     color: 'white',
     alignSelf: 'center'
   },
