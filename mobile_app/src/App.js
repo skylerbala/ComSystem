@@ -32,7 +32,6 @@ class App extends React.Component {
   }
 
   render() {
-    console.log('App')
     let mainView = null;
 
     if (!this.state.isOnBoarding) {
