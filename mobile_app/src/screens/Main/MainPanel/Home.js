@@ -16,7 +16,7 @@ export default class MainPanel extends React.Component {
     headerTitle: () => {
       return (
         <Image
-          style={{ height: '70%' }}
+          style={{ width: 100, height: '70%', flex: 1 }}
           resizeMode="contain"
           source={require('../../../assets/images/logo-text.png')}
         />

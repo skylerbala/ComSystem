@@ -26,6 +26,7 @@ export default styles = StyleSheet.create({
   expressionListTitleText: {
     color: 'white',
     fontWeight: '600',
+    fontSize: scale(16),
     marginBottom: scale(5)
   },
   modalCard: {

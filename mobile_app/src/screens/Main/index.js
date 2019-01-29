@@ -202,17 +202,18 @@ export default class Main extends Component {
     }
 
     playTone = async (name) => {
-        let sound = new Audio.Sound();
         try {
-            let ringtone = await Sounds.find((e) => {
+            let sound = new Audio.Sound();
+            let soundFile = await Sounds.find((e) => {
                 if (e.name == name) {
-                    return e.path
+                    return e;
                 }
-            })
+            });
 
-            await sound.loadAsync(ringtone.path);
+            await sound.loadAsync(soundFile.path);
             await sound.playAsync();
         } catch (error) {
+            console.log(error)
             Toast.show("Error: Unable to play tone", {
                 duration: Toast.durations.SHORT,
                 position: Toast.positions.CENTER,

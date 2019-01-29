@@ -21,6 +21,7 @@ export default class SettingsTab extends React.Component {
   }
 
   onMessageBoxIPChange(IP) {
+    console.log(IP)
     this.props.screenProps.handleMessageBoxIPChange(IP);
   }
 
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   formText: {
-    fontSize: scale(14),
+    fontSize: scale(16),
     color: colors.darkText
   },
   textView: {
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   text: {
-    fontSize: scale(14),
+    fontSize: scale(16),
     color: colors.gray
   },
   divider: {

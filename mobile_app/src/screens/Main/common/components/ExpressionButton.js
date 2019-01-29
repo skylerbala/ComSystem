@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     margin: 5
   },
   expressionsText: {
-    fontSize: scale(17.5),
+    fontSize: scale(25),
     color: 'white',
     alignSelf: 'center'
   }
